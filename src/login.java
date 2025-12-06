@@ -8,7 +8,7 @@ public class login extends JFrame implements ActionListener {
     private JButton loginButton;
 
     login() {
-        welcomeLabel = new JLabel("ald;kfjasd");
+        welcomeLabel = new JLabel("Welcome to Better APSpace");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 25));
         welcomeLabel.setBounds(280,30,800,300);
         welcomeLabel.setForeground(new Color(0x000000));
