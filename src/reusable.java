@@ -4,7 +4,7 @@ import java.awt.*;
 public class reusable {
     public static void windowSetup(JFrame frame) {
 
-        frame.setSize(800, 650);
+        frame.setSize(1080, 650);
         frame.setTitle("Better APSpace");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
