@@ -10,7 +10,6 @@ public class reusable {
         frame.setResizable(false);
         frame.getContentPane().setBackground(new Color(0xffffff));
         frame.setLayout(null);
-        frame.setVisible(true);
         frame.setLocationRelativeTo(null);
 
         //ImageIcon icon = new ImageIcon("resources/icon1.png");
