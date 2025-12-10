@@ -1,0 +1,6 @@
+Format = username,password,role
+admin1,123,Admin
+lec1,123,Lecturer
+stud1,123,Student
+staff1,123,AcademicStaff
+
