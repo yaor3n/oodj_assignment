@@ -7,3 +7,4 @@ admin,123,Admin
 student,123,Student
 raul,321,Student
 yaoren,123,Lecturer
+lecturer,password,Lecturer
