@@ -113,6 +113,9 @@ public class login extends JFrame implements ActionListener {
                         "File Error",
                         JOptionPane.ERROR_MESSAGE);
             }
+        } else if (e.getSource()  == backButton) {
+            new userSelect();
+            this.dispose();
         }
     }
 }
