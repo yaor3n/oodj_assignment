@@ -1,0 +1,4 @@
+M-01,JAVA,Diploma,sky ong,This is the module
+M-02,Testing,Diploma,Test,Test
+E3,sky,Bachelor's Degree,ali,popo
+333,oop,Master's Degree,er,er
