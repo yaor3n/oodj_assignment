@@ -7,4 +7,9 @@ admin,123,Admin
 student,123,Student
 raul,321,Student
 yaoren,123,Lecturer
+<<<<<<< HEAD
 sky,sky,Lecturer
+=======
+szikai,123,AcademicStaff
+
+>>>>>>> 0c2c86e0420e57c911e1c42f63c4a99e797558a5
