@@ -1,8 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class accountCreation extends JFrame implements ActionListener {
     public static void main(String[] args) {
@@ -91,6 +90,31 @@ public class accountCreation extends JFrame implements ActionListener {
         }
     }
 
+    private boolean usernameExists(String username) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("accounts.txt"))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+
+                if (parts.length >= 1 && parts[0].equals(username)) {
+                    return true; // true if username already exists
+                }
+            }
+        } catch (FileNotFoundException e) {
+            return false;
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error reading account file!",
+                    "File Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
+        return false;
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -109,6 +133,14 @@ public class accountCreation extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this,
                         "Please fill all fields!",
                         "Input Error",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (usernameExists(username)) {
+                JOptionPane.showMessageDialog(this,
+                        "Username already exists!\nPlease choose another.",
+                        "Duplicate Username",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
