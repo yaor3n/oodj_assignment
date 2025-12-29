@@ -2,101 +2,110 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class academicLeaderDashboard extends JFrame{
+public class academicLeaderDashboard extends JFrame {
     private JPanel centerPanel;
     private JPanel sidebar;
     private JPanel glassPane;
-    private JLayeredPane layeredPane; //for sidebar
+    private JLayeredPane layeredPane;
     private boolean sidebarVisible = false;
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private academicLeaderDashboardSidebar sidebarPanel;
-    
-    private final Color activeColor = new Color(30,30,30);
-    private final Color defaultColor = new Color(70,70,70);
-    private final Color BACKGROUND_COLOR = new Color(240, 244, 248); // Ghost White
-    private final Color CARD_HOVER_COLOR = new Color(252, 252, 252);
-    
-    
+
+    private final Color activeColor = new Color(30, 30, 30);
+    private final Color defaultColor = new Color(70, 70, 70);
+    private final Color BACKGROUND_COLOR = new Color(240, 244, 248);
+    //private final Color SUCCESS_GREEN = new Color(40, 167, 69);
 
     public academicLeaderDashboard() {
-        reusable.windowSetup(this); 
+        reusable.windowSetup(this);
         layeredPane = new JLayeredPane();
         this.setContentPane(layeredPane);
-        
-        //header for every page to use
+
+        // --- MAIN UI STRUCTURE ---
         JPanel mainHeader = new JPanel(new BorderLayout());
-        
+
+        // Header Bar
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(Color.WHITE);
         header.setPreferredSize(new Dimension(0, 50));
         header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 230, 230)));
 
         JButton hamburgerButton = new JButton("☰");
-        hamburgerButton.setForeground(new Color(50,50,50));
+        hamburgerButton.setForeground(new Color(50, 50, 50));
         hamburgerButton.setBorderPainted(false);
         hamburgerButton.setContentAreaFilled(false);
         hamburgerButton.setFocusPainted(false);
         hamburgerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        hamburgerButton.addActionListener(e -> toggleSidebar()); 
+        hamburgerButton.addActionListener(e -> toggleSidebar());
         header.add(hamburgerButton, BorderLayout.WEST);
 
         JLabel headerTitle = new JLabel("Academic Leader Dashboard", SwingConstants.CENTER);
-        headerTitle.setForeground(new Color(33,37,41));
+        headerTitle.setForeground(new Color(33, 37, 41));
         header.add(headerTitle, BorderLayout.CENTER);
-        
+
         mainHeader.add(header, BorderLayout.NORTH);
-        
-        //card panel
+
+        // Navigation Card Panel
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // --- DASHBOARD ---
+        // --- DASHBOARD PAGE ---
         JPanel dashboardPage = new JPanel(new BorderLayout());
+        dashboardPage.setBackground(BACKGROUND_COLOR);
 
-        // Create module button
+        // Top Action Row
         JPanel actionRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
-        JButton createButton = new JButton("Create Modules");
-        createButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        createButton.setBackground(Color.white);
-        createButton.setForeground(Color.BLACK);
+        actionRow.setOpaque(false);
+        JButton createButton = new JButton("Create New Module");
+        createButton.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 14));
+        createButton.setBackground(new Color(40, 167, 69));
+        createButton.setForeground(Color.WHITE);
+        createButton.setOpaque(true);
+        createButton.setBorderPainted(false);
         createButton.setFocusPainted(false);
-        createButton.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15)); // Padding
         createButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        createButton.setPreferredSize(new Dimension(150, 40));
+        createButton.setPreferredSize(new Dimension(180, 35));
         createButton.addActionListener(e -> showModuleDialog(null));
         actionRow.add(createButton);
         dashboardPage.add(actionRow, BorderLayout.NORTH);
 
-        // Module Grid
+        // Module Grid Assembly
         centerPanel = new JPanel(new GridLayout(0, 3, 20, 20));
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        centerPanel.setOpaque(false);
+        centerPanel.setBackground(BACKGROUND_COLOR);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
+        
         JPanel gridWrapper = new JPanel(new BorderLayout());
+        gridWrapper.setOpaque(false);
+        gridWrapper.setBackground(BACKGROUND_COLOR);
         gridWrapper.add(centerPanel, BorderLayout.NORTH);
+        
         JScrollPane scrollPane = new JScrollPane(gridWrapper);
         scrollPane.setBorder(null);
+        scrollPane.getViewport().setBackground(BACKGROUND_COLOR);
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);
         dashboardPage.add(scrollPane, BorderLayout.CENTER);
 
-        // --- REPORT ---
+        // --- REPORT PAGE ---
         academicLeaderReport reportPageObject = new academicLeaderReport();
 
-        // --- 3. CONFIGURE CARDPANEL ---
         cardPanel.add(dashboardPage, "DASHBOARD");
         cardPanel.add(reportPageObject, "REPORT");
         mainHeader.add(cardPanel, BorderLayout.CENTER);
+
         layeredPane.add(mainHeader, JLayeredPane.DEFAULT_LAYER);
-      
-        // sidebar
+
+        // --- SIDEBAR SETUP ---
         sidebarPanel = new academicLeaderDashboardSidebar(() -> toggleSidebar());
-        sidebar = sidebarPanel; 
+        sidebar = sidebarPanel;
         sidebar.setVisible(false);
         layeredPane.add(sidebar, JLayeredPane.MODAL_LAYER);
-        
+
         sidebarPanel.getDashboardBtn().addActionListener(e -> showPage("DASHBOARD"));
         sidebarPanel.getReportBtn().addActionListener(e -> showPage("REPORT"));
 
-        // --- 5. SETUP DIMMER & RESIZE ---
+        // Glass Pane for Dimming
         glassPane = new JPanel();
         glassPane.setBackground(new Color(0, 0, 0, 50));
         glassPane.setOpaque(false);
@@ -104,19 +113,20 @@ public class academicLeaderDashboard extends JFrame{
         glassPane.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (sidebarVisible) toggleSidebar(); 
+                if (sidebarVisible) toggleSidebar();
             }
         });
         layeredPane.add(glassPane, JLayeredPane.PALETTE_LAYER);
 
+        // Responsive Resize Logic
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentResized(java.awt.event.ComponentEvent e) {
                 int w = layeredPane.getWidth();
                 int h = layeredPane.getHeight();
                 mainHeader.setBounds(0, 0, w, h);
-                glassPane.setBounds(0, 0, w, h); 
-                sidebar.setBounds(0, 0, 240, h); 
+                glassPane.setBounds(0, 0, w, h);
+                sidebar.setBounds(0, 0, 240, h);
             }
         });
 
@@ -131,86 +141,79 @@ public class academicLeaderDashboard extends JFrame{
 
     private void refreshDashboard() {
         centerPanel.removeAll();
-        centerPanel.setBackground(BACKGROUND_COLOR);
+        centerPanel.setBackground(BACKGROUND_COLOR);  
         
         List<academicLeaderModule> modules = academicLeaderModuleFileManager.loadModules();
+
         for (academicLeaderModule m : modules) {
-            JPanel moduleCard = new JPanel(new BorderLayout(0,15));
-            moduleCard.setPreferredSize(new Dimension(250, 320)); // Keep this fixed
+            // Card Border Layout (NORTH: Image, CENTER: Text Info)
+            JPanel moduleCard = new JPanel(new BorderLayout());
+            moduleCard.setPreferredSize(new Dimension(280, 340));
             moduleCard.setBackground(Color.WHITE);
             moduleCard.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(240, 240, 240), 1,true), // Very light border
-                BorderFactory.createEmptyBorder(12, 12, 12, 12) // Internal padding
+                BorderFactory.createLineBorder(new Color(230, 230, 230), 1, true),
+                BorderFactory.createEmptyBorder(0, 0, 10, 0)
             ));
 
-            // Card Top: The 3-dot button
-            JPanel cardHeader = new JPanel(new FlowLayout(FlowLayout.RIGHT,5,2));
-            cardHeader.setOpaque(false);
-            JButton dotBtn = new JButton("...");
-            dotBtn.setBorderPainted(false);
-            dotBtn.setContentAreaFilled(false);
-            dotBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            cardHeader.add(dotBtn);
-
-            JPopupMenu popupMenu = new JPopupMenu();
-            JMenuItem editButton = new JMenuItem("EDIT");
-            JMenuItem deleteButton = new JMenuItem("DELETE");
-            deleteButton.setBackground(Color.RED);
-
-            //edit function
-            editButton.addActionListener(e -> showModuleDialog(m));
-
-            //delete function
-            deleteButton.addActionListener(e -> {
-                int deleteConfirmation = JOptionPane.showConfirmDialog(this,"Are you sure you want to delete " + m.getName() + "module ?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-                if (deleteConfirmation==JOptionPane.YES_OPTION){
-                    academicLeaderModuleFileManager.deleteModule(m.getCode());
-                    refreshDashboard();
-                }
-            });
-
-            popupMenu.add(editButton);
-            popupMenu.add(deleteButton);
-
-            dotBtn.addActionListener(e -> {
-                popupMenu.show(dotBtn, 0, dotBtn.getHeight());
-            });
-
-            // Card Middle: Image
+            // Card Image (NORTH)
             JLabel cardImg = new JLabel("", SwingConstants.CENTER);
             String path = m.getImageFilePath();
-            ImageIcon icon = (path == null || path.equals("default") || path.equals("ModuleDefaultPic.png")) ? new ImageIcon("ModuleDefaultPic.png") : new ImageIcon(path);
+            ImageIcon icon = (path == null || path.equals("default") || path.equals("ModuleDefaultPic.png")) 
+                             ? new ImageIcon("ModuleDefaultPic.png") : new ImageIcon(path);
 
             if (icon.getImage() != null) {
-                Image scaled = icon.getImage().getScaledInstance(250, 190, Image.SCALE_SMOOTH);
+                Image scaled = icon.getImage().getScaledInstance(280, 180, Image.SCALE_SMOOTH);
                 cardImg.setIcon(new ImageIcon(scaled));
-                cardImg.setBorder(BorderFactory.createEmptyBorder(-10, 0, 5, 0));
             }
 
-            // Card Bottom: Info Section
-            JPanel infoPanel = new JPanel(new GridLayout(3, 1, 0, 2));
-            infoPanel.setBackground(Color.WHITE);
+            // Info Section (CENTER)
+            JPanel contentPanel = new JPanel(new BorderLayout());
+            contentPanel.setBackground(Color.WHITE);
+            contentPanel.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 15));
 
-            JLabel nameLabel = new JLabel(m.getName(), SwingConstants.LEFT);
-            nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
-            nameLabel.setForeground(new Color(33,37,41));
+            // Title Row: Contains Name (Left) and 3-Dot Button (Right)
+            JPanel titleRow = new JPanel(new BorderLayout());
+            titleRow.setOpaque(false);
 
-            JLabel qualLabel = new JLabel(m.getQualification(), SwingConstants.LEFT);
+            JLabel nameLabel = new JLabel(m.getName());
+            nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 17));
+            nameLabel.setForeground(new Color(33, 37, 41));
+
+            JButton dotBtn = new JButton("...");
+            dotBtn.setFont(new Font("Segoe UI", Font.BOLD, 20));
+            dotBtn.setForeground(new Color(180, 180, 180));
+            dotBtn.setBorderPainted(false);
+            dotBtn.setContentAreaFilled(false);
+            dotBtn.setFocusPainted(false);
+            dotBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            dotBtn.addActionListener(e -> {
+                JPopupMenu popupMenu = createCardPopup(m);
+                popupMenu.show(dotBtn, -50, dotBtn.getHeight());
+            });
+
+            titleRow.add(nameLabel, BorderLayout.CENTER);
+            titleRow.add(dotBtn, BorderLayout.EAST);
+
+            // Sub-info: Qualification and Date
+            JPanel subInfo = new JPanel(new GridLayout(2, 1, 0, 0));
+            subInfo.setOpaque(false);
+
+            JLabel qualLabel = new JLabel(m.getQualification());
             qualLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-            qualLabel.setForeground(new Color(108,117,125));
-            
-            JLabel timeLabel = new JLabel(m.getIntakeMonth() + " " + m.getYear(), SwingConstants.LEFT);
-            timeLabel.setFont(new Font("Segoe UI", Font.ITALIC, 12));
-            timeLabel.setForeground(new Color(0, 123, 255));
+            qualLabel.setForeground(new Color(108, 117, 125));
 
-            infoPanel.add(nameLabel);
-            infoPanel.add(qualLabel);
-            infoPanel.add(timeLabel);
+            JLabel timeLabel = new JLabel(m.getIntakeMonth() + " " + m.getYear());
+            timeLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
+            timeLabel.setForeground(new Color(40, 167, 69)); // Matches report design
 
-            // Final Assembly
-            moduleCard.add(cardHeader, BorderLayout.NORTH);
-            moduleCard.add(cardImg, BorderLayout.CENTER);
-            moduleCard.add(infoPanel, BorderLayout.SOUTH);
+            subInfo.add(qualLabel);
+            subInfo.add(timeLabel);
+
+            contentPanel.add(titleRow, BorderLayout.NORTH);
+            contentPanel.add(subInfo, BorderLayout.CENTER);
+
+            moduleCard.add(cardImg, BorderLayout.NORTH);
+            moduleCard.add(contentPanel, BorderLayout.CENTER);
 
             centerPanel.add(moduleCard);
         }
@@ -218,288 +221,226 @@ public class academicLeaderDashboard extends JFrame{
         centerPanel.repaint();
     }
 
+    private JPopupMenu createCardPopup(academicLeaderModule m) {
+        JPopupMenu popupMenu = new JPopupMenu();
+        popupMenu.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+
+        JMenuItem editItem = new JMenuItem("Edit Module");
+        JMenuItem deleteItem = new JMenuItem("Delete Module");
+
+        editItem.addActionListener(e -> showModuleDialog(m));
+        deleteItem.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                "Are you sure you want to delete " + m.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                academicLeaderModuleFileManager.deleteModule(m.getCode());
+                refreshDashboard();
+            }
+        });
+
+        popupMenu.add(editItem);
+        popupMenu.add(deleteItem);
+        return popupMenu;
+    }
+
     public void showModuleDialog(academicLeaderModule editModule) {
-       boolean isEdit=(editModule !=null);
-       JDialog dialog = new JDialog(this, isEdit? "Edit Module":"Create New Module", true);
-       dialog.setSize(800, 550);
-       dialog.setLayout(new GridBagLayout());
-       GridBagConstraints Gbc=new GridBagConstraints();
-       dialog.setBackground(new Color(240,240,240));
-       
-       //default picture
-       final String[] defaultPics = {"ModuleDefaultPic.png", "ModuleDefaultPic2.png", "ModuleDefaultPic3.png"};
-       final int[] currentIndex = {0};
-       final String[] selectedPath = {defaultPics[0]};
+        boolean isEdit = (editModule != null);
+        JDialog dialog = new JDialog(this, isEdit ? "Edit Module" : "Create New Module", true);
+        dialog.setSize(800, 550);
+        dialog.setLayout(new GridBagLayout());
+        GridBagConstraints Gbc = new GridBagConstraints();
+        dialog.getContentPane().setBackground(new Color(248, 249, 250));
 
-       // --- LEFT PANEL ---
-       JPanel leftPanel = new JPanel(new GridBagLayout());
-       leftPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-       GridBagConstraints leftGbc = new GridBagConstraints();
+        final String[] defaultPics = {"ModuleDefaultPic.png", "ModuleDefaultPic2.png", "ModuleDefaultPic3.png"};
+        final int[] currentIndex = {0};
+        final String[] selectedPath = {isEdit ? editModule.getImageFilePath() : defaultPics[0]};
 
-       leftGbc.gridx = 0; leftGbc.gridy = 0; leftGbc.gridwidth = 3;
-       leftGbc.insets = new Insets(0, 0, 20, 0);
-       leftPanel.add(new JLabel("Module Cover Image", SwingConstants.CENTER), leftGbc);
+        // --- LEFT PANEL (IMAGE SELECTION) ---
+        JPanel leftPanel = new JPanel(new GridBagLayout());
+        leftPanel.setOpaque(false);
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        GridBagConstraints leftGbc = new GridBagConstraints();
 
-       JButton leftArrow = new JButton("<");
-       JButton rightArrow = new JButton(">");
-       JLabel imagePlaceholder = new JLabel("No Image", SwingConstants.CENTER);
+        leftGbc.gridx = 0; leftGbc.gridy = 0; leftGbc.gridwidth = 3;
+        leftGbc.insets = new Insets(0, 0, 20, 0);
+        leftPanel.add(new JLabel("Module Cover Image", SwingConstants.CENTER), leftGbc);
 
-       leftArrow.addActionListener(e -> {
-            currentIndex[0] = (currentIndex[0] - 1 + defaultPics.length) % defaultPics.length; // Loops back to 2 after index 0
+        JLabel imagePlaceholder = new JLabel("", SwingConstants.CENTER);
+        imagePlaceholder.setPreferredSize(new Dimension(240, 190));
+        imagePlaceholder.setOpaque(true);
+        imagePlaceholder.setBackground(new Color(230, 230, 230));
+
+        updateImagePreview(imagePlaceholder, selectedPath[0]);
+
+        JButton leftArrow = new JButton("<");
+        JButton rightArrow = new JButton(">");
+        for (JButton btn : new JButton[]{leftArrow, rightArrow}) {
+            btn.setContentAreaFilled(false);
+            btn.setFocusPainted(false);
+            btn.setPreferredSize(new Dimension(30, 120));
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        }
+
+        leftArrow.addActionListener(e -> {
+            currentIndex[0] = (currentIndex[0] - 1 + defaultPics.length) % defaultPics.length;
             selectedPath[0] = defaultPics[currentIndex[0]];
             updateImagePreview(imagePlaceholder, selectedPath[0]);
         });
 
         rightArrow.addActionListener(e -> {
-            currentIndex[0] = (currentIndex[0] + 1) % defaultPics.length; // Loops back to 0 after index 2
+            currentIndex[0] = (currentIndex[0] + 1) % defaultPics.length;
             selectedPath[0] = defaultPics[currentIndex[0]];
             updateImagePreview(imagePlaceholder, selectedPath[0]);
         });
+
+        leftGbc.gridwidth = 1; leftGbc.gridy = 1;
+        leftGbc.gridx = 0; leftPanel.add(leftArrow, leftGbc);
+        leftGbc.gridx = 1; leftPanel.add(imagePlaceholder, leftGbc);
+        leftGbc.gridx = 2; leftPanel.add(rightArrow, leftGbc);
+
+        JButton uploadBtn = new JButton("Upload Custom Image");
+        leftGbc.gridx = 0; leftGbc.gridy = 2; leftGbc.gridwidth = 3;
+        leftGbc.insets = new Insets(15, 0, 0, 0);
+        leftPanel.add(uploadBtn, leftGbc);
+
+        uploadBtn.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(dialog);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                selectedPath[0] = fileChooser.getSelectedFile().getAbsolutePath();
+                updateImagePreview(imagePlaceholder, selectedPath[0]);
+            }
+        });
+
+        // --- RIGHT PANEL (FORM) ---
+        JPanel rightPanel = new JPanel(new GridBagLayout());
+        rightPanel.setOpaque(false);
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
+        GridBagConstraints rgbc = new GridBagConstraints();
+        rgbc.insets = new Insets(5, 5, 5, 5);
+        rgbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JTextField codeField = new JTextField(20);
+        JTextField nameField = new JTextField(20);
+        JComboBox<String> qualificationBox = new JComboBox<>(new String[]{"-Select-", "Foundation", "Certificate", "Diploma", "Bachelor's Degree", "Master's Degree", "PhD"});
         
-        // Styling the arrows (Only need one loop)
-       for (JButton btn : new JButton[]{leftArrow, rightArrow}) {
-           btn.setContentAreaFilled(false);
-           btn.setBorder(BorderFactory.createLineBorder(new Color(240,240,240)));
-           btn.setPreferredSize(new Dimension(30, 120));
-        }
+        List<String> lecturerList = academicLeaderModuleFileManager.checkLecturerNames();
+        JComboBox<String> lecturerBox = new JComboBox<>();
+        lecturerBox.addItem("-Select-");
+        for (String name : lecturerList) lecturerBox.addItem(name);
 
-       imagePlaceholder.setPreferredSize(new Dimension(240, 190)); 
-       imagePlaceholder.setOpaque(true);
-       imagePlaceholder.setBackground(new Color(230, 230, 230));
-       
-       // update image preview
-       Runnable updateImagePreview=()->{
-          ImageIcon defaultIcon = new ImageIcon(selectedPath[0]);
-          if (defaultIcon.getImage()!=null){
-              Image img = defaultIcon.getImage().getScaledInstance(250, 190, Image.SCALE_SMOOTH);
-              imagePlaceholder.setIcon(new ImageIcon(img));
-          }
-       };
+        String[] months = {"-Select-", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        JComboBox<String> intakeMonthBox = new JComboBox<>(months);
 
-       updateImagePreview.run();
+        int currentYear = java.time.LocalDate.now().getYear();
+        JComboBox<String> yearBox = new JComboBox<>();
+        for (int i = 0; i < 5; i++) yearBox.addItem(String.valueOf(currentYear + i));
 
-       leftGbc.gridwidth = 1; leftGbc.gridy = 1;
-       leftGbc.gridx = 0; leftPanel.add(leftArrow, leftGbc);
-       leftGbc.gridx = 1; leftPanel.add(imagePlaceholder, leftGbc);
-       leftGbc.gridx = 2; leftPanel.add(rightArrow, leftGbc);
+        JTextArea descriptionArea = new JTextArea(4, 20);
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        JScrollPane descScroll = new JScrollPane(descriptionArea);
 
-       //Upload profile pic button
-       JButton uploadBtn = new JButton("Upload profile picture");
-       leftGbc.gridx = 0; leftGbc.gridy = 2; leftGbc.gridwidth = 3;
-       leftPanel.add(uploadBtn, leftGbc);
-
-       uploadBtn.addActionListener(e -> {
-           JFileChooser fileChooser = new JFileChooser();
-           fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
-           int result = fileChooser.showOpenDialog(dialog);
-           if (result == JFileChooser.APPROVE_OPTION) {
-               selectedPath[0] = fileChooser.getSelectedFile().getAbsolutePath();
-               ImageIcon icon = new ImageIcon(selectedPath[0]);
-               Image scaled = icon.getImage().getScaledInstance(250, 200, Image.SCALE_SMOOTH);
-               imagePlaceholder.setIcon(new ImageIcon(scaled));
-               updateImagePreview(imagePlaceholder, selectedPath[0]);//use to overtake the default pic
-               imagePlaceholder.setText("");
-           }
-       });
-
-       // --- RIGHT PANEL ---
-       JPanel rightPanel = new JPanel(new GridBagLayout());
-       rightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
-       GridBagConstraints rightgbc = new GridBagConstraints();
-       rightgbc.insets = new Insets(5, 5, 5, 5);
-       rightgbc.fill = GridBagConstraints.HORIZONTAL;
-
-       JTextField codeField = new JTextField(20);
-       JTextField nameField = new JTextField(20);
-       JComboBox<String> qualificationBox = new JComboBox<>(new String[]{"-Select-", "Foundation", "Certificate", "Diploma", "Bachelor's Degree", "Master's Degree", "PhD"});
-
-       List<String> lecturerList = academicLeaderModuleFileManager.checkLecturerNames();
-       JComboBox<String> lecturerBox = new JComboBox<>();
-       lecturerBox.addItem("-Select-"); // Add default first
-        if (lecturerList.isEmpty()) {
-            lecturerBox.addItem("No Lecturers Found");
-        } else {
-            for (String name : lecturerList) {lecturerBox.addItem(name);}
-        }
-        
-       String[] months = {"-Select-", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-       JComboBox<String> intakeMonthBox = new JComboBox<>(months);
-       
-       int currentYear = java.time.LocalDate.now().getYear();
-        DefaultComboBoxModel<String> yearModel = new DefaultComboBoxModel<>();
-        for (int i = 0; i < 5; i++) {
-            yearModel.addElement(String.valueOf(currentYear + i));
-        }
-        JComboBox<String> yearBox = new JComboBox<>(yearModel);
-
-        if (editModule != null) {
+        if (isEdit) {
+            codeField.setText(editModule.getCode());
+            codeField.setEditable(false);
+            nameField.setText(editModule.getName());
+            qualificationBox.setSelectedItem(editModule.getQualification());
+            lecturerBox.setSelectedItem(editModule.getLecturerName());
+            intakeMonthBox.setSelectedItem(editModule.getIntakeMonth());
             yearBox.setSelectedItem(String.valueOf(editModule.getYear()));
-        } else {
-            yearBox.setSelectedItem(String.valueOf(currentYear));
+            descriptionArea.setText(editModule.getDescription());
         }
 
-       JTextArea descriptionArea = new JTextArea("", 5, 20);
-       descriptionArea.setLineWrap(true);
-       descriptionArea.setWrapStyleWord(true);
-       JScrollPane descriptionScroll = new JScrollPane(descriptionArea);
+        rgbc.gridx = 0; rgbc.gridy = 0; rightPanel.add(new JLabel("Code:"), rgbc);
+        rgbc.gridx = 1; rightPanel.add(codeField, rgbc);
+        rgbc.gridx = 0; rgbc.gridy = 1; rightPanel.add(new JLabel("Name:"), rgbc);
+        rgbc.gridx = 1; rightPanel.add(nameField, rgbc);
+        rgbc.gridx = 0; rgbc.gridy = 2; rightPanel.add(new JLabel("Level:"), rgbc);
+        rgbc.gridx = 1; rightPanel.add(qualificationBox, rgbc);
+        rgbc.gridx = 0; rgbc.gridy = 3; rightPanel.add(new JLabel("Lecturer:"), rgbc);
+        rgbc.gridx = 1; rightPanel.add(lecturerBox, rgbc);
+        rgbc.gridx = 0; rgbc.gridy = 4; rightPanel.add(new JLabel("Month:"), rgbc);
+        rgbc.gridx = 1; rightPanel.add(intakeMonthBox, rgbc);
+        rgbc.gridx = 0; rgbc.gridy = 5; rightPanel.add(new JLabel("Year:"), rgbc);
+        rgbc.gridx = 1; rightPanel.add(yearBox, rgbc);
+        rgbc.gridx = 0; rgbc.gridy = 6; rgbc.anchor = GridBagConstraints.NORTH; rightPanel.add(new JLabel("Desc:"), rgbc);
+        rgbc.gridx = 1; rightPanel.add(descScroll, rgbc);
 
-       rightgbc.gridx = 0; rightgbc.gridy = 0; rightPanel.add(new JLabel("Module Code:"), rightgbc);
-       rightgbc.gridx = 1; rightPanel.add(codeField, rightgbc);
-       rightgbc.gridx = 0; rightgbc.gridy = 1; rightPanel.add(new JLabel("Module Name:"), rightgbc);
-       rightgbc.gridx = 1; rightPanel.add(nameField, rightgbc);
-       rightgbc.gridx = 0; rightgbc.gridy = 2; rightPanel.add(new JLabel("Qualification:"), rightgbc);
-       rightgbc.gridx = 1; rightPanel.add(qualificationBox, rightgbc);
-       rightgbc.gridx = 0; rightgbc.gridy = 3; rightPanel.add(new JLabel("Lecturer:"), rightgbc);
-       rightgbc.gridx = 1; rightPanel.add(lecturerBox, rightgbc);
-       rightgbc.gridx = 0; rightgbc.gridy = 4; rightPanel.add(new JLabel("Intake Months:"), rightgbc);
-       rightgbc.gridx = 1; rightPanel.add(intakeMonthBox, rightgbc);
-       rightgbc.gridx = 0; rightgbc.gridy = 5; rightPanel.add(new JLabel("Intake Year:"), rightgbc);
-       rightgbc.gridx = 1; rightPanel.add(yearBox, rightgbc);
-       rightgbc.gridx = 0; rightgbc.gridy = 6; rightgbc.anchor = GridBagConstraints.NORTHWEST; rightPanel.add(new JLabel("Description:"), rightgbc);
-       rightgbc.gridx = 1; rightgbc.weighty = 1.0; rightPanel.add(descriptionScroll, rightgbc);
+        Gbc.gridx = 0; Gbc.gridy = 0; dialog.add(leftPanel, Gbc);
+        Gbc.gridx = 1; dialog.add(rightPanel, Gbc);
 
-       Gbc.gridx=0; Gbc.gridy=0; Gbc.anchor=GridBagConstraints.CENTER;
+        // Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setOpaque(false);
+        JButton saveButton = new JButton(isEdit ? "Update" : "Create");
+        JButton cancelButton = new JButton("Cancel");
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(saveButton);
 
-       dialog.add(leftPanel,Gbc);
-       Gbc.gridx=1;
-       dialog.add(rightPanel,Gbc);
-       
-       if(isEdit){
-           codeField.setText(editModule.getCode());
-           codeField.setEditable(false);
-           codeField.setBackground(new Color(230,230,230));
-           
-           nameField.setText(editModule.getName());
-           qualificationBox.setSelectedItem(editModule.getQualification());
-           lecturerBox.setSelectedItem(editModule.getLecturerName());
-           descriptionArea.setText(editModule.getDescription());
-       }
-       // --- BUTTON PANEL ---
+        Gbc.gridx = 0; Gbc.gridy = 1; Gbc.gridwidth = 2; Gbc.insets = new Insets(20, 0, 0, 20);
+        dialog.add(buttonPanel, Gbc);
 
-       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-       JButton saveButton = new JButton(isEdit?"Update":"Create");
-       JButton cancelButton = new JButton("Cancel");
-
-       Gbc.gridx = 0; Gbc.gridy = 1; Gbc.gridwidth = 2;
-       Gbc.fill = GridBagConstraints.HORIZONTAL;
-       Gbc.insets = new Insets(20, 0, 0, 20); // Adds spacing above buttons
-       dialog.add(buttonPanel, Gbc);
-
-       saveButton.addActionListener(e -> {
-           String code = codeField.getText().trim();
-           String name = nameField.getText().trim();
-           String description = descriptionArea.getText().trim();
-
-           if (code.isEmpty() || name.isEmpty() || description.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, "All fields are required !", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return;
-           }
-           if (qualificationBox.getSelectedIndex()<=0){
-               JOptionPane.showMessageDialog(dialog, "Please select a Qualification.", "Selection Error", JOptionPane.ERROR_MESSAGE);
-               return;
-           }
-           if (lecturerBox.getSelectedIndex()<=0){
-               JOptionPane.showMessageDialog(dialog, "Please select a Lecturer.", "Selection Error", JOptionPane.ERROR_MESSAGE);
-               return;
-           }
-           if (intakeMonthBox.getSelectedIndex()<=0){
-               JOptionPane.showMessageDialog(dialog, "Please select a Module Intake Month.", "Selection Error", JOptionPane.ERROR_MESSAGE);
-               return;
-           }
-//           if (yearBox.getSelectedIndex()<=0){
-//               JOptionPane.showMessageDialog(dialog, "Please select a year for this module.", "Selection Error", JOptionPane.ERROR_MESSAGE);
-//               return;
-//           }
-           
-           String selectedMonth = (String) intakeMonthBox.getSelectedItem();
-            int selectedYear = Integer.parseInt((String) yearBox.getSelectedItem());
-
-            // date validation
-            if (isDateInPast(selectedMonth, selectedYear)) {
-                JOptionPane.showMessageDialog(dialog, 
-                    "Error: You cannot create a module for a date that has already passed (" + selectedMonth + " " + selectedYear + ").", 
-                    "Invalid Date", 
-                    JOptionPane.ERROR_MESSAGE);
+        saveButton.addActionListener(e -> {
+            if (codeField.getText().trim().isEmpty() || nameField.getText().trim().isEmpty() || intakeMonthBox.getSelectedIndex() <= 0) {
+                JOptionPane.showMessageDialog(dialog, "Please fill all required fields.");
                 return;
             }
-           academicLeaderModule newModule = new academicLeaderModule(code, name, (String)qualificationBox.getSelectedItem(), (String)lecturerBox.getSelectedItem(), (String)intakeMonthBox.getSelectedItem(), selectedYear , description, selectedPath[0]);
-           
-           if(isEdit){
-               academicLeaderModuleFileManager.updateModule(newModule);
-               JOptionPane.showMessageDialog(dialog, "Module Updated!");
-           }else{
-               academicLeaderModuleFileManager.saveModule(newModule);
-               JOptionPane.showMessageDialog(dialog, "Module Created!");
-           }
-           //JOptionPane.showMessageDialog(dialog, "Module Created Successfully!");
-           refreshDashboard();
-           dialog.dispose();
-       });
+            
+            String selectedMonth = (String) intakeMonthBox.getSelectedItem();
+            int selectedYear = Integer.parseInt((String) yearBox.getSelectedItem());
+            if (isDateInPast(selectedMonth, selectedYear)) {
+                JOptionPane.showMessageDialog(dialog, "Cannot create module for a past date.");
+                return;
+            }
 
-       cancelButton.addActionListener(e -> dialog.dispose());
-       buttonPanel.add(cancelButton);
-       buttonPanel.add(saveButton);
+            academicLeaderModule newM = new academicLeaderModule(
+                codeField.getText().trim(), nameField.getText().trim(), 
+                (String)qualificationBox.getSelectedItem(), (String)lecturerBox.getSelectedItem(), 
+                selectedMonth, selectedYear, descriptionArea.getText().trim(), selectedPath[0]
+            );
 
-       dialog.setLocationRelativeTo(this);
-       dialog.setVisible(true);
-   }
+            if (isEdit) academicLeaderModuleFileManager.updateModule(newM);
+            else academicLeaderModuleFileManager.saveModule(newM);
+            
+            refreshDashboard();
+            dialog.dispose();
+        });
 
-    private void toggleSidebar() {
-        sidebarVisible = !sidebarVisible;
-        sidebar.setVisible(sidebarVisible); // Show menu
-        glassPane.setVisible(sidebarVisible); // Show dimmer/click-area
-        layeredPane.repaint();
+        cancelButton.addActionListener(e -> dialog.dispose());
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 
-    // Helper to handle scaling and updating the label icon
     private void updateImagePreview(JLabel placeholder, String path) {
         ImageIcon icon = new ImageIcon(path);
         if (icon.getImage() != null) {
-            // Ensure the scaling (250, 190) matches your imagePlaceholder.setPreferredSize exactly
-            Image scaled = icon.getImage().getScaledInstance(250, 190, Image.SCALE_SMOOTH);
+            Image scaled = icon.getImage().getScaledInstance(240, 190, Image.SCALE_SMOOTH);
             placeholder.setIcon(new ImageIcon(scaled));
         }
     }
-    
+
+    private void toggleSidebar() {
+        sidebarVisible = !sidebarVisible;
+        sidebar.setVisible(sidebarVisible);
+        glassPane.setVisible(sidebarVisible);
+        layeredPane.repaint();
+    }
+
     private void showPage(String pageName) {
         cardLayout.show(cardPanel, pageName);
-
-        // Safety check to prevent NullPointerException
         if (sidebarPanel != null) {
-            sidebarPanel.getDashboardBtn().setBackground(defaultColor);
-            sidebarPanel.getReportBtn().setBackground(defaultColor);
-
-            if (pageName.equals("DASHBOARD")) {
-                sidebarPanel.getDashboardBtn().setBackground(activeColor);
-            } else {
-                sidebarPanel.getReportBtn().setBackground(activeColor);
-            }
-            sidebarPanel.repaint();
+            sidebarPanel.getDashboardBtn().setBackground(pageName.equals("DASHBOARD") ? activeColor : defaultColor);
+            sidebarPanel.getReportBtn().setBackground(pageName.equals("REPORT") ? activeColor : defaultColor);
         }
-
-        if (sidebarVisible) toggleSidebar(); 
+        if (sidebarVisible) toggleSidebar();
     }
-    
+
     private boolean isDateInPast(String selectedMonth, int selectedYear) {
-        // 1. Get current month and year
         java.time.LocalDate now = java.time.LocalDate.now();
-        int currentMonth = now.getMonthValue(); // 1 - 12
-        int currentYear = now.getYear();
-
-        // 2. Convert month name to number
-        java.time.format.DateTimeFormatter parser = java.time.format.DateTimeFormatter.ofPattern("MMMM", java.util.Locale.ENGLISH);
         int selectedMonthInt = java.time.Month.valueOf(selectedMonth.toUpperCase()).getValue();
-
-        // 3. Compare
-        if (selectedYear < currentYear) {
-            return true; // Year is definitely in the past
-        } else if (selectedYear == currentYear) {
-            return selectedMonthInt < currentMonth; // Same year, check if month has passed
-        }
-
-        return false; // Future year
+        if (selectedYear < now.getYear()) return true;
+        if (selectedYear == now.getYear()) return selectedMonthInt < now.getMonthValue();
+        return false;
     }
-    
-
-    
- }
+}

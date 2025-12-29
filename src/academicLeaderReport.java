@@ -9,6 +9,9 @@ import javax.swing.table.TableRowSorter;
 public class academicLeaderReport extends JPanel {
     private JPanel cardPanel;
     private CardLayout cardLayout;
+    private int count;
+    private String topIntakeMonth;
+    private int maxCount;
     
     public academicLeaderReport() {
       this.setLayout(new BorderLayout());
@@ -130,47 +133,85 @@ public class academicLeaderReport extends JPanel {
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         totalModule.add(title, BorderLayout.NORTH);
 
-        // Placeholder for the JTable you will add later
-//        JPanel tablePlaceholder = new JPanel();
-//        tablePlaceholder.setBackground(new Color(250, 250, 250));
-//        tablePlaceholder.setBorder(BorderFactory.createDashedBorder(Color.LIGHT_GRAY, 2, 2));
-//        totalModule.add(tablePlaceholder, BorderLayout.CENTER);
-        
         List<academicLeaderModule> modules = academicLeaderModuleFileManager.loadModules();
-        int count = modules.size();
+        count = modules.size();
         
         JPanel totalModuleCount=new JPanel(new BorderLayout());
-        totalModuleCount.setPreferredSize(new Dimension(240,100));
+        totalModuleCount.setPreferredSize(new Dimension(200,80));
         totalModuleCount.setBackground(new Color(248,249,250));
         totalModuleCount.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(230,230,230),1,true),
+                BorderFactory.createMatteBorder(0,1,3,3, new Color(220,220,220)),
                 BorderFactory.createEmptyBorder(15,20,15,20)
         ));
         
-        //right side title
+        //total module count card
         JLabel totalModuleLabel=new JLabel("TOTAL MODULES CREATED");
         totalModuleLabel.setFont(new Font("Segoe UI", Font.BOLD,12));
         totalModuleLabel.setForeground(new Color(108,117,125));
         
         JLabel totalModuleValue=new JLabel(String.valueOf(count));
-        totalModuleValue.setFont(new Font("Segoe UI", Font.BOLD,30));
-        totalModuleLabel.setForeground(new Color(30,45,65));
+        totalModuleValue.setFont(new Font("Segoe UI", Font.BOLD,22));
+        totalModuleValue.setForeground(new Color(40,167,69));
         
         totalModuleCount.add(totalModuleLabel, BorderLayout.NORTH);
         totalModuleCount.add(totalModuleValue, BorderLayout.CENTER);
         
-        JPanel cardAligner = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        //top intake
+        java.util.Map<String, Integer> intakeCounts = new java.util.HashMap<>();
+        for (academicLeaderModule m : modules) {
+            String month = m.getIntakeMonth() + " " + m.getYear();
+            intakeCounts.put(month, intakeCounts.getOrDefault(month, 0) + 1);
+        }
+
+        topIntakeMonth = "N/A";
+        maxCount = 0;
+        for (java.util.Map.Entry<String, Integer> entry : intakeCounts.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                topIntakeMonth = entry.getKey();
+            }
+        }
+        
+        JPanel peakIntakeMonth = new JPanel(new BorderLayout());
+        peakIntakeMonth.setPreferredSize(new Dimension(200, 80));
+        peakIntakeMonth.setBackground(new Color(248, 249, 250));
+        peakIntakeMonth.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0,1,3,3, new Color(220, 220, 220)),
+                BorderFactory.createEmptyBorder(15, 20, 15, 20)
+        ));
+
+        JLabel intakeLabel = new JLabel("PEAK INTAKE MONTH");
+        intakeLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        intakeLabel.setForeground(new Color(108, 117, 125));
+
+        JLabel intakeValue = new JLabel(topIntakeMonth + " (" + maxCount + ")");
+        intakeValue.setFont(new Font("Segoe UI", Font.BOLD, 20)); // Fits better
+        intakeValue.setForeground(new Color(40, 167, 69)); // Success Green
+
+        peakIntakeMonth.add(intakeLabel, BorderLayout.NORTH);
+        peakIntakeMonth.add(intakeValue, BorderLayout.CENTER);
+        
+        
+        JPanel cardAligner = new JPanel(new FlowLayout(FlowLayout.LEFT));
         cardAligner.setOpaque(false);
         cardAligner.add(totalModuleCount);
+        cardAligner.add(Box.createHorizontalStrut(10));
+        cardAligner.add(peakIntakeMonth);
         
         topSection.add(cardAligner, BorderLayout.CENTER);
-        totalModule.add(topSection, BorderLayout.NORTH);
+        //totalModule.add(topSection, BorderLayout.NORTH);
         
         //filter
-        JPanel filter=new JPanel(new FlowLayout(FlowLayout.RIGHT,15,10));
+        JPanel filterContainer=new JPanel(new BorderLayout());
+        filterContainer.setOpaque(false);
+        filterContainer.setBorder(BorderFactory.createEmptyBorder(30,0,0,0));
+              
+        JPanel filter=new JPanel(new FlowLayout(FlowLayout.RIGHT,0,0));
         filter.setOpaque(false);
+        
         JLabel filterLabel=new JLabel("Filter by:");
         filterLabel.setFont(new Font("Segoe UI", Font.BOLD,12));
+        filterLabel.setForeground(new Color(100, 100, 100));
         
         //year filter
         int currentYear = java.time.LocalDate.now().getYear();
@@ -181,20 +222,48 @@ public class academicLeaderReport extends JPanel {
         String[] months = {"All Months", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         JComboBox<String> monthFilter = new JComboBox<>(months);
 
-        filter.add(filterLabel);
+        //filter.add(filterLabel);
         JLabel filterByIntake=new JLabel("Intake:");
         filterByIntake.setFont(new Font("Segoe UI", Font.BOLD,12));
         JLabel filterByYear=new JLabel("Year:");
         filterByYear.setFont(new Font("Segoe UI", Font.BOLD,12));
         
-        filter.add(filterByIntake); filter.add(monthFilter);
-        filter.add(filterByYear); filter.add(yearFilter);
+        //clear filter
+        JButton clearFilterButton=new JButton("Clear Filters");
+        clearFilterButton.setFont(new Font("Segoe UI",Font.BOLD,12));
+        clearFilterButton.setBackground(new Color(40,167,69));
+        clearFilterButton.setForeground(Color.WHITE);
+        clearFilterButton.setOpaque(true);
+        clearFilterButton.setContentAreaFilled(true);
+        clearFilterButton.setBorderPainted(false);
+        clearFilterButton.setFocusPainted(false);
+        clearFilterButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        clearFilterButton.setPreferredSize(new Dimension(110, 30));
         
-        topSection.add(filter, BorderLayout.SOUTH);
+        clearFilterButton.addActionListener(e->{
+            monthFilter.setSelectedIndex(0);
+            yearFilter.setSelectedIndex(0);
+        });
+        
+        
+        filter.add(filterLabel);
+        filter.add(Box.createHorizontalStrut(10));
+        filter.add(filterByIntake);
+        filter.add(Box.createHorizontalStrut(5));
+        filter.add(monthFilter);
+        filter.add(Box.createHorizontalStrut(15)); 
+        filter.add(filterByYear);
+        filter.add(Box.createHorizontalStrut(5));
+        filter.add(yearFilter);
+        filter.add(Box.createHorizontalStrut(15));      
+        
+        filter.add(clearFilterButton);
+        filterContainer.add(filter,BorderLayout.EAST);
+        topSection.add(filterContainer, BorderLayout.SOUTH);
         totalModule.add(topSection, BorderLayout.NORTH);
         
         // Inside totalModuleReport() (table)
-        String[] columns = {"Code", "Module Name", "Level", "Lecturer","Intake Month","Year"};
+        String[] columns = {"Module Code", "Module Name", "Level", "Lecturer","Intake Month","Year"};
         DefaultTableModel model = new DefaultTableModel(columns, 0){
             @Override
             public boolean isCellEditable(int r,int c){return false;}
@@ -205,13 +274,26 @@ public class academicLeaderReport extends JPanel {
             model.addRow(new Object[]{m.getCode(), m.getName(), m.getQualification(), m.getLecturerName(), m.getIntakeMonth(), m.getYear()});
         }
 
-        JTable moduleTable = new JTable(model);
+        JTable moduleTable = new JTable(model) {
+            @Override
+            public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
+                Component rowColor = super.prepareRenderer(renderer, row, column);
+                if (!isRowSelected(row)) {
+                    // Alternating colors: White and Very Light Grey
+                    rowColor.setBackground(row % 2 == 0 ? Color.WHITE : new Color(242, 242, 242));
+                }
+                return rowColor;
+            }
+        };
         moduleTable.setRowHeight(30); 
         moduleTable.setShowGrid(false);
         moduleTable.setIntercellSpacing(new Dimension(0, 0));
         moduleTable.getTableHeader().setBackground(new Color(245, 247, 250));
         moduleTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        moduleTable.getTableHeader().setPreferredSize(new Dimension(0, 40));
+        moduleTable.getTableHeader().setPreferredSize(new Dimension(0, 25));
+        
+        //make the table header move to left
+        ((JLabel)moduleTable.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.LEFT);
         
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         moduleTable.setRowSorter(sorter);
@@ -222,12 +304,8 @@ public class academicLeaderReport extends JPanel {
             
             List<RowFilter<Object, Object>> filters = new ArrayList<>();
             
-            if (!selectedYear.equals("All Years")) {
-                filters.add(RowFilter.regexFilter(selectedYear, 5)); // Column index 5 is Year
-            }
-            if (!selectedMonth.equals("All Months")) {
-                filters.add(RowFilter.regexFilter(selectedMonth, 4)); // Column index 4 is Intake
-            }
+            if (!selectedYear.equals("All Years")) {filters.add(RowFilter.regexFilter(selectedYear, 5));}
+            if (!selectedMonth.equals("All Months")) {filters.add(RowFilter.regexFilter(selectedMonth, 4));}
             
             sorter.setRowFilter(RowFilter.andFilter(filters));
         };
@@ -236,21 +314,78 @@ public class academicLeaderReport extends JPanel {
         monthFilter.addActionListener(filterAction);
         
         JScrollPane scrollPane = new JScrollPane(moduleTable);
-        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(230,230,230),1));
         scrollPane.getViewport().setBackground(Color.WHITE);
+        
+        String currentTime = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(java.time.LocalDateTime.now());
+        JLabel lastUpdatedLabel = new JLabel("Last synced: " + currentTime);
+        lastUpdatedLabel.setFont(new Font("Segoe UI", Font.ITALIC, 11));
+        lastUpdatedLabel.setForeground(Color.GRAY);
+        
+        //export csv
+        JButton exportButton = new JButton("\u2913 Export to CSV");
+        exportButton.setFont(new Font("Segoe UI Symbol", Font.BOLD, 12));
+        exportButton.setBackground(new Color(245, 245, 245));
+        exportButton.setForeground(new Color(70, 70, 70));
+        exportButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        exportButton.setPreferredSize(new Dimension(130, 25));
+        exportButton.setFocusPainted(false);
+
+        // 2. Set the Action
+        exportButton.addActionListener(e -> {
+            exportToCSV(moduleTable, String.valueOf(count), topIntakeMonth + " (" + maxCount + ")");
+        });
+        // 3. Create a Bottom Action Row
+        JPanel actionRow = new JPanel(new BorderLayout()); // Aligned with the table edge
+        actionRow.setOpaque(false);
+        actionRow.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
+        actionRow.add(lastUpdatedLabel, BorderLayout.WEST);
+        actionRow.add(exportButton,BorderLayout.EAST);
 
         JPanel registryPanel = new JPanel(new BorderLayout(0,10));
         registryPanel.setOpaque(false);
-        
-        JLabel registryTitle = new JLabel("Complete Module Registry");
-        registryTitle.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        //registryTitle.setBorder(BorderFactory.createEmptyBorder(2,5,30,0)); // Spacing between filter and table title
-
+        JLabel registryTitle = new JLabel("📊 Complete Module Registry");
+        registryTitle.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
         registryPanel.add(registryTitle, BorderLayout.NORTH);
-        registryPanel.add(scrollPane, BorderLayout.CENTER);       
+        registryPanel.add(scrollPane, BorderLayout.CENTER); 
+        registryPanel.add(actionRow, BorderLayout.SOUTH);
 
         totalModule.add(registryPanel, BorderLayout.CENTER);
-        
         return totalModule;
+    }
+    
+    private void exportToCSV(JTable table, String totalModules, String peakIntakeMonth) {
+        String home = System.getProperty("user.home");
+        String downloadsPath= home + java.io.File.separator + "Downloads";
+        String csvFileName = "Module Performance Summary.csv";
+        java.io.File fileToSave = new java.io.File(downloadsPath, csvFileName);
+        
+        try(java.io.FileWriter fw=new java.io.FileWriter(fileToSave)){
+            //top summary section
+            fw.write("ACADEMIC LEADER DASHBOARD SUMMARY\n");
+            fw.write("Total Modules Created," + totalModules + "\n");
+            fw.write("Peak Intake Month," + peakIntakeMonth.replace(","," ") + "\n");
+            fw.write("\n");
+            //write headers
+            for (int i=0; i<table.getColumnCount(); i++){
+                String header = table.getColumnName(i);
+                fw.write(header + (i == table.getColumnCount() - 1 ? "" : ","));
+            }
+            fw.write("\n");
+            //write table data
+            for (int row=0; row < table.getRowCount(); row++){
+                for(int col=0;col < table.getColumnCount(); col++){
+                    Object value = table.getValueAt(row, col);
+                    String data = (value !=null)?value.toString().replace(","," "):"";
+                    fw.write(data + (col == table.getColumnCount()-1 ? "" : ","));
+                }
+                fw.write("\n");
+            }
+            
+            JOptionPane.showMessageDialog(this,"Successful download!", "Download Complete", JOptionPane.INFORMATION_MESSAGE);
+            
+        }catch (java.io.IOException ex){
+            JOptionPane.showMessageDialog(this,"Error: Could not save the file.", "Download Failed", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
