@@ -8,8 +8,12 @@ student,123,Student
 raul,321,Student
 yaoren,123,Lecturer
 <<<<<<< HEAD
+<<<<<<< HEAD
 sky,sky,Lecturer
 =======
 szikai,123,AcademicStaff
 
 >>>>>>> 0c2c86e0420e57c911e1c42f63c4a99e797558a5
+=======
+lecturer,password,Lecturer
+>>>>>>> 1fedf8932ff7811d359dcd71e6027a0c2703abc2
