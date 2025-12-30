@@ -1,7 +1,8 @@
 M-01,JAVA,Diploma,sky ong,January,2025,This is the module,default
-M-02,Testing,Diploma,Test,February,2026,Test,default
 E3,sky,Bachelor's Degree,ali,May,2025,popo,default
 abu,ayam,PhD,lec1,October,2025,itik,ModuleDefaultPic.png
 aniya,aniya,Bachelor's Degree,sky,May,2025,tyt,C:\Users\User\OneDrive\Pictures\Screenshots\Screenshot 2025-12-22 142315.png
 B02,Python,Diploma,sky,April,2026,python first class,ModuleDefaultPic2.png
 B12,RWDD,Certificate,yaoren,December,2025,NEW MODULE,ModuleDefaultPic3.png
+CP001,Capstone Project,Diploma,Assigned Lecturer,August,2025,new project,ModuleDefaultPic3.png
+S01,Sejarahh,Master's Degree,sky,February,2026,new course,ModuleDefaultPic2.png
