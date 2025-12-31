@@ -1,4 +1,4 @@
-//master-detail
+//master-detail layout
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -20,19 +20,21 @@ public class academicLeaderReport extends JPanel {
       JPanel leftNavigation=new JPanel();
       leftNavigation.setLayout(new BoxLayout(leftNavigation,BoxLayout.Y_AXIS));
       leftNavigation.setPreferredSize(new Dimension(280,0));
-      leftNavigation.setBackground(new Color(240,244,248));
-      leftNavigation.setBorder(BorderFactory.createMatteBorder(0,0,0,1,new Color(220,220,220)));
+      leftNavigation.setBackground(new Color(248,250,252));
+      leftNavigation.setBorder(BorderFactory.createMatteBorder(0,0,0,1,new Color(226,232,240)));
       
-      leftNavigation.add(createSectionTitle("MODULE ANALYTICS"));
+      leftNavigation.add(Box.createVerticalStrut(10));
+      leftNavigation.add(createSectionTitle("🗂️ MODULE ANALYTICS"));
       
       //dropdown
-      leftNavigation.add(dropdownGroup("Module Performance Summary", new String[]{"Total Modules Created"}));
-      leftNavigation.add(dropdownGroup("Student Enrollment Summary", new String[]{"Enrollment Trends"}));
-      leftNavigation.add(dropdownGroup("Assessment Performance", new String[]{"Pass/Fail Rates"}));
-      leftNavigation.add(dropdownGroup("Lecturer Performance", new String[]{"Workload Overview"}));
+      leftNavigation.add(dropdownGroup("📈 Module Performance Summary", new String[]{"Total Modules Created"}));
+      leftNavigation.add(dropdownGroup("👥 Student Enrollment Summary", new String[]{"Enrollment Trends"}));
+      leftNavigation.add(dropdownGroup("📝 Assessment Performance", new String[]{"Pass/Fail Rates"}));
+      leftNavigation.add(dropdownGroup("👨‍🏫 Lecturer Performance", new String[]{"Workload Overview"}));
       this.add(new JScrollPane(leftNavigation),BorderLayout.WEST);
       
-      leftNavigation.add(createSectionTitle("STUDENT FEEDBACK"));
+      leftNavigation.add(Box.createVerticalStrut(20)); 
+      leftNavigation.add(createSectionTitle("💬 STUDENT FEEDBACK"));
       
       //right panel
       cardLayout=new CardLayout();
@@ -56,9 +58,9 @@ public class academicLeaderReport extends JPanel {
     
     private JLabel createSectionTitle(String text){
         JLabel reportTypeTitle=new JLabel(text);
-        reportTypeTitle.setFont(new Font("Segoe UI",Font.BOLD,11));
-        reportTypeTitle.setForeground(new Color(120,130,140));
-        reportTypeTitle.setBorder(BorderFactory.createEmptyBorder(15,20,5,10));
+        reportTypeTitle.setFont(new Font("Segoe UI Emoji",Font.BOLD,11));
+        reportTypeTitle.setForeground(new Color(100,116,139));
+        reportTypeTitle.setBorder(BorderFactory.createEmptyBorder(20,24,8,10));
         return reportTypeTitle;
     }
     
@@ -81,6 +83,7 @@ public class academicLeaderReport extends JPanel {
             styleNavigationButton(subBtn, false);
             subBtn.addActionListener(e -> cardLayout.show(cardPanel, item));
             itemPanel.add(subBtn);
+            itemPanel.add(Box.createVerticalStrut(2));
         }
         
         mainReportType.addActionListener(e -> {
@@ -89,30 +92,34 @@ public class academicLeaderReport extends JPanel {
 
             if (!isVisible) {
                 // OPEN STATE: Modern Highlight
-                mainReportType.setBackground(new Color(230, 240, 255)); // Light blue tint
+                mainReportType.setBackground(new Color(241, 245, 249)); // Light blue tint
                 mainReportType.setOpaque(true);
             } else {
                 // CLOSED STATE: Neutral
                 mainReportType.setOpaque(false);
-            }
+            }                 
         });
         
         dropdown.add(mainReportType);
         dropdown.add(itemPanel);
+        addHoverEffect(mainReportType);
+        //addHoverEffect(subBtn);
         return dropdown;
     }
     
     private void styleNavigationButton(JButton btn, boolean isParent) {
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
-        btn.setMaximumSize(new Dimension(280, 40));
-        btn.setFont(new Font("Segoe UI", isParent ? Font.BOLD : Font.PLAIN, 13));
+        btn.setMaximumSize(new Dimension(260, 40));
+        btn.setFont(new Font("Segoe UI Emoji", isParent ? Font.BOLD : Font.PLAIN, 13));
+        btn.setForeground(new Color(51, 65, 85));
         btn.setContentAreaFilled(false);
+        btn.setBorder(BorderFactory.createEmptyBorder(8, 24, 8, 16));
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
         btn.setHorizontalAlignment(SwingConstants.LEFT);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        //btn.setForeground(isParent ? NAVY : new Color(80, 90, 100));
     }
+
     
     private JButton createPlaceholderBtn(String text) {
         JButton btn = new JButton(text);
@@ -353,6 +360,26 @@ public class academicLeaderReport extends JPanel {
         totalModule.add(registryPanel, BorderLayout.CENTER);
         return totalModule;
     }
+    
+    private void addHoverEffect(JButton btn) {
+        Color hoverBg = new Color(241, 245, 249);
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                btn.setOpaque(true);
+                btn.setBackground(hoverBg);
+                btn.repaint();
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                btn.setOpaque(false);
+                btn.repaint();
+            }
+        });
+    }
+
     
     private void exportToCSV(JTable table, String totalModules, String peakIntakeMonth) {
         String home = System.getProperty("user.home");

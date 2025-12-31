@@ -86,17 +86,29 @@ public class academicLeaderDashboardSidebar extends JPanel {
     
     private void styleSidebarButton(JButton btn, JPanel container) {
         btn.setMaximumSize(new Dimension(200, 45));
-        btn.setBackground(new Color(70, 70, 70));
+        btn.setBackground(new Color(60, 70, 85));
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
-        btn.setFont(new Font("Arial", Font.PLAIN, 14));
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setAlignmentX(Component.CENTER_ALIGNMENT);
         container.add(btn);
+        
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                btn.setBackground(new Color(80, 95, 115)); // Slightly lighter on hover
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                btn.setBackground(new Color(60, 70, 85)); // Revert to original
+            }
+        });
     }
     
     public JButton getDashboardBtn() { return dashboardBtn; }
     public JButton getReportBtn() { return reportBtn; }
+    public JButton getProfileBtn() { return profileBtn; }
     public JButton getLogoutBtn() { return logoutBtn; }
 }

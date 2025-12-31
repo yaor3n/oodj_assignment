@@ -19,7 +19,7 @@ public class academicLeaderDashboard extends JFrame {
 
     private final Color activeColor = new Color(30, 30, 30);
     private final Color defaultColor = new Color(70, 70, 70);
-    private final Color BACKGROUND_COLOR = new Color(240, 244, 248);
+    private final Color BACKGROUND_COLOR = (new Color(248,250,252));
 
     public academicLeaderDashboard() {
         reusable.windowSetup(this);
@@ -143,20 +143,20 @@ public class academicLeaderDashboard extends JFrame {
 
         // 2. MODULE REGISTRY CONTAINER
         JPanel registryContainer = new JPanel(new BorderLayout());
-        registryContainer.setBackground(Color.WHITE);
-        registryContainer.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
+        registryContainer.setBackground(new Color(248,250,252));
+        //registryContainer.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
 
         centerPanel = new JPanel(new GridLayout(0, 3, 25, 25));
-        centerPanel.setBackground(Color.WHITE);
+        centerPanel.setBackground(new Color(248,250,252));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
 
         gridWrapper = new JPanel(new BorderLayout());
-        gridWrapper.setBackground(Color.WHITE);
+        gridWrapper.setBackground(new Color(248,250,252));
         gridWrapper.add(centerPanel, BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane(gridWrapper);
         scrollPane.setBorder(null);
-        scrollPane.getViewport().setBackground(Color.WHITE);
+        scrollPane.getViewport().setBackground(new Color(248,250,252));
         // IMPORTANT: This prevents module cards from resizing during search
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);
@@ -179,9 +179,11 @@ public class academicLeaderDashboard extends JFrame {
         centerPanel.addMouseListener(clickAwayListener);
 
         // Pages Integration
-        academicLeaderReport reportPageObject = new academicLeaderReport();
+        academicLeaderReport reportPage = new academicLeaderReport();
+        academicLeaderUserProfile userProfilePage = new academicLeaderUserProfile();
         cardPanel.add(dashboardPage, "DASHBOARD");
-        cardPanel.add(reportPageObject, "REPORT");
+        cardPanel.add(reportPage, "REPORT");
+        cardPanel.add(userProfilePage, "PROFILE");
         mainHeader.add(cardPanel, BorderLayout.CENTER);
         layeredPane.add(mainHeader, JLayeredPane.DEFAULT_LAYER);
 
@@ -192,6 +194,7 @@ public class academicLeaderDashboard extends JFrame {
         layeredPane.add(sidebar, JLayeredPane.MODAL_LAYER);
         sidebarPanel.getDashboardBtn().addActionListener(e -> showPage("DASHBOARD"));
         sidebarPanel.getReportBtn().addActionListener(e -> showPage("REPORT"));
+        sidebarPanel.getProfileBtn().addActionListener(e -> showPage("PROFILE"));
 
         glassPane = new JPanel();
         glassPane.setBackground(new Color(0, 0, 0, 50));
@@ -240,7 +243,7 @@ public class academicLeaderDashboard extends JFrame {
             moduleCard.setPreferredSize(new Dimension(260, 287));
             moduleCard.setBackground(Color.WHITE);
             moduleCard.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(235, 238, 242), 1, true),
+                BorderFactory.createLineBorder(Color.darkGray, 1, true),
                 BorderFactory.createEmptyBorder(15, 0, 10, 0)
             ));
 
@@ -304,10 +307,17 @@ public class academicLeaderDashboard extends JFrame {
 
     private JPopupMenu createCardPopup(academicLeaderModule m) {
         JPopupMenu popupMenu = new JPopupMenu();
-        popupMenu.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+        popupMenu.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2, true));
 
         JMenuItem editItem = new JMenuItem("Edit Module");
         JMenuItem deleteItem = new JMenuItem("Delete Module");
+        
+        editItem.setBackground(Color.WHITE);
+        deleteItem.setBackground(Color.WHITE);
+        deleteItem.setForeground(new Color(220,53,69));
+        
+        JSeparator separator = new JSeparator();
+        separator.setBackground(Color.LIGHT_GRAY);
 
         editItem.addActionListener(e -> showModuleDialog(m));
         deleteItem.addActionListener(e -> {
@@ -320,6 +330,7 @@ public class academicLeaderDashboard extends JFrame {
         });
 
         popupMenu.add(editItem);
+        popupMenu.add(separator);
         popupMenu.add(deleteItem);
         return popupMenu;
     }
@@ -577,8 +588,9 @@ public class academicLeaderDashboard extends JFrame {
     private void showPage(String pageName) {
         cardLayout.show(cardPanel, pageName);
         if (sidebarPanel != null) {
-            sidebarPanel.getDashboardBtn().setBackground(pageName.equals("DASHBOARD") ? activeColor : defaultColor);
-            sidebarPanel.getReportBtn().setBackground(pageName.equals("REPORT") ? activeColor : defaultColor);
+            sidebarPanel.getDashboardBtn().setBackground(defaultColor);
+            sidebarPanel.getReportBtn().setBackground(defaultColor);
+            sidebarPanel.getProfileBtn().setBackground(defaultColor);
         }
         if (sidebarVisible) toggleSidebar();
     }
