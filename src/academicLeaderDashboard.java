@@ -148,7 +148,7 @@ public class academicLeaderDashboard extends JFrame {
 
         centerPanel = new JPanel(new GridLayout(0, 3, 25, 25));
         centerPanel.setBackground(new Color(248,250,252));
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 25, 25));
 
         gridWrapper = new JPanel(new BorderLayout());
         gridWrapper.setBackground(new Color(248,250,252));
@@ -157,11 +157,9 @@ public class academicLeaderDashboard extends JFrame {
         JScrollPane scrollPane = new JScrollPane(gridWrapper);
         scrollPane.setBorder(null);
         scrollPane.getViewport().setBackground(new Color(248,250,252));
-        // IMPORTANT: This prevents module cards from resizing during search
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(15);
-        registryContainer.add(scrollPane, BorderLayout.CENTER);
-        dashboardPage.add(registryContainer, BorderLayout.CENTER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        dashboardPage.add(scrollPane, BorderLayout.CENTER);
 
         // Click away logic
         java.awt.event.MouseAdapter clickAwayListener = new java.awt.event.MouseAdapter() {
@@ -524,7 +522,6 @@ public class academicLeaderDashboard extends JFrame {
                 return;
             }
 
-            // FIX: Passing all 8 required arguments to match your academicLeaderModule class
             academicLeaderModule newM = new academicLeaderModule(code, name, selQual, selLect, selMonth, selYear, description, selectedPath[0]);
 
             if (isEdit) {
