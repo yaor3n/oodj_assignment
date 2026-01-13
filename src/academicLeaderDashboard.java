@@ -223,9 +223,7 @@ public class academicLeaderDashboard extends JFrame {
     private void filterModules() {
         String filterText = searchField.getText().toLowerCase();
         List<academicLeaderModule> allModules = academicLeaderModuleFileManager.loadModules();
-        List<academicLeaderModule> filtered = allModules.stream()
-                .filter(m -> m.getName().toLowerCase().contains(filterText))
-                .collect(Collectors.toList());
+        List<academicLeaderModule> filtered = allModules.stream().filter(m -> m.getName().toLowerCase().contains(filterText)).collect(Collectors.toList());
         displayModules(filtered);
     }
 
