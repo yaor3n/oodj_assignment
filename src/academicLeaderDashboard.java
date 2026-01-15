@@ -234,71 +234,112 @@ public class academicLeaderDashboard extends JFrame {
 
     private void displayModules(List<academicLeaderModule> modules) {
         centerPanel.removeAll();
-        for (academicLeaderModule m : modules) {
-            JPanel moduleCard = new JPanel(new BorderLayout());
-            moduleCard.setPreferredSize(new Dimension(260, 287));
-            moduleCard.setBackground(Color.WHITE);
-            moduleCard.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.darkGray, 1, true),
-                BorderFactory.createEmptyBorder(15, 0, 10, 0)
-            ));
+        gridWrapper.removeAll();
+        
+        if (modules.isEmpty()){
+            gridWrapper.setLayout(new GridBagLayout());
+            
+            JPanel emptyBox = new JPanel();
+            emptyBox.setLayout(new BoxLayout(emptyBox, BoxLayout.Y_AXIS));
+            emptyBox.setOpaque(false);
+           
+            JLabel noResultIconLabel = new JLabel("🔍", SwingConstants.CENTER);
+            noResultIconLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 30));
+            noResultIconLabel.setForeground(new Color(203, 213, 225));
+            noResultIconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);          
+            noResultIconLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+            
+            JLabel noResultLabel = new JLabel("No modules found matching your search.", SwingConstants.CENTER);
+            noResultLabel.setFont(new Font("Segoe UI", Font.ITALIC, 18));
+            noResultLabel.setForeground(Color.GRAY);
+            noResultLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
+            JLabel noResultSubMessage = new JLabel("Try adjusting your search or filters to find what you're looking for.");
+            noResultSubMessage.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            noResultSubMessage.setForeground(new Color(148, 163, 184));
+            noResultSubMessage.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
+            emptyBox.add(noResultIconLabel);
+            emptyBox.add(Box.createVerticalStrut(10));
+            emptyBox.add(noResultLabel);
+            emptyBox.add(Box.createVerticalStrut(8));
+            emptyBox.add(noResultSubMessage);
+            
+            gridWrapper.add(emptyBox, new GridBagConstraints());
+            
+        } else {
+            
+            gridWrapper.setLayout(new BorderLayout());
+            centerPanel.setLayout(new GridLayout(0, 3, 25, 25));
+            gridWrapper.add(centerPanel, BorderLayout.NORTH);
+            
+            for (academicLeaderModule m : modules) {
+                JPanel moduleCard = new JPanel(new BorderLayout());
+                moduleCard.setPreferredSize(new Dimension(260, 287));
+                moduleCard.setBackground(Color.WHITE);
+                moduleCard.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Color.darkGray, 1, true),
+                    BorderFactory.createEmptyBorder(15, 0, 10, 0)
+                ));
 
-            JLabel cardImg = new JLabel("", SwingConstants.CENTER);
-            String path = m.getImageFilePath();
-            ImageIcon icon = (path == null || path.equals("default") || path.equals("ModuleDefaultPic.png")) 
-                             ? new ImageIcon("ModuleDefaultPic.png") : new ImageIcon(path);
-            if (icon.getImage() != null) {
-                Image scaled = icon.getImage().getScaledInstance(260, 160, Image.SCALE_SMOOTH);
-                cardImg.setIcon(new ImageIcon(scaled));
+                JLabel cardImg = new JLabel("", SwingConstants.CENTER);
+                String path = m.getImageFilePath();
+                ImageIcon icon = (path == null || path.equals("default") || path.equals("ModuleDefaultPic.png")) 
+                                 ? new ImageIcon("ModuleDefaultPic.png") : new ImageIcon(path);
+                if (icon.getImage() != null) {
+                    Image scaled = icon.getImage().getScaledInstance(260, 160, Image.SCALE_SMOOTH);
+                    cardImg.setIcon(new ImageIcon(scaled));
+                }
+
+                // Info Content
+                JPanel contentPanel = new JPanel(new BorderLayout());
+                contentPanel.setOpaque(false);
+                contentPanel.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 15));
+
+                JPanel titleRow = new JPanel(new BorderLayout());
+                titleRow.setOpaque(false);
+                JLabel nameLabel = new JLabel(m.getName());
+                nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+
+                JButton dotBtn = new JButton("...");
+                dotBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
+                dotBtn.setForeground(new Color(180, 180, 180));
+                dotBtn.setBorderPainted(false);
+                dotBtn.setContentAreaFilled(false);
+                dotBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                dotBtn.addActionListener(e -> createCardPopup(m).show(dotBtn, -50, dotBtn.getHeight()));
+
+                titleRow.add(nameLabel, BorderLayout.CENTER);
+                titleRow.add(dotBtn, BorderLayout.EAST);
+
+                JPanel subInfo = new JPanel();
+                subInfo.setLayout(new BoxLayout(subInfo, BoxLayout.Y_AXIS));
+                subInfo.setOpaque(false);
+                JLabel qualLabel = new JLabel(m.getQualification());
+                qualLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+                qualLabel.setForeground(new Color(110, 120, 130));
+                qualLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                JLabel timeLabel = new JLabel(m.getIntakeMonth() + " " + m.getYear());
+                timeLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
+                timeLabel.setForeground(new Color(40, 167, 69));
+                timeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                subInfo.add(qualLabel);
+                subInfo.add(Box.createVerticalStrut(8));
+                subInfo.add(timeLabel);
+
+                contentPanel.add(titleRow, BorderLayout.NORTH);
+                contentPanel.add(subInfo, BorderLayout.CENTER);
+
+                moduleCard.add(cardImg, BorderLayout.NORTH);
+                moduleCard.add(contentPanel, BorderLayout.CENTER);
+                //JPanel moduleCard = createModuleCard(m); 
+                centerPanel.add(moduleCard);
             }
-
-            // Info Content
-            JPanel contentPanel = new JPanel(new BorderLayout());
-            contentPanel.setOpaque(false);
-            contentPanel.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 15));
-
-            JPanel titleRow = new JPanel(new BorderLayout());
-            titleRow.setOpaque(false);
-            JLabel nameLabel = new JLabel(m.getName());
-            nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-
-            JButton dotBtn = new JButton("...");
-            dotBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
-            dotBtn.setForeground(new Color(180, 180, 180));
-            dotBtn.setBorderPainted(false);
-            dotBtn.setContentAreaFilled(false);
-            dotBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            dotBtn.addActionListener(e -> createCardPopup(m).show(dotBtn, -50, dotBtn.getHeight()));
-
-            titleRow.add(nameLabel, BorderLayout.CENTER);
-            titleRow.add(dotBtn, BorderLayout.EAST);
-
-            JPanel subInfo = new JPanel();
-            subInfo.setLayout(new BoxLayout(subInfo, BoxLayout.Y_AXIS));
-            subInfo.setOpaque(false);
-            JLabel qualLabel = new JLabel(m.getQualification());
-            qualLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-            qualLabel.setForeground(new Color(110, 120, 130));
-            qualLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-            JLabel timeLabel = new JLabel(m.getIntakeMonth() + " " + m.getYear());
-            timeLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
-            timeLabel.setForeground(new Color(40, 167, 69));
-            timeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-            subInfo.add(qualLabel);
-            subInfo.add(Box.createVerticalStrut(8));
-            subInfo.add(timeLabel);
-
-            contentPanel.add(titleRow, BorderLayout.NORTH);
-            contentPanel.add(subInfo, BorderLayout.CENTER);
-
-            moduleCard.add(cardImg, BorderLayout.NORTH);
-            moduleCard.add(contentPanel, BorderLayout.CENTER);
-            centerPanel.add(moduleCard);
         }
-        centerPanel.revalidate();
-        centerPanel.repaint();
+            gridWrapper.revalidate();
+            gridWrapper.repaint();
     }
 
     private JPopupMenu createCardPopup(academicLeaderModule m) {
@@ -440,9 +481,20 @@ public class academicLeaderDashboard extends JFrame {
         
         List<String> lecturerList = academicLeaderModuleFileManager.checkLecturerNames();
         JComboBox<String> lecturerBox = new JComboBox<>();
-        lecturerBox.addItem("-Select-");
-        for (String name : lecturerList) lecturerBox.addItem(name);
-
+        if (lecturerList == null || lecturerList.isEmpty()) {
+            lecturerBox.addItem("No Lecturers Found");
+            lecturerBox.setEnabled(false);
+            lecturerBox.setForeground(Color.RED);
+        } else {
+            lecturerBox.addItem("-Select-");
+            for (String name : lecturerList) {
+                lecturerBox.addItem(name);
+            }
+            if (isEdit) {
+                lecturerBox.setSelectedItem(editModule.getLecturerName());
+            }
+        }
+        
         JComboBox<String> monthBox = new JComboBox<>(new String[]{"-Select-", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
         JComboBox<String> yearBox = new JComboBox<>();
         int currentYear = java.time.LocalDate.now().getYear();
@@ -529,6 +581,11 @@ public class academicLeaderDashboard extends JFrame {
                 academicLeaderModuleFileManager.saveModule(newM);
                 JOptionPane.showMessageDialog(dialog, "Successfully created new module!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
+            
+            if (!lecturerBox.isEnabled()) {
+                JOptionPane.showMessageDialog(dialog, "You cannot save a module without an assigned lecturer. Please register lecturers first.", "Missing Data", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             refreshDashboard();
             dialog.dispose();
         });
@@ -537,7 +594,6 @@ public class academicLeaderDashboard extends JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-
 
     // --- HELPER METHODS FOR MODERN LOOK ---
 

@@ -58,9 +58,9 @@ public class academicLeaderReport extends JPanel {
     
     private JLabel createSectionTitle(String text){
         JLabel reportTypeTitle=new JLabel(text);
-        reportTypeTitle.setFont(new Font("Segoe UI Emoji",Font.BOLD,11));
+        reportTypeTitle.setFont(new Font("Segoe UI Emoji",Font.BOLD,14));
         reportTypeTitle.setForeground(new Color(100,116,139));
-        reportTypeTitle.setBorder(BorderFactory.createEmptyBorder(20,24,8,10));
+        reportTypeTitle.setBorder(BorderFactory.createEmptyBorder(25,24,10,10));
         return reportTypeTitle;
     }
     
@@ -79,39 +79,42 @@ public class academicLeaderReport extends JPanel {
         itemPanel.setVisible(false);
         
         for (String item : items) {
-            JButton subBtn = new JButton("      " + item);
-            styleNavigationButton(subBtn, false);
-            subBtn.addActionListener(e -> cardLayout.show(cardPanel, item));
-            itemPanel.add(subBtn);
+            JButton subButton = new JButton("      " + item);
+            styleNavigationButton(subButton, false);
+            subButton.addActionListener(e -> cardLayout.show(cardPanel, item));
+            addHoverEffect(subButton);
+            itemPanel.add(subButton);
             itemPanel.add(Box.createVerticalStrut(2));
         }
         
         mainReportType.addActionListener(e -> {
             boolean isVisible = itemPanel.isVisible();
             itemPanel.setVisible(!isVisible);
-
-            if (!isVisible) {
-                // OPEN STATE: Modern Highlight
-                mainReportType.setBackground(new Color(241, 245, 249)); // Light blue tint
-                mainReportType.setOpaque(true);
-            } else {
-                // CLOSED STATE: Neutral
-                mainReportType.setOpaque(false);
-            }                 
+            // Highlight the parent when open
+            mainReportType.setOpaque(!isVisible);
+            mainReportType.setBackground(new Color(241, 245, 249)); 
         });
         
         dropdown.add(mainReportType);
         dropdown.add(itemPanel);
-        addHoverEffect(mainReportType);
-        //addHoverEffect(subBtn);
+        addHoverEffect(mainReportType);       
         return dropdown;
     }
     
     private void styleNavigationButton(JButton btn, boolean isParent) {
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
         btn.setMaximumSize(new Dimension(260, 40));
-        btn.setFont(new Font("Segoe UI Emoji", isParent ? Font.BOLD : Font.PLAIN, 13));
-        btn.setForeground(new Color(51, 65, 85));
+        
+        if (isParent) {
+            // Main dropdown font: Clean and semi-bold
+            btn.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
+            btn.setForeground(new Color(30, 41, 59)); // Darker slate for readability
+        } else {
+            // Sub-item font: Slightly smaller and lighter color
+            btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            btn.setForeground(new Color(71, 85, 105)); // Lighter slate
+        }
+        
         btn.setContentAreaFilled(false);
         btn.setBorder(BorderFactory.createEmptyBorder(8, 24, 8, 16));
         btn.setBorderPainted(false);
@@ -143,15 +146,17 @@ public class academicLeaderReport extends JPanel {
         List<academicLeaderModule> modules = academicLeaderModuleFileManager.loadModules();
         count = modules.size();
         
+        //total module count card
         JPanel totalModuleCount=new JPanel(new BorderLayout());
         totalModuleCount.setPreferredSize(new Dimension(200,80));
-        totalModuleCount.setBackground(new Color(248,249,250));
+        totalModuleCount.setBackground(Color.WHITE);
         totalModuleCount.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0,1,3,3, new Color(220,220,220)),
-                BorderFactory.createEmptyBorder(15,20,15,20)
+            BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(226, 232, 240)), // Soft outer shell
+            BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 5, 0, 0, new Color(40, 167, 69)), // green Side Accent
+                BorderFactory.createEmptyBorder(15, 20, 15, 20) // Inner Padding
+            )
         ));
         
-        //total module count card
         JLabel totalModuleLabel=new JLabel("TOTAL MODULES CREATED");
         totalModuleLabel.setFont(new Font("Segoe UI", Font.BOLD,12));
         totalModuleLabel.setForeground(new Color(108,117,125));
@@ -181,10 +186,12 @@ public class academicLeaderReport extends JPanel {
         
         JPanel peakIntakeMonth = new JPanel(new BorderLayout());
         peakIntakeMonth.setPreferredSize(new Dimension(200, 80));
-        peakIntakeMonth.setBackground(new Color(248, 249, 250));
+        peakIntakeMonth.setBackground(Color.WHITE);
         peakIntakeMonth.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0,1,3,3, new Color(220, 220, 220)),
-                BorderFactory.createEmptyBorder(15, 20, 15, 20)
+            BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(226, 232, 240)), // Soft outer shell
+            BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 5, 0, 0, new Color(40,167,69)), // green Side Accent
+                BorderFactory.createEmptyBorder(15, 20, 15, 20) // Inner Padding
+            )
         ));
 
         JLabel intakeLabel = new JLabel("PEAK INTAKE MONTH");
@@ -221,9 +228,19 @@ public class academicLeaderReport extends JPanel {
         filterLabel.setForeground(new Color(100, 100, 100));
         
         //year filter
+        java.util.Set<String> yearFromList = new java.util.TreeSet<>();
+        for (academicLeaderModule m: modules){
+            yearFromList.add(String.valueOf(m.getYear()));
+        }
+        
         int currentYear = java.time.LocalDate.now().getYear();
-        String[] years = {"All Years", String.valueOf(currentYear), String.valueOf(currentYear + 1)};
-        JComboBox<String> yearFilter = new JComboBox<>(years);
+        yearFromList.add(String.valueOf(currentYear));
+        yearFromList.add(String.valueOf(currentYear + 1));
+        
+        java.util.List<String> yearList = new ArrayList<>();
+        yearList.add("All Years");
+        yearList.addAll(yearFromList);        
+        JComboBox<String> yearFilter = new JComboBox<>(yearList.toArray(new String[0]));
         
         //month filter
         String[] months = {"All Months", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
@@ -269,20 +286,35 @@ public class academicLeaderReport extends JPanel {
         topSection.add(filterContainer, BorderLayout.SOUTH);
         totalModule.add(topSection, BorderLayout.NORTH);
         
-        
-        
         //no result
         JPanel noResult = new JPanel(new GridBagLayout());
         noResult.setBackground(Color.WHITE);
         noResult.setOpaque(true);
-        noResult.setVisible(false);
-        noResult.setBorder(BorderFactory.createEmptyBorder(25,0,0,0));
         
+        JPanel noResultContent=new JPanel();
+        noResultContent.setLayout(new BoxLayout(noResultContent,BoxLayout.Y_AXIS));
+        noResultContent.setOpaque(false);
+        
+        JLabel noResultIconLabel = new JLabel("🔍");
+        noResultIconLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 24));
+        noResultIconLabel.setForeground(new Color(203, 213, 225));
+        noResultIconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);          
+        noResultIconLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         
         JLabel emptyText = new JLabel("NO RESULT FOUND");
         emptyText.setFont(new Font("Segoe UI", Font.BOLD, 14));
         emptyText.setForeground(new Color(148,163,184));
-        noResult.add(emptyText);
+        emptyText.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JLabel subEmptyText = new JLabel("Try adjusting your filters to find what you're looking for.");
+        subEmptyText.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        subEmptyText.setForeground(new Color(160,174,192));
+        subEmptyText.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        noResultContent.add(noResultIconLabel);
+        noResultContent.add(emptyText);
+        noResultContent.add(subEmptyText);
+        noResult.add(noResultContent);
         
         // Inside totalModuleReport() (table)
         String[] columns = {"Module Code", "Module Name", "Level", "Lecturer","Intake Month","Year"};
@@ -312,7 +344,7 @@ public class academicLeaderReport extends JPanel {
             }
         };
         
-        moduleTable.setRowHeight(30); 
+        moduleTable.setRowHeight(31); 
         moduleTable.setGridColor(new Color(230,230,230));
         moduleTable.setShowGrid(true);
         moduleTable.setIntercellSpacing(new Dimension(1, 1));
@@ -327,7 +359,6 @@ public class academicLeaderReport extends JPanel {
                 return header;
             }
         });
-        
         
         //make the table header move to left
         ((JLabel)moduleTable.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.LEFT);
@@ -344,7 +375,7 @@ public class academicLeaderReport extends JPanel {
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
         scrollPane.getViewport().setBackground(Color.WHITE);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
         scrollPane.setColumnHeaderView(moduleTable.getTableHeader());
         
         JPanel headerCorner = new JPanel();
