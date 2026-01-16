@@ -20,11 +20,9 @@ public class academicLeaderReport extends JPanel {
       JPanel leftNavigation=new JPanel();
       leftNavigation.setLayout(new BoxLayout(leftNavigation,BoxLayout.Y_AXIS));
       leftNavigation.setPreferredSize(new Dimension(280,0));
-      leftNavigation.setBackground(new Color(248,250,252));
+      leftNavigation.setBackground(new Color(248, 250, 252));
       leftNavigation.setBorder(BorderFactory.createMatteBorder(0,0,0,1,new Color(226,232,240)));
-      
-      leftNavigation.add(Box.createVerticalStrut(10));
-      leftNavigation.add(createSectionTitle("🗂️ MODULE ANALYTICS"));
+      leftNavigation.add(leftNavigationTitle("🗂️ MODULE ANALYTICS"));
       
       //dropdown
       leftNavigation.add(dropdownGroup("📈 Module Performance Summary", new String[]{"Total Modules Created"}));
@@ -34,7 +32,7 @@ public class academicLeaderReport extends JPanel {
       this.add(new JScrollPane(leftNavigation),BorderLayout.WEST);
       
       leftNavigation.add(Box.createVerticalStrut(20)); 
-      leftNavigation.add(createSectionTitle("💬 STUDENT FEEDBACK"));
+      leftNavigation.add(leftNavigationTitle("💬 STUDENT FEEDBACK"));
       
       //right panel
       cardLayout=new CardLayout();
@@ -56,16 +54,24 @@ public class academicLeaderReport extends JPanel {
       cardLayout.show(cardPanel, "EMPTY");
     }
     
-    private JLabel createSectionTitle(String text){
+    private JLabel leftNavigationTitle(String text){
         JLabel reportTypeTitle=new JLabel(text);
+        reportTypeTitle.setOpaque(true);
         reportTypeTitle.setFont(new Font("Segoe UI Emoji",Font.BOLD,14));
+        reportTypeTitle.setBackground(new Color(226, 232, 240));
         reportTypeTitle.setForeground(new Color(100,116,139));
-        reportTypeTitle.setBorder(BorderFactory.createEmptyBorder(25,24,10,10));
+        //reportTypeTitle.setBorder(BorderFactory.createEmptyBorder(25,24,10,10));
+        
+        reportTypeTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        reportTypeTitle.setHorizontalAlignment(SwingConstants.LEFT);
+        reportTypeTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35)); 
+        reportTypeTitle.setBorder(BorderFactory.createEmptyBorder(10, 24, 10, 0));
         return reportTypeTitle;
     }
     
     private JPanel dropdownGroup(String title,String[]items){
         JPanel dropdown=new JPanel();
+        //dropdown
         dropdown.setLayout(new BoxLayout(dropdown, BoxLayout.Y_AXIS));
         dropdown.setAlignmentX(Component.LEFT_ALIGNMENT);
         dropdown.setOpaque(false);
@@ -103,27 +109,43 @@ public class academicLeaderReport extends JPanel {
     
     private void styleNavigationButton(JButton btn, boolean isParent) {
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
-        btn.setMaximumSize(new Dimension(260, 40));
-        
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
+        btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+
         if (isParent) {
-            // Main dropdown font: Clean and semi-bold
-            btn.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
-            btn.setForeground(new Color(30, 41, 59)); // Darker slate for readability
+            btn.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13));
+            btn.setForeground(new Color(30, 41, 59)); // Deep slate for high contrast
         } else {
-            // Sub-item font: Slightly smaller and lighter color
-            btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-            btn.setForeground(new Color(71, 85, 105)); // Lighter slate
+            btn.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+            btn.setForeground(new Color(71, 85, 105)); // Muted slate for sub-items
         }
-        
+
         btn.setContentAreaFilled(false);
         btn.setBorder(BorderFactory.createEmptyBorder(8, 24, 8, 16));
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
-        btn.setHorizontalAlignment(SwingConstants.LEFT);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
-
     
+    private void addHoverEffect(JButton hover) {
+        // Very light grey tint for hover
+        Color hoverBackground = new Color(241, 245, 249); 
+
+        hover.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                hover.setOpaque(true);
+                hover.setBackground(hoverBackground);
+                hover.repaint();
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                hover.setOpaque(false);
+                hover.repaint();
+            }
+        });
+    }
+
     private JButton createPlaceholderBtn(String text) {
         JButton btn = new JButton(text);
         styleNavigationButton(btn, false);
@@ -268,7 +290,6 @@ public class academicLeaderReport extends JPanel {
             monthFilter.setSelectedIndex(0);
             yearFilter.setSelectedIndex(0);
         });
-        
         
         filter.add(filterLabel);
         filter.add(Box.createHorizontalStrut(10));
@@ -446,26 +467,6 @@ public class academicLeaderReport extends JPanel {
         totalModule.add(registryPanel, BorderLayout.CENTER);
         return totalModule;
     }
-    
-    private void addHoverEffect(JButton btn) {
-        Color hoverBg = new Color(241, 245, 249);
-
-        btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                btn.setOpaque(true);
-                btn.setBackground(hoverBg);
-                btn.repaint();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                btn.setOpaque(false);
-                btn.repaint();
-            }
-        });
-    }
-
     
     private void exportToCSV(JTable table, String totalModules, String peakIntakeMonth) {
         String home = System.getProperty("user.home");

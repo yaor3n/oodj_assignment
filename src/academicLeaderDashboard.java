@@ -19,7 +19,7 @@ public class academicLeaderDashboard extends JFrame {
 
     private final Color activeColor = new Color(30, 30, 30);
     private final Color defaultColor = new Color(70, 70, 70);
-    private final Color BACKGROUND_COLOR = (new Color(248,250,252));
+    private final Color BACKGROUND_COLOR = (Color.WHITE);
 
     public academicLeaderDashboard() {
         reusable.windowSetup(this);
@@ -57,7 +57,8 @@ public class academicLeaderDashboard extends JFrame {
         dashboardPage.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
         // 1. TOP CONTROLS SECTION
-        JPanel controlsPanel = new JPanel(new BorderLayout(0, 15));
+        JPanel controlsPanel = new JPanel();
+        controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS)); // Stack rows vertically
         controlsPanel.setOpaque(false);
         controlsPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
@@ -125,6 +126,7 @@ public class academicLeaderDashboard extends JFrame {
         // Create Button Row
         JPanel actionRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         actionRow.setOpaque(false);
+        actionRow.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 43));
         JButton createButton = new JButton("➕ Create New Module");
         createButton.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
         createButton.setBackground(new Color(40, 167, 69));
@@ -136,9 +138,11 @@ public class academicLeaderDashboard extends JFrame {
         createButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         createButton.addActionListener(e -> showModuleDialog(null));
         actionRow.add(createButton);
+        
 
-        controlsPanel.add(searchBar, BorderLayout.NORTH);
-        controlsPanel.add(actionRow, BorderLayout.SOUTH);
+        controlsPanel.add(searchBar);
+        controlsPanel.add(Box.createVerticalStrut(15)); 
+        controlsPanel.add(actionRow);
         dashboardPage.add(controlsPanel, BorderLayout.NORTH);
 
         // 2. MODULE REGISTRY CONTAINER
@@ -322,7 +326,9 @@ public class academicLeaderDashboard extends JFrame {
 
                 JLabel timeLabel = new JLabel(m.getIntakeMonth() + " " + m.getYear());
                 timeLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
-                timeLabel.setForeground(new Color(40, 167, 69));
+                timeLabel.setOpaque(true);
+                timeLabel.setBackground(new Color(240, 253 ,244));
+                timeLabel.setForeground(new Color(22, 163, 74));
                 timeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 subInfo.add(qualLabel);
