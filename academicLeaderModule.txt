@@ -1,8 +1,5 @@
-M-01,JAVA,Diploma,sky ong,January,2025,This is the module,default
-E3,sky,Bachelor's Degree,ali,May,2025,popo,default
-abu,ayam,PhD,lec1,October,2025,itik,ModuleDefaultPic.png
-aniya,aniya,Bachelor's Degree,sky,May,2025,tyt,C:\Users\User\OneDrive\Pictures\Screenshots\Screenshot 2025-12-22 142315.png
-B02,Python,Diploma,sky,April,2026,python first class,ModuleDefaultPic2.png
-B12,RWDD,Certificate,yaoren,December,2025,NEW MODULE,ModuleDefaultPic3.png
-CP001,Capstone Project,Diploma,Assigned Lecturer,August,2025,new project,ModuleDefaultPic3.png
-S01,Sejarahh,Master's Degree,sky,February,2026,new course,ModuleDefaultPic2.png
+M01,JAVA,Diploma,yaoren,January,2026,This is java language programming course,ModuleDefaultPic2.png
+M02,Python,Foundation,lec1,May,2026,This is a python language programming course,ModuleDefaultPic.png
+M03,Introduction to AI,Bachelor's Degree,test,June,2026,This is AI course,ModuleDefaultPic.png
+M04,Responsive Web Design,Diploma,lec1,June,2026,This is a HTML + CSS language course,ModuleDefaultPic3.png
+M05,CC1,PhD,test,March,2026,Let the student to open booth,ModuleDefaultPic2.png

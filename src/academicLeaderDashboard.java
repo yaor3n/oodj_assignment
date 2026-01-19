@@ -139,7 +139,6 @@ public class academicLeaderDashboard extends JFrame {
         createButton.addActionListener(e -> showModuleDialog(null));
         actionRow.add(createButton);
         
-
         controlsPanel.add(searchBar);
         controlsPanel.add(Box.createVerticalStrut(15)); 
         controlsPanel.add(actionRow);
@@ -197,6 +196,13 @@ public class academicLeaderDashboard extends JFrame {
         sidebarPanel.getDashboardBtn().addActionListener(e -> showPage("DASHBOARD"));
         sidebarPanel.getReportBtn().addActionListener(e -> showPage("REPORT"));
         sidebarPanel.getProfileBtn().addActionListener(e -> showPage("PROFILE"));
+        sidebarPanel.getLogoutBtn().addActionListener(e -> {
+            int confirmation = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout Confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirmation ==JOptionPane.YES_OPTION){
+                new login();
+                this.dispose();
+            }
+        });
 
         glassPane = new JPanel();
         glassPane.setBackground(new Color(0, 0, 0, 50));

@@ -8,7 +8,7 @@ public class academicLeaderUserProfile extends JPanel {
     private JTextField nameField, emailField, dobField, genderField, userField;
     private JLabel staffIDField,roleField;
     private JPasswordField passField;
-    private final Color SUCCESS_GREEN = new Color(40, 167, 69);
+    //private final Color SUCCESS_GREEN = new Color(40, 167, 69);
     
     // Panel to hold buttons and layout to swap them
     private JPanel buttonContainer;
@@ -16,7 +16,7 @@ public class academicLeaderUserProfile extends JPanel {
 
     public academicLeaderUserProfile() {
         this.setLayout(new BorderLayout());
-        this.setBackground(new Color(248, 250, 252));
+        this.setBackground(Color.WHITE);
 
         // 1. INITIALIZE COMPONENTS
         staffIDField = new JLabel("AL6767");
@@ -63,8 +63,8 @@ public class academicLeaderUserProfile extends JPanel {
         JPanel userProfileContent = new JPanel();
         userProfileContent.setLayout(new BoxLayout(userProfileContent, BoxLayout.Y_AXIS));
         userProfileContent.setOpaque(false);
-        userProfileContent.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
-
+        userProfileContent.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
+        
         // PAGE TITLE
         JLabel pageTitle = new JLabel("👤 User Profile Management");
         pageTitle.setFont(new Font("Segoe UI Emoji", Font.BOLD, 24));
@@ -77,14 +77,14 @@ public class academicLeaderUserProfile extends JPanel {
         // personal information
         JPanel personalCard = new JPanel(new GridBagLayout());
         styleProfileCard(personalCard);
-        personalCard.setMaximumSize(new Dimension(750, 350));
+        personalCard.setMaximumSize(new Dimension(650, 350));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(12, 15, 12, 15);
+        gbc.insets = new Insets(0, 0, 20, 0);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel personalHeader = new JLabel("📝 Personal Information (Read-Only)");
+        JLabel personalHeader = new JLabel("📝 Personal Information");
         personalHeader.setFont(new Font("Segoe UI Emoji", Font.BOLD, 15));
-        personalHeader.setForeground(SUCCESS_GREEN);
+        personalHeader.setForeground(new Color(40, 167, 69));
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
         personalCard.add(personalHeader, gbc);
@@ -95,19 +95,23 @@ public class academicLeaderUserProfile extends JPanel {
         addProfileRow(personalCard, "Email Address", emailField, gbc, 3);
         addProfileRow(personalCard, "Gender", genderField, gbc, 4);
         addProfileRow(personalCard, "Date of Birth", dobField, gbc, 5);
+        
 
         // account credential
         JPanel credentialsCard = new JPanel(new GridBagLayout());
         styleProfileCard(credentialsCard);
-        credentialsCard.setMaximumSize(new Dimension(750, 250));
+        credentialsCard.setMaximumSize(new Dimension(650, 250));
+        gbc.insets = new Insets(0, 0, 25, 0);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
         JLabel credsHeader = new JLabel("🔐 Account Credentials");
         credsHeader.setFont(new Font("Segoe UI Emoji", Font.BOLD, 15));
-        credsHeader.setForeground(SUCCESS_GREEN);
+        credsHeader.setForeground(new Color(40, 167, 69));
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
         credentialsCard.add(credsHeader, gbc);
         gbc.gridwidth = 1;
-
+        
         addProfileRow(credentialsCard, "Username", userField, gbc, 1);
         addProfileRow(credentialsCard, "Password", passwordWrapper, gbc, 2);
         addProfileRow(credentialsCard, "Access Role", roleField, gbc, 3);
@@ -116,27 +120,28 @@ public class academicLeaderUserProfile extends JPanel {
         buttonCardLayout = new CardLayout();
         buttonContainer = new JPanel(buttonCardLayout);
         buttonContainer.setOpaque(false);
-        buttonContainer.setMaximumSize(new Dimension(750, 60));
+        buttonContainer.setMaximumSize(new Dimension(650, 60));
+        buttonContainer.setPreferredSize(new Dimension(650,80));
 
         // VIEW MODE PANEL (Just "Update Profile")
-        JPanel viewModePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel viewModePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
         viewModePanel.setOpaque(false);
         JButton updateBtn = new JButton("Update Profile");
-        styleActionButton(updateBtn, Color.ORANGE);
+        styleActionButton(updateBtn, new Color(51,65,85));
         updateBtn.addActionListener(e -> setEditMode(true));
         viewModePanel.add(updateBtn);
 
         // EDIT MODE PANEL ("Save" and "Cancel")
-        JPanel editModePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        JPanel editModePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         editModePanel.setOpaque(false);
         JButton saveBtn = new JButton("Save Changes");
-        styleActionButton(saveBtn, SUCCESS_GREEN);
+        styleActionButton(saveBtn, new Color(40, 167, 69));
         saveBtn.addActionListener(e -> updateProfile());
         
         JButton cancelBtn = new JButton("Cancel");
-        styleActionButton(cancelBtn, new Color(108, 117, 125)); // Modern Grey
+        styleActionButton(cancelBtn, new Color(108, 117, 125));
         cancelBtn.addActionListener(e -> {
-            loadProfileFromFile(); // Revert changes from file
+            loadProfileFromFile();
             setEditMode(false);
         });
 
@@ -154,13 +159,15 @@ public class academicLeaderUserProfile extends JPanel {
         userProfileContent.add(buttonContainer);
 
         JPanel centeringWrapper = new JPanel(new GridBagLayout());
-        centeringWrapper.setBackground(new Color(248, 250, 252));
+        centeringWrapper.setBackground(Color.WHITE);
         centeringWrapper.add(userProfileContent);
 
         JScrollPane scroll = new JScrollPane(centeringWrapper);
         scroll.setBorder(null);
-        scroll.getViewport().setBackground(new Color(248, 250, 252));
+        scroll.getViewport().setBackground(Color.WHITE);
         scroll.getVerticalScrollBar().setUnitIncrement(25);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        
         this.add(scroll, BorderLayout.CENTER);
 
         loadProfileFromFile(); 
@@ -184,14 +191,25 @@ public class academicLeaderUserProfile extends JPanel {
         }
     }
 
-    private void styleActionButton(JButton btn, Color bg) {
-        btn.setBackground(bg);
-        btn.setForeground(Color.WHITE);
-        btn.setPreferredSize(new Dimension(180, 45));
-        btn.setOpaque(true);
-        btn.setBorderPainted(false);
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+    private void styleActionButton(JButton updateButton, Color bg) {
+        updateButton.setBackground(bg);
+        updateButton.setForeground(Color.WHITE);
+        updateButton.setPreferredSize(new Dimension(180, 45));
+        updateButton.setOpaque(true);
+        updateButton.setBorderPainted(false);
+        updateButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        updateButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        
+        updateButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                updateButton.setBackground(bg.darker());
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                updateButton.setBackground(bg);
+            }
+        });
     }
 
     // (Remaining methods updateProfile, styleProfileCard, createProfileTextField, addProfileRow, loadProfileFromFile stay exactly the same as previous)
@@ -241,8 +259,8 @@ public class academicLeaderUserProfile extends JPanel {
     private void styleProfileCard(JPanel panel) {
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(225, 230, 235), 1, true),
-            BorderFactory.createEmptyBorder(25, 40, 25, 40)
+            BorderFactory.createLineBorder(new Color(40, 167, 69), 1, true), // Soft Slate
+            BorderFactory.createEmptyBorder(30, 30, 15, 30) // Reduced internal padding
         ));
     }
 
@@ -270,13 +288,15 @@ public class academicLeaderUserProfile extends JPanel {
 
     private void addProfileRow(JPanel panel, String label, JComponent comp, GridBagConstraints gbc, int row) {
         gbc.gridy = row;
-        gbc.gridx = 0; gbc.weightx = 0.3;
+        gbc.gridx = 0; gbc.weightx = 0.25;
+        gbc.insets = new Insets(0, 0, 15, 30);
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel lbl = new JLabel(label + ":");
-        lbl.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        panel.add(lbl, gbc);
+        JLabel contentLabel = new JLabel(label + ":");
+        contentLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        panel.add(contentLabel, gbc);
         
-        gbc.gridx = 1; gbc.weightx = 0.7;
+        gbc.gridx = 1; gbc.weightx = 0.8;
+        gbc.insets = new Insets(0,0,15,0);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(comp, gbc);
