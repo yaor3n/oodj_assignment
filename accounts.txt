@@ -2,7 +2,7 @@ test,123,Lecturer
 lec1,123,Lecturer
 stud1,123,Student
 stud2,321,Student
-staff1,123,AcademicStaff
+staff1,123,AcademicLeader
 admin,123,Admin
 student,123,Student
 raul,321,Student
