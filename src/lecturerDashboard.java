@@ -38,6 +38,13 @@ public class lecturerDashboard extends JFrame implements ActionListener {
           width,
           height);
       moduleBox[i].setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+      moduleBox[i].addMouseListener(
+          new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+              System.out.println("Module " + (i + 1) + " Clicked");
+            }
+          }
+      );
 
       JLabel label = new JLabel("Module " + (i + 1), JLabel.CENTER);
       label.setFont(new Font("Arial", Font.BOLD, 18));
@@ -61,6 +68,9 @@ public class lecturerDashboard extends JFrame implements ActionListener {
     if (e.getSource() == logoutButton) {
       new userSelect();
       this.dispose();
+    }
+    if (e.getSource() == createNewModuleButton) {
+      System.out.println("Create Module Button Clicked");
     }
   }
 }
