@@ -5,7 +5,7 @@ public class reusable {
     public static void windowSetup(JFrame frame) {
 
         frame.setSize(1080, 650);
-        frame.setTitle("Better APSpace");
+        frame.setTitle("Assessment Feedback System (AFS)");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.getContentPane().setBackground(new Color(0xffffff));

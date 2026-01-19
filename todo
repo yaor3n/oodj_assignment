@@ -1,0 +1,69 @@
+role: admin staff
+
+should be able to:
+  - Create/Read/Update/Delete end users []
+    > deleting user works
+    > But add more confirmation steps or a undo button []
+    > save button to save current status []
+    > editing user password doesnt []
+    > renaming username doesnt []
+    > updating roles doesnt []
+    > add logic to check if an existing username & role before updating those details []
+
+  - Assign lecturers to their respective academic leaders []
+  - Define APU grading system []
+  - Create new classes for related modules []
+
+flow & logic:
+login > dashboard 
+        > option to CRUD users
+          > reads from accounts.txt lists out all users and their metadata
+          > able to select any user modify their info, a drop down that indexes accounts.txt for roles etc to show available roles to change user to for example
+          > maybe add refresh button to load in new data for outdated jframe
+
+        > option to assign lecturers to their respective academic leaders
+          > reads accounts.txt, filters out users that has roles "AcademicLeader" & "Lecturer"
+          > have a page with 2 drop down menus, 1 academic leader another for lecturer
+          > the lecturer will be assigned to the academic leader, upon clicking save it will write to a new file "AssignedLecturers.txt" for example
+          > there will be a page that shows lecturers that are assigned to their AcademicLeaders
+          > lecturers that arent assigned will have the status none beside them
+          > how this works is by using the "AssignedLecturers.txt" file and comparing it to "Accounts.txt", filtering out lecturer role only
+          > "Accounts.txt" has all existing lecturers and "AssignedLecturers.txt" has the asasigned ones
+          > so if lecturers in "Accounts.txt" minus(-) "AssignedLecturers.txt" = lecturers left that arent assigned yet
+          > format for AssignedLecturers.txt could be like:
+            > AcademicLeader1: lec1, lec2, lec3
+            > following lecturers could be concatinated behind the last added lectuerer of an AcademicLeader with a period 
+          
+        > option to define APU grading system
+          > "GradingSystem.txt" stores grades in format:
+            > A+ = 95%
+            > A = 90%
+            > A- = 85%
+            > and there will be logic checking if there are same marks assigned to same grade etc
+          > this file will be used and read to compare students marks to assign a grade
+
+        > option to create new classes for related modules
+          > reads "modules" file created by AcademicLeaders
+          > page with drop down again to match classes to modules
+          > once matches are saved it will be saved to "Classes.txt"
+          > data could be stored in this format:
+            > Module1 : class1, class2, class3
+            > stored similar to AssignedLecturers file
+        
+        > ALL files containing data could be exported as csv (features)
+        > Data will be displayed in a table like format (some selectable to CRUD)
+        
+        > updated way of storing data in "AssignedLecturers.txt"
+          > AL001|L001
+          > AL001|L002
+          > AL002|L003
+          > or just AL001,L001 csv
+          > Easier comparing
+          > Easier validation
+          > Easier CSV export
+          > Easier future extension
+          > same goes for "GradingSystem.txt" & "Classes.txt"
+          > Implement searchbar to index items
+
+        
+
