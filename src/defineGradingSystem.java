@@ -21,7 +21,6 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         title.setBounds(350, 10, 300, 40);
         add(title);
 
-        // Input fields
         gradeField = new JTextField();
         gradeField.setBounds(150, 60, 100, 30);
         add(gradeField);
@@ -46,7 +45,6 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         sp.setBounds(150, 110, 440, 250);
         add(sp);
 
-        // Buttons
         updateBtn = new JButton("Update");
         updateBtn.setBounds(150, 380, 100, 30);
         updateBtn.addActionListener(this);

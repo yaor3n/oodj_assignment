@@ -1,248 +1,242 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class crudUsers extends JFrame implements ActionListener {
-
-    private JTable table;
-    private DefaultTableModel model;
-    private JTextField searchField;
-    private JButton searchBtn, refreshBtn, deleteBtn, saveBtn, backBtn;
+public class crudUsers extends JFrame {
 
     private final String FILE_NAME = "accounts.txt";
 
-    // Allowed roles
-    private final String[] VALID_ROLES = {
-            "Lecturer",
-            "Student",
-            "AcademicLeader",
-            "Admin"
-    };
+    private ArrayList<User> allUsers = new ArrayList<>();
+    private DefaultTableModel model;
+    private JTable table;
+    private JTextField searchField;
 
     public crudUsers() {
 
-        setTitle("CRUD Users");
-        setLayout(null);
-
-        JLabel title = new JLabel("Manage Users");
-        title.setFont(new Font("Arial", Font.BOLD, 25));
-        title.setBounds(380, 20, 300, 40);
-        add(title);
-
-        // 🔍 Search bar
-        searchField = new JTextField();
-        searchField.setBounds(250, 80, 300, 30);
-        add(searchField);
-
-        searchBtn = new JButton("Search");
-        searchBtn.setBounds(560, 80, 100, 30);
-        searchBtn.addActionListener(this);
-        add(searchBtn);
-
-        // 📋 JTable (CORRECT column order)
-        model = new DefaultTableModel(new String[]{"Username", "Password", "Role"}, 0);
-        table = new JTable(model);
-        JScrollPane sp = new JScrollPane(table);
-        sp.setBounds(150, 130, 600, 280);
-        add(sp);
-
-        // 🔘 Buttons
-        refreshBtn = new JButton("Refresh");
-        refreshBtn.setBounds(150, 430, 100, 40);
-        refreshBtn.addActionListener(this);
-        add(refreshBtn);
-
-        deleteBtn = new JButton("Delete");
-        deleteBtn.setBounds(270, 430, 100, 40);
-        deleteBtn.addActionListener(this);
-        add(deleteBtn);
-
-        saveBtn = new JButton("Save");
-        saveBtn.setBounds(390, 430, 100, 40);
-        saveBtn.addActionListener(this);
-        add(saveBtn);
-
-        backBtn = new JButton("Back");
-        backBtn.setBounds(650, 500, 100, 40);
-        backBtn.addActionListener(this);
-        add(backBtn);
-
-        loadUsers("");
-
+        // ✅ MUST use reusable window setup
         reusable.windowSetup(this);
+
+        // ========= MAIN SCROLLABLE PANEL =========
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(null);
+        mainPanel.setPreferredSize(new Dimension(1000, 1000)); // taller than frame
+
+        // ========= TITLE =========
+        JLabel title = new JLabel("Admin - User Management");
+        title.setFont(new Font("Arial", Font.BOLD, 22));
+        title.setBounds(350, 20, 400, 30);
+        mainPanel.add(title);
+
+        // ========= SEARCH =========
+        JLabel searchLabel = new JLabel("Search:");
+        searchLabel.setBounds(100, 80, 80, 25);
+        mainPanel.add(searchLabel);
+
+        searchField = new JTextField();
+        searchField.setBounds(170, 80, 250, 25);
+        mainPanel.add(searchField);
+
+        JButton searchBtn = new JButton("Search");
+        searchBtn.setBounds(440, 80, 100, 25);
+        searchBtn.addActionListener(e ->
+                refreshTable(searchField.getText().trim())
+        );
+        mainPanel.add(searchBtn);
+
+        JButton resetBtn = new JButton("Reset");
+        resetBtn.setBounds(560, 80, 100, 25);
+        resetBtn.addActionListener(e -> {
+            searchField.setText("");
+            refreshTable("");
+        });
+        mainPanel.add(resetBtn);
+
+        // ========= TABLE =========
+        model = new DefaultTableModel(new String[]{
+                "ID", "Full Name", "Email", "Gender", "DOB",
+                "Username", "Password", "Role", "Course"
+        }, 0) {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return col != 0; // ID locked
+            }
+        };
+
+        table = new JTable(model);
+        table.setRowHeight(22);
+
+        JScrollPane tableScroll = new JScrollPane(table);
+        tableScroll.setBounds(50, 130, 980, 280);
+        mainPanel.add(tableScroll);
+
+        // ========= UPDATE / DELETE =========
+        JButton updateBtn = new JButton("Update Selected");
+        updateBtn.setBounds(350, 430, 160, 35);
+        updateBtn.addActionListener(e -> updateUsers());
+        mainPanel.add(updateBtn);
+
+        JButton deleteBtn = new JButton("Delete Selected");
+        deleteBtn.setBounds(530, 430, 160, 35);
+        deleteBtn.addActionListener(e -> deleteUser());
+        mainPanel.add(deleteBtn);
+
+        // ========= CREATE USER SECTION =========
+        JLabel createTitle = new JLabel("Create New User");
+        createTitle.setFont(new Font("Arial", Font.BOLD, 18));
+        createTitle.setBounds(420, 490, 250, 30);
+        mainPanel.add(createTitle);
+
+        int labelX = 200;
+        int fieldX = 360;
+        int y = 540;
+        int gap = 35;
+
+        JTextField fullName = addField(mainPanel, "Full Name", labelX, fieldX, y);
+        y += gap;
+        JTextField email = addField(mainPanel, "Email", labelX, fieldX, y);
+        y += gap;
+        JTextField gender = addField(mainPanel, "Gender", labelX, fieldX, y);
+        y += gap;
+        JTextField dob = addField(mainPanel, "DOB", labelX, fieldX, y);
+        y += gap;
+        JTextField username = addField(mainPanel, "Username", labelX, fieldX, y);
+        y += gap;
+        JTextField password = addField(mainPanel, "Password", labelX, fieldX, y);
+        y += gap;
+        JTextField role = addField(mainPanel, "Role", labelX, fieldX, y);
+        y += gap;
+        JTextField course = addField(mainPanel, "Course (- if none)", labelX, fieldX, y);
+
+        JButton createBtn = new JButton("Create User");
+        createBtn.setBounds(420, y + 50, 180, 40);
+        createBtn.addActionListener(e -> {
+            User u = new User(
+                    generateNextID(),
+                    fullName.getText().trim(),
+                    email.getText().trim(),
+                    gender.getText().trim(),
+                    dob.getText().trim(),
+                    username.getText().trim(),
+                    password.getText().trim(),
+                    role.getText().trim(),
+                    course.getText().trim().isEmpty() ? "-" : course.getText().trim()
+            );
+
+            allUsers.add(u);
+            saveAll();
+            refreshTable("");
+            JOptionPane.showMessageDialog(this, "User created successfully");
+        });
+        mainPanel.add(createBtn);
+
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setBounds(0, 0, 1080, 600);
+        add(scrollPane);
+
+        scrollPane.getVerticalScrollBar().setPreferredSize(
+                new Dimension(25, Integer.MAX_VALUE)
+        );
+
+
+        loadUsers();
+        refreshTable("");
         setVisible(true);
     }
 
-    // 📂 Load users from accounts.txt
-    private void loadUsers(String keyword) {
-        model.setRowCount(0);
+    // ================= HELPER =================
+    private JTextField addField(JPanel panel, String label, int lx, int fx, int y) {
+        JLabel l = new JLabel(label);
+        l.setBounds(lx, y, 150, 25);
+        panel.add(l);
 
+        JTextField f = new JTextField();
+        f.setBounds(fx, y, 300, 25);
+        panel.add(f);
+        return f;
+    }
+
+    // ================= FILE =================
+    private void loadUsers() {
+        allUsers.clear();
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
-
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-
-                // MUST be username,password,role
-                if (data.length == 3) {
-                    String username = data[0];
-                    String password = data[1];
-                    String role = data[2];
-
-                    if (keyword.isEmpty()
-                            || username.toLowerCase().contains(keyword)
-                            || role.toLowerCase().contains(keyword)) {
-
-                        model.addRow(new Object[]{username, password, role});
-                    }
+                String[] p = line.split(",");
+                if (p.length == 9) {
+                    allUsers.add(new User(
+                            p[0], p[1], p[2], p[3], p[4],
+                            p[5], p[6], p[7], p[8]
+                    ));
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error reading accounts.txt");
+            JOptionPane.showMessageDialog(this, "Error loading accounts.txt");
         }
     }
 
-    // ❌ Delete user (table-only until Save)
+    private void saveAll() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_NAME))) {
+            for (User u : allUsers)
+                pw.println(u.toFileString());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Save failed");
+        }
+    }
+
+    // ================= LOGIC =================
+    private void refreshTable(String keyword) {
+        model.setRowCount(0);
+        for (User u : allUsers) {
+            if (keyword.isEmpty()
+                    || u.fullName.toLowerCase().contains(keyword.toLowerCase())
+                    || u.username.toLowerCase().contains(keyword.toLowerCase())
+                    || u.role.toLowerCase().contains(keyword.toLowerCase())) {
+
+                model.addRow(new Object[]{
+                        u.id, u.fullName, u.email, u.gender, u.dob,
+                        u.username, u.password, u.role, u.course
+                });
+            }
+        }
+    }
+
+    private void updateUsers() {
+        if (table.isEditing())
+            table.getCellEditor().stopCellEditing();
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String id = model.getValueAt(i, 0).toString();
+            for (User u : allUsers) {
+                if (u.id.equals(id)) {
+                    u.fullName = model.getValueAt(i, 1).toString();
+                    u.email = model.getValueAt(i, 2).toString();
+                    u.gender = model.getValueAt(i, 3).toString();
+                    u.dob = model.getValueAt(i, 4).toString();
+                    u.username = model.getValueAt(i, 5).toString();
+                    u.password = model.getValueAt(i, 6).toString();
+                    u.role = model.getValueAt(i, 7).toString();
+                    u.course = model.getValueAt(i, 8).toString();
+                }
+            }
+        }
+        saveAll();
+        JOptionPane.showMessageDialog(this, "Users updated successfully");
+    }
+
     private void deleteUser() {
         int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Select a user first");
-            return;
-        }
+        if (row == -1) return;
 
-        int confirm = JOptionPane.showConfirmDialog(
-                this,
-                "Are you sure you want to delete this user?",
-                "Confirm Delete",
-                JOptionPane.YES_NO_OPTION
-        );
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            model.removeRow(row);
-        }
+        String id = model.getValueAt(row, 0).toString();
+        allUsers.removeIf(u -> u.id.equals(id));
+        model.removeRow(row);
+        saveAll();
     }
 
-    // 💾 Save users to accounts.txt with full validation
-    private void saveUsers() {
-
-        // 🔥 IMPORTANT: commit table edits first
-        if (table.isEditing()) {
-            table.getCellEditor().stopCellEditing();
-        }
-
-        ArrayList<String> usernames = new ArrayList<>();
-        ArrayList<String> outputLines = new ArrayList<>();
-
-        // 1️⃣ Validate everything FIRST
-        for (int i = 0; i < model.getRowCount(); i++) {
-
-            String username = model.getValueAt(i, 0).toString().trim();
-            String password = model.getValueAt(i, 1).toString().trim();
-            String role = model.getValueAt(i, 2).toString().trim();
-
-            if (username.isEmpty() || password.isEmpty() || role.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Empty field at row " + (i + 1),
-                        "Validation Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                return;
-            }
-
-            if (usernames.contains(username)) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Duplicate username detected: " + username,
-                        "Validation Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                return;
-            }
-
-            if (!isValidRole(role)) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Invalid role: " + role +
-                                "\n\nAllowed roles:\nLecturer, Student, AcademicLeader, Admin",
-                        "Invalid Role",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                return;
-            }
-
-            usernames.add(username);
-            outputLines.add(username + "," + password + "," + role);
-        }
-
-        // 2️⃣ Write to temp file
-        File tempFile = new File("accounts_temp.txt");
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(tempFile))) {
-            for (String line : outputLines) {
-                pw.println(line);
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error writing temp file");
-            return;
-        }
-
-        // 3️⃣ Replace original file
-        File originalFile = new File(FILE_NAME);
-
-        if (!tempFile.renameTo(originalFile)) {
-            JOptionPane.showMessageDialog(this, "Error replacing accounts.txt");
-            return;
-        }
-
-        JOptionPane.showMessageDialog(
-                this,
-                "Details saved successfully",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-    }
-
-
-
-
-    // ✅ Role whitelist check
-    private boolean isValidRole(String role) {
-        for (String r : VALID_ROLES) {
-            if (r.equalsIgnoreCase(role)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-        if (e.getSource() == searchBtn) {
-            loadUsers(searchField.getText().toLowerCase());
-        }
-
-        if (e.getSource() == refreshBtn) {
-            searchField.setText("");
-            loadUsers("");
-        }
-
-        if (e.getSource() == deleteBtn) {
-            deleteUser();
-        }
-
-        if (e.getSource() == saveBtn) {
-            saveUsers();
-        }
-
-        if (e.getSource() == backBtn) {
-            new adminDashboard();
-            dispose();
-        }
+    private String generateNextID() {
+        return "U" + String.format("%03d", allUsers.size() + 1);
     }
 
     public static void main(String[] args) {

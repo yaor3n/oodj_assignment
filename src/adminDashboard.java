@@ -38,10 +38,10 @@ public class adminDashboard extends JFrame implements ActionListener {
         createClassesButton.setBackground(new Color(0xffffff));
         this.add(createClassesButton);
 
-        defineGradingSystemButton = new JButton("Create Classes");
+        defineGradingSystemButton = new JButton("Define Grading System");
         defineGradingSystemButton.setFont(new Font("Arial", Font.BOLD, 25));
         defineGradingSystemButton.addActionListener(this);
-        defineGradingSystemButton.setBounds(370,325,300,75);
+        defineGradingSystemButton.setBounds(370,425,300,75);
         defineGradingSystemButton.setForeground(new Color(0x000000));
         defineGradingSystemButton.setBackground(new Color(0xffffff));
         this.add(defineGradingSystemButton);
@@ -67,6 +67,7 @@ public class adminDashboard extends JFrame implements ActionListener {
             this.dispose();
         } else if (e.getSource() == crudUsersButton) {
             new crudUsers();
+            this.dispose();
         } else if (e.getSource() == createClassesButton) {
             new createClasses();
             this.dispose();
