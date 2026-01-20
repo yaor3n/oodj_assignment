@@ -12,6 +12,9 @@ public class academicLeaderReport extends JPanel {
     private int count;
     private String topIntakeMonth;
     private int maxCount;
+    private DefaultTableModel moduleTableModel; 
+    private JLabel totalModuleValue;
+    private JLabel intakeValue;
     
     public academicLeaderReport() {
       this.setLayout(new BorderLayout());
@@ -165,7 +168,7 @@ public class academicLeaderReport extends JPanel {
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         totalModule.add(title, BorderLayout.NORTH);
 
-        List<academicLeaderModule> modules = academicLeaderModuleFileManager.loadModules();
+        List<academicLeaderModule> modules = academicLeaderFileManager.loadModules();
         count = modules.size();
         
         //total module count card
@@ -183,7 +186,7 @@ public class academicLeaderReport extends JPanel {
         totalModuleLabel.setFont(new Font("Segoe UI", Font.BOLD,12));
         totalModuleLabel.setForeground(new Color(108,117,125));
         
-        JLabel totalModuleValue=new JLabel(String.valueOf(count));
+        totalModuleValue=new JLabel(String.valueOf(count));
         totalModuleValue.setFont(new Font("Segoe UI", Font.BOLD,22));
         totalModuleValue.setForeground(new Color(40,167,69));
         
@@ -220,14 +223,13 @@ public class academicLeaderReport extends JPanel {
         intakeLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
         intakeLabel.setForeground(new Color(108, 117, 125));
 
-        JLabel intakeValue = new JLabel(topIntakeMonth + " (" + maxCount + ")");
+        intakeValue = new JLabel(topIntakeMonth + " (" + maxCount + ")");
         intakeValue.setFont(new Font("Segoe UI", Font.BOLD, 20)); // Fits better
         intakeValue.setForeground(new Color(40, 167, 69)); // Success Green
 
         peakIntakeMonth.add(intakeLabel, BorderLayout.NORTH);
         peakIntakeMonth.add(intakeValue, BorderLayout.CENTER);
-        
-        
+         
         JPanel cardAligner = new JPanel(new FlowLayout(FlowLayout.LEFT));
         cardAligner.setOpaque(false);
         cardAligner.add(totalModuleCount);
@@ -339,18 +341,18 @@ public class academicLeaderReport extends JPanel {
         
         // Inside totalModuleReport() (table)
         String[] columns = {"Module Code", "Module Name", "Level", "Lecturer","Intake Month","Year"};
-        DefaultTableModel model = new DefaultTableModel(columns, 0){
+        moduleTableModel = new DefaultTableModel(columns, 0){
             @Override
             public boolean isCellEditable(int r,int c){return false;}
         };
 
         // Populate with data from your file manager
         for (academicLeaderModule m : modules) {
-            model.addRow(new Object[]{m.getCode(), m.getName(), m.getQualification(), m.getLecturerName(), m.getIntakeMonth(), m.getYear()});
+            moduleTableModel.addRow(new Object[]{m.getCode(), m.getName(), m.getQualification(), m.getLecturerName(), m.getIntakeMonth(), m.getYear()});
         }
         
         //table
-        JTable moduleTable = new JTable(model) {
+        JTable moduleTable = new JTable(moduleTableModel) {
             @Override
             public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
                 Component component = super.prepareRenderer(renderer, row, column);              
@@ -404,7 +406,7 @@ public class academicLeaderReport extends JPanel {
         headerCorner.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(203, 213, 225)));
         scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, headerCorner);
         
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(moduleTableModel);
         moduleTable.setRowSorter(sorter);
         
         java.awt.event.ActionListener filterAction = e -> {
@@ -466,6 +468,38 @@ public class academicLeaderReport extends JPanel {
         totalModule.add(topSection, BorderLayout.NORTH);
         totalModule.add(registryPanel, BorderLayout.CENTER);
         return totalModule;
+    }
+    
+    public void refreshData() {
+        List<academicLeaderModule> modules = academicLeaderFileManager.loadModules();
+
+        if (moduleTableModel != null) {
+            moduleTableModel.setRowCount(0);
+            for (academicLeaderModule m : modules) {
+                moduleTableModel.addRow(new Object[]{
+                    m.getCode(), m.getName(), m.getQualification(), 
+                    m.getLecturerName(), m.getIntakeMonth(), m.getYear()
+                });
+            }
+        }
+        
+        count = modules.size();
+        if (totalModuleValue != null) totalModuleValue.setText(String.valueOf(count));
+
+        java.util.Map<String, Integer> intakeCounts = new java.util.HashMap<>();
+        for (academicLeaderModule m : modules) {
+            String month = m.getIntakeMonth() + " " + m.getYear();
+            intakeCounts.put(month, intakeCounts.getOrDefault(month, 0) + 1);
+        }
+        topIntakeMonth = "N/A";
+        maxCount = 0;
+        for (var entry : intakeCounts.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                topIntakeMonth = entry.getKey();
+            }
+        }
+        if (intakeValue != null) intakeValue.setText(topIntakeMonth + " (" + maxCount + ")");
     }
     
     private void exportToCSV(JTable table, String totalModules, String peakIntakeMonth) {

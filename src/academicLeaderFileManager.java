@@ -2,8 +2,29 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class academicLeaderModuleFileManager {
-    private static final String FILE_PATH = "academicLeaderModule.txt";
+public class academicLeaderFileManager {
+    private static final String MODULE_FILE = "academicLeaderModule.txt";
+    private static final String ACCOUNT_FILE = "accounts.txt";
+    
+    public static String[] authenticate(String username, String password) {
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 3) {
+                    String fUser = parts[0].trim();
+                    String fPass = parts[1].trim();
+                    
+                    if (username.equals(fUser) && password.equals(fPass)) {
+                        return parts;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null; // Return null if no match is found
+    }
     
     public static void saveModule(academicLeaderModule module) {
         // Use true for append mode. PrintWriter.println adds the newline automatically.
@@ -17,10 +38,10 @@ public class academicLeaderModuleFileManager {
     // Read all modules from the file and turn them into Objects
     public static List<academicLeaderModule> loadModules() {
         List<academicLeaderModule> modules = new ArrayList<>();
-        File file = new File(FILE_PATH);
+        File file = new File(MODULE_FILE);
         if (!file.exists()) return modules;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(MODULE_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -53,7 +74,7 @@ public class academicLeaderModuleFileManager {
     }
     
     public static void saveNewModule(List<academicLeaderModule> modules) {
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(FILE_PATH, false)))) {
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(MODULE_FILE, false)))) {
             for (academicLeaderModule m : modules) {
                 // Using m.toString() ensures the 7th field (Intake) is included!
                 out.println(m.toString()); 
@@ -84,7 +105,7 @@ public class academicLeaderModuleFileManager {
     
     public int getModuleCount(){
         int count=0;
-        File file=new File(FILE_PATH);
+        File file=new File(MODULE_FILE);
         if (!file.exists())return 0;
         
         try(BufferedReader br=new BufferedReader(new FileReader(file))){

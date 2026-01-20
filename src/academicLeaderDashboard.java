@@ -194,7 +194,7 @@ public class academicLeaderDashboard extends JFrame {
         sidebar.setVisible(false);
         layeredPane.add(sidebar, JLayeredPane.MODAL_LAYER);
         sidebarPanel.getDashboardBtn().addActionListener(e -> showPage("DASHBOARD"));
-        sidebarPanel.getReportBtn().addActionListener(e -> showPage("REPORT"));
+        sidebarPanel.getReportBtn().addActionListener(e -> {reportPage.refreshData(); showPage("REPORT");});
         sidebarPanel.getProfileBtn().addActionListener(e -> showPage("PROFILE"));
         sidebarPanel.getLogoutBtn().addActionListener(e -> {
             int confirmation = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout Confirmation", JOptionPane.YES_NO_OPTION);
@@ -232,13 +232,13 @@ public class academicLeaderDashboard extends JFrame {
     
     private void filterModules() {
         String filterText = searchField.getText().toLowerCase();
-        List<academicLeaderModule> allModules = academicLeaderModuleFileManager.loadModules();
+        List<academicLeaderModule> allModules = academicLeaderFileManager.loadModules();
         List<academicLeaderModule> filtered = allModules.stream().filter(m -> m.getName().toLowerCase().contains(filterText)).collect(Collectors.toList());
         displayModules(filtered);
     }
 
     private void refreshDashboard() {
-        List<academicLeaderModule> modules = academicLeaderModuleFileManager.loadModules();
+        List<academicLeaderModule> modules = academicLeaderFileManager.loadModules();
         displayModules(modules);
     }
 
@@ -373,7 +373,7 @@ public class academicLeaderDashboard extends JFrame {
             int confirm = JOptionPane.showConfirmDialog(this, 
                 "Are you sure you want to delete " + m.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-                academicLeaderModuleFileManager.deleteModule(m.getCode());
+                academicLeaderFileManager.deleteModule(m.getCode());
                 refreshDashboard();
             }
         });
@@ -491,7 +491,7 @@ public class academicLeaderDashboard extends JFrame {
         JTextField nameField = createStyledTextField(isEdit ? editModule.getName() : "");
         JComboBox<String> qualificationBox = new JComboBox<>(new String[]{"-Select-", "Foundation", "Diploma", "Bachelor's Degree", "Master's Degree", "PhD"});
         
-        List<String> lecturerList = academicLeaderModuleFileManager.checkLecturerNames();
+        List<String> lecturerList = academicLeaderFileManager.checkLecturerNames();
         JComboBox<String> lecturerBox = new JComboBox<>();
         if (lecturerList == null || lecturerList.isEmpty()) {
             lecturerBox.addItem("No Lecturers Found");
@@ -587,10 +587,10 @@ public class academicLeaderDashboard extends JFrame {
             academicLeaderModule newM = new academicLeaderModule(code, name, selQual, selLect, selMonth, selYear, description, selectedPath[0]);
 
             if (isEdit) {
-                academicLeaderModuleFileManager.updateModule(newM);
+                academicLeaderFileManager.updateModule(newM);
                 JOptionPane.showMessageDialog(dialog, "Successfully edited module!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                academicLeaderModuleFileManager.saveModule(newM);
+                academicLeaderFileManager.saveModule(newM);
                 JOptionPane.showMessageDialog(dialog, "Successfully created new module!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
             
