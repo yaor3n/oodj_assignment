@@ -72,6 +72,7 @@ public class login extends JFrame implements ActionListener {
 
                         if (username.equals(fileUsername) && password.equals(filePassword)) {
                             found = true;
+                            Session.currentUsername = username;
 
                             switch (role) {
                                 case "Admin":

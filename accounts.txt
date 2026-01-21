@@ -5,5 +5,6 @@ stud2,321,Student
 staff1,123,AcademicStaff
 admin,123,Admin
 student,123,Student
-raul,321,Student
+raul,raul,Student
 yaoren,123,Lecturer
+studenttest,test,Student
