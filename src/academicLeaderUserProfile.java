@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class academicLeaderUserProfile extends JPanel {
-    private JTextField nameField, emailField, dobField, genderField, userField;
-    private JLabel staffIDField,roleField;
-    private JPasswordField passField;
+    private JTextField nameField, emailField, dobField, genderField, usernameField;
+    private JLabel idField,roleField;
+    private JPasswordField passwordField;
     //private final Color SUCCESS_GREEN = new Color(40, 167, 69);
     
     // Panel to hold buttons and layout to swap them
@@ -19,19 +19,19 @@ public class academicLeaderUserProfile extends JPanel {
         this.setBackground(Color.WHITE);
 
         // 1. INITIALIZE COMPONENTS
-        staffIDField = new JLabel("AL6767");
+        idField = new JLabel("AL6767");
         nameField = createProfileTextField();
         emailField = createProfileTextField();
         genderField = createProfileTextField();
         dobField = createProfileTextField();
-        userField = createProfileTextField();
+        usernameField = createProfileTextField();
         
         roleField = new JLabel("Pending");
         roleField.setFont(new Font("Segoe UI", Font.BOLD, 13));
     
-        passField = new JPasswordField();
-        passField.setBorder(null); 
-        passField.setOpaque(false);
+        passwordField = new JPasswordField();
+        passwordField.setBorder(null); 
+        passwordField.setOpaque(false);
         //stylePasswordField(passField);
         
         JButton eyeButton = new JButton("👁️");
@@ -40,10 +40,10 @@ public class academicLeaderUserProfile extends JPanel {
         eyeButton.setContentAreaFilled(false);
         eyeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         eyeButton.addActionListener(e -> {
-            if (passField.getEchoChar() == (char)0){
-                passField.setEchoChar('•');
+            if (passwordField.getEchoChar() == (char)0){
+                passwordField.setEchoChar('•');
             }else{
-                passField.setEchoChar((char)0);
+                passwordField.setEchoChar((char)0);
             }
         });
         
@@ -55,7 +55,7 @@ public class academicLeaderUserProfile extends JPanel {
             BorderFactory.createEmptyBorder(0, 12, 0, 5) // Internal padding
         ));
 
-        passwordWrapper.add(passField, BorderLayout.CENTER);
+        passwordWrapper.add(passwordField, BorderLayout.CENTER);
         passwordWrapper.add(eyeButton, BorderLayout.EAST);
         
         setEditMode(false);
@@ -90,7 +90,7 @@ public class academicLeaderUserProfile extends JPanel {
         personalCard.add(personalHeader, gbc);
         gbc.gridwidth = 1;
 
-        addProfileRow(personalCard, "Staff ID", staffIDField, gbc, 1);
+        addProfileRow(personalCard, "Staff ID", idField, gbc, 1);
         addProfileRow(personalCard, "Full Name", nameField, gbc, 2);
         addProfileRow(personalCard, "Email Address", emailField, gbc, 3);
         addProfileRow(personalCard, "Gender", genderField, gbc, 4);
@@ -112,7 +112,7 @@ public class academicLeaderUserProfile extends JPanel {
         credentialsCard.add(credsHeader, gbc);
         gbc.gridwidth = 1;
         
-        addProfileRow(credentialsCard, "Username", userField, gbc, 1);
+        addProfileRow(credentialsCard, "Username", usernameField, gbc, 1);
         addProfileRow(credentialsCard, "Password", passwordWrapper, gbc, 2);
         addProfileRow(credentialsCard, "Access Role", roleField, gbc, 3);
 
@@ -174,14 +174,14 @@ public class academicLeaderUserProfile extends JPanel {
     }
 
     private void setEditMode(boolean editing) {
-        userField.setEditable(editing);
-        passField.setEditable(editing);
+        usernameField.setEditable(editing);
+        passwordField.setEditable(editing);
 
         Color fieldBg = editing ? Color.WHITE : new Color(245, 245, 245);
-        userField.setBackground(fieldBg);
+        usernameField.setBackground(fieldBg);
 
         // Find the password wrapper and change its color
-        Component wrapper = passField.getParent();
+        Component wrapper = passwordField.getParent();
         if (wrapper instanceof JPanel) {
             wrapper.setBackground(fieldBg);
         }
@@ -215,8 +215,8 @@ public class academicLeaderUserProfile extends JPanel {
     // (Remaining methods updateProfile, styleProfileCard, createProfileTextField, addProfileRow, loadProfileFromFile stay exactly the same as previous)
     
     private void updateProfile() {
-        String newUsername = userField.getText().trim();
-        String newPassword = new String(passField.getPassword()).trim();
+        String newUsername = usernameField.getText().trim();
+        String newPassword = new String(passwordField.getPassword()).trim();
 
         if (newUsername.isEmpty() || newPassword.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Username and Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -231,8 +231,9 @@ public class academicLeaderUserProfile extends JPanel {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 3 && parts[2].trim().equalsIgnoreCase("Academic Leader")) {
-                    accounts.add(newUsername + "," + newPassword + "," + parts[2].trim());
+                if (parts.length >= 8 && parts[7].trim().equalsIgnoreCase("AcademicLeader")) {
+                    String updatedLine = parts[0] + "," + parts[1] + "," + parts[2] + "," + parts[3] + "," + parts[4] + "," + newUsername + "," + newPassword + "," + parts[7].trim() + "," + parts[8];
+                accounts.add(updatedLine);
                     updated = true;
                 } else {
                     accounts.add(line);
@@ -241,15 +242,15 @@ public class academicLeaderUserProfile extends JPanel {
             reader.close();
 
             BufferedWriter writer = new BufferedWriter(new FileWriter("accounts.txt"));
-            for (String acc : accounts) {
-                writer.write(acc);
-                writer.newLine();
+            for (int i = 0; i < accounts.size(); i++) {
+                writer.write(accounts.get(i));
+                if (i < accounts.size() - 1) writer.newLine();
             }
             writer.close();
 
             if (updated) {
                 JOptionPane.showMessageDialog(this, "Profile updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                setEditMode(false); // Return to view mode after saving
+                setEditMode(false); 
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Error saving data: " + ex.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
@@ -307,19 +308,22 @@ public class academicLeaderUserProfile extends JPanel {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 3 && parts[2].trim().equalsIgnoreCase("Academic Leader")) {
-                    userField.setText(parts[0].trim());
-                    passField.setText(parts[1].trim());
-                    roleField.setText(parts[2].trim());
-                    nameField.setText("Ong Szi Kai");
-                    emailField.setText("ongszikai@apu.edu.my");
-                    genderField.setText("Male");
-                    dobField.setText("1 January 2025");
+                if (parts.length >= 8 && parts[7].trim().equalsIgnoreCase("AcademicLeader")) {
+                    idField.setText(parts[0].trim());
+                    nameField.setText(parts[1].trim());
+                    emailField.setText(parts[2].trim());
+                    genderField.setText(parts[3].trim());
+                    dobField.setText(parts[4].trim());
+                    usernameField.setText(parts[5].trim());
+                    passwordField.setText(parts[6].trim());
+                    
+                    String displayRole = parts[7].trim().replace("AcademicLeader", "Academic Leader");
+                    roleField.setText(displayRole);
                     break; 
                 }
             }
         } catch (Exception e) {
-            roleField.setText("Error reading file");
+            JOptionPane.showMessageDialog(this, "Error loading profile: " + e.getMessage());
         }
     }
 }

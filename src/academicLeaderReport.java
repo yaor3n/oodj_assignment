@@ -13,8 +13,12 @@ public class academicLeaderReport extends JPanel {
     private String topIntakeMonth;
     private int maxCount;
     private DefaultTableModel moduleTableModel; 
+    private DefaultTableModel lecturerTableModel;
     private JLabel totalModuleValue;
     private JLabel intakeValue;
+    private JLabel totalLecturerValue;
+    private int LecturerCount;
+    
     
     public academicLeaderReport() {
       this.setLayout(new BorderLayout());
@@ -31,7 +35,7 @@ public class academicLeaderReport extends JPanel {
       leftNavigation.add(dropdownGroup("📈 Module Performance Summary", new String[]{"Total Modules Created"}));
       leftNavigation.add(dropdownGroup("👥 Student Enrollment Summary", new String[]{"Enrollment Trends"}));
       leftNavigation.add(dropdownGroup("📝 Assessment Performance", new String[]{"Pass/Fail Rates"}));
-      leftNavigation.add(dropdownGroup("👨‍🏫 Lecturer Performance", new String[]{"Workload Overview"}));
+      leftNavigation.add(dropdownGroup("👨‍🏫 Lecturer Performance", new String[]{"Lecturer Overview", "Lecturer Rating"}));
       this.add(new JScrollPane(leftNavigation),BorderLayout.WEST);
       
       leftNavigation.add(Box.createVerticalStrut(20)); 
@@ -52,6 +56,9 @@ public class academicLeaderReport extends JPanel {
       
       cardPanel.add(defaultPage,"EMPTY");
       cardPanel.add(totalModuleReport(),"Total Modules Created");
+      
+      cardPanel.add(defaultPage,"EMPTY");
+      cardPanel.add(lecturerReport(),"Lecturer Overview");
       
       this.add(cardPanel, BorderLayout.CENTER);
       cardLayout.show(cardPanel, "EMPTY");
@@ -117,10 +124,10 @@ public class academicLeaderReport extends JPanel {
 
         if (isParent) {
             btn.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13));
-            btn.setForeground(new Color(30, 41, 59)); // Deep slate for high contrast
+            btn.setForeground(new Color(30, 41, 59)); 
         } else {
             btn.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
-            btn.setForeground(new Color(71, 85, 105)); // Muted slate for sub-items
+            btn.setForeground(new Color(71, 85, 105)); 
         }
 
         btn.setContentAreaFilled(false);
@@ -159,89 +166,42 @@ public class academicLeaderReport extends JPanel {
     private JPanel totalModuleReport(){
         JPanel totalModule = new JPanel(new BorderLayout(0,20));
         totalModule.setBackground(Color.WHITE);
-        totalModule.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        totalModule.setBorder(BorderFactory.createEmptyBorder(10, 30, 30, 30));
         
-        JPanel topSection = new JPanel(new BorderLayout(0, 15));
+        JPanel topSection = new JPanel();
+        topSection.setLayout(new BoxLayout(topSection, BoxLayout.Y_AXIS));
         topSection.setOpaque(false);
+        topSection.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel title = new JLabel("Total Modules Created Details");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        totalModule.add(title, BorderLayout.NORTH);
-
+        title.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        title.setAlignmentX(Component.LEFT_ALIGNMENT);
+        topSection.add(title);
+        topSection.add(Box.createVerticalStrut(15));
+        
         List<academicLeaderModule> modules = academicLeaderFileManager.loadModules();
         count = modules.size();
         
-        //total module count card
-        JPanel totalModuleCount=new JPanel(new BorderLayout());
-        totalModuleCount.setPreferredSize(new Dimension(200,80));
-        totalModuleCount.setBackground(Color.WHITE);
-        totalModuleCount.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(226, 232, 240)), // Soft outer shell
-            BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 5, 0, 0, new Color(40, 167, 69)), // green Side Accent
-                BorderFactory.createEmptyBorder(15, 20, 15, 20) // Inner Padding
-            )
-        ));
-        
-        JLabel totalModuleLabel=new JLabel("TOTAL MODULES CREATED");
-        totalModuleLabel.setFont(new Font("Segoe UI", Font.BOLD,12));
-        totalModuleLabel.setForeground(new Color(108,117,125));
-        
-        totalModuleValue=new JLabel(String.valueOf(count));
-        totalModuleValue.setFont(new Font("Segoe UI", Font.BOLD,22));
-        totalModuleValue.setForeground(new Color(40,167,69));
-        
-        totalModuleCount.add(totalModuleLabel, BorderLayout.NORTH);
-        totalModuleCount.add(totalModuleValue, BorderLayout.CENTER);
-        
-        //top intake
-        java.util.Map<String, Integer> intakeCounts = new java.util.HashMap<>();
-        for (academicLeaderModule m : modules) {
-            String month = m.getIntakeMonth() + " " + m.getYear();
-            intakeCounts.put(month, intakeCounts.getOrDefault(month, 0) + 1);
-        }
-
-        topIntakeMonth = "N/A";
-        maxCount = 0;
-        for (java.util.Map.Entry<String, Integer> entry : intakeCounts.entrySet()) {
-            if (entry.getValue() > maxCount) {
-                maxCount = entry.getValue();
-                topIntakeMonth = entry.getKey();
-            }
-        }
-        
-        JPanel peakIntakeMonth = new JPanel(new BorderLayout());
-        peakIntakeMonth.setPreferredSize(new Dimension(200, 80));
-        peakIntakeMonth.setBackground(Color.WHITE);
-        peakIntakeMonth.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(226, 232, 240)), // Soft outer shell
-            BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 5, 0, 0, new Color(40,167,69)), // green Side Accent
-                BorderFactory.createEmptyBorder(15, 20, 15, 20) // Inner Padding
-            )
-        ));
-
-        JLabel intakeLabel = new JLabel("PEAK INTAKE MONTH");
-        intakeLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        intakeLabel.setForeground(new Color(108, 117, 125));
-
-        intakeValue = new JLabel(topIntakeMonth + " (" + maxCount + ")");
-        intakeValue.setFont(new Font("Segoe UI", Font.BOLD, 20)); // Fits better
-        intakeValue.setForeground(new Color(40, 167, 69)); // Success Green
-
-        peakIntakeMonth.add(intakeLabel, BorderLayout.NORTH);
-        peakIntakeMonth.add(intakeValue, BorderLayout.CENTER);
-         
-        JPanel cardAligner = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel cardAligner = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         cardAligner.setOpaque(false);
-        cardAligner.add(totalModuleCount);
-        cardAligner.add(Box.createHorizontalStrut(10));
-        cardAligner.add(peakIntakeMonth);
-        
-        topSection.add(cardAligner, BorderLayout.CENTER);
-        //totalModule.add(topSection, BorderLayout.NORTH);
-        
+        cardAligner.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // REUSING REUSABLE METHOD
+        totalModuleValue = new JLabel(String.valueOf(count));
+        cardAligner.add(createSummaryCard("TOTAL MODULES CREATED", totalModuleValue, new Color(40, 167, 69)));
+        cardAligner.add(Box.createHorizontalStrut(15));
+
+        // Intake logic variables stay the same
+        intakeValue = new JLabel("Loading..."); 
+        cardAligner.add(createSummaryCard("PEAK INTAKE MONTH", intakeValue, new Color(40, 167, 69)));
+
+        topSection.add(cardAligner);
+        topSection.add(Box.createVerticalStrut(25));
+
         //filter
         JPanel filterContainer=new JPanel(new BorderLayout());
         filterContainer.setOpaque(false);
+        filterContainer.setAlignmentX(Component.LEFT_ALIGNMENT);
         filterContainer.setBorder(BorderFactory.createEmptyBorder(30,0,0,0));
               
         JPanel filter=new JPanel(new FlowLayout(FlowLayout.RIGHT,0,0));
@@ -306,6 +266,7 @@ public class academicLeaderReport extends JPanel {
         
         filter.add(clearFilterButton);
         filterContainer.add(filter,BorderLayout.EAST);
+        filterContainer.add(Box.createVerticalStrut(44));
         topSection.add(filterContainer, BorderLayout.SOUTH);
         totalModule.add(topSection, BorderLayout.NORTH);
         
@@ -470,6 +431,67 @@ public class academicLeaderReport extends JPanel {
         return totalModule;
     }
     
+    private JPanel lecturerReport(){
+        JPanel lecturerOverview = new JPanel(new BorderLayout(0, 20));
+        lecturerOverview.setBackground(Color.WHITE);
+        lecturerOverview.setBorder(BorderFactory.createEmptyBorder(10, 30, 30, 30));
+
+        JPanel topSection = new JPanel();
+        topSection.setLayout(new BoxLayout(topSection, BoxLayout.Y_AXIS));
+        topSection.setOpaque(false);
+        topSection.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel title = new JLabel("Lecturer Performance Overview");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        title.setAlignmentX(Component.LEFT_ALIGNMENT);
+        topSection.add(title);
+        topSection.add(Box.createVerticalStrut(15));
+        
+        List<academicLeaderModule> lecturers = academicLeaderFileManager.loadModules();
+        
+        JPanel cardAligner = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        cardAligner.setOpaque(false);
+        cardAligner.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Total Lecturers Card
+        totalLecturerValue = new JLabel("0");
+        cardAligner.add(createSummaryCard("TOTAL LECTURERS", totalLecturerValue, new Color(0, 123, 255)));
+        cardAligner.add(Box.createHorizontalStrut(15));
+
+        topSection.add(cardAligner);
+        topSection.add(Box.createVerticalStrut(25));
+        
+        JPanel filterContainer = new JPanel(new BorderLayout());
+        filterContainer.setOpaque(false);
+        filterContainer.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Left side: Table Title
+        JLabel tableTitle = new JLabel("📊 Lecturer Workload Registry");
+        tableTitle.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
+        filterContainer.add(tableTitle, BorderLayout.WEST);
+
+        // Right side: Search Group 
+        JPanel searchGroup = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        searchGroup.setOpaque(false);
+
+        JLabel filterLabel = new JLabel("Filter by Name:");
+        filterLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        JTextField searchField = new JTextField();
+        searchField.setPreferredSize(new Dimension(200, 30)); // Fixed size for clean look
+
+        searchGroup.add(filterLabel);
+        searchGroup.add(searchField);
+        filterContainer.add(searchGroup, BorderLayout.EAST);
+
+        topSection.add(filterContainer);
+        topSection.add(Box.createVerticalStrut(10));
+
+        
+        
+        lecturerOverview.add(topSection, BorderLayout.NORTH);
+
+        return lecturerOverview;
+    }
     public void refreshData() {
         List<academicLeaderModule> modules = academicLeaderFileManager.loadModules();
 
@@ -500,6 +522,30 @@ public class academicLeaderReport extends JPanel {
             }
         }
         if (intakeValue != null) intakeValue.setText(topIntakeMonth + " (" + maxCount + ")");
+    }
+    
+    private JPanel createSummaryCard(String titleText, JLabel valueLabel, Color accentColor) {
+        JPanel summaryCard = new JPanel(new BorderLayout());
+        summaryCard.setPreferredSize(new Dimension(210, 80));
+        summaryCard.setBackground(Color.WHITE);
+        summaryCard.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(226, 232, 240)),
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 5, 0, 0, new Color(40,167,69)),
+                BorderFactory.createEmptyBorder(15, 20, 15, 20)
+            )
+        ));
+
+        JLabel titleLabel = new JLabel(titleText);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        titleLabel.setForeground(new Color(108, 117, 125));
+
+        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        valueLabel.setForeground(new Color(40,167,69));
+
+        summaryCard.add(titleLabel, BorderLayout.NORTH);
+        summaryCard.add(valueLabel, BorderLayout.CENTER);
+        return summaryCard;
     }
     
     private void exportToCSV(JTable table, String totalModules, String peakIntakeMonth) {
