@@ -15,7 +15,6 @@ public class crudUsers extends JFrame {
 
     public crudUsers() {
 
-        // ✅ MUST use reusable window setup
         reusable.windowSetup(this);
 
         // ========= MAIN SCROLLABLE PANEL =========
@@ -52,6 +51,14 @@ public class crudUsers extends JFrame {
             refreshTable("");
         });
         mainPanel.add(resetBtn);
+
+        JButton backBtn = new JButton("Go back");
+        backBtn.setBounds(900, 80, 100, 25);
+        backBtn.addActionListener(e -> {
+            new adminDashboard();
+            this.dispose();
+        });
+        mainPanel.add(backBtn);
 
         // ========= TABLE =========
         model = new DefaultTableModel(new String[]{
@@ -139,6 +146,8 @@ public class crudUsers extends JFrame {
                 new Dimension(25, Integer.MAX_VALUE)
         );
 
+        // faster scroll
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 
         loadUsers();
         refreshTable("");

@@ -1,0 +1,5 @@
+M01,JAVA,Diploma,yaoren,January,2026,This is java language programming course,ModuleDefaultPic2.png
+M02,Python,Bachelor's Degree,lec1,May,2026,This is a python language programming course,ModuleDefaultPic.png
+M03,Introduction to AI,Bachelor's Degree,test,June,2026,This is AI course,ModuleDefaultPic.png
+M04,Responsive Web Design,Diploma,lec1,June,2026,This is a HTML + CSS language course,ModuleDefaultPic3.png
+M05,CC1,PhD,test,March,2026,Let the student to open booth,ModuleDefaultPic2.png

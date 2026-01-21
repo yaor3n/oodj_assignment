@@ -18,7 +18,7 @@ flow & logic:
 login > dashboard 
         > option to CRUD users
           > reads from accounts.txt lists out all users and their metadata
-          > able to select any user modify their info, a drop down that indexes accounts.txt for roles etc to show available roles to change user to for example
+          > able to select any user modify their info, a drop down that indexes accounts.btxt for roles etc to show available roles to change user to for example
           > maybe add refresh button to load in new data for outdated jframe
 
         > option to assign lecturers to their respective academic leaders
@@ -43,7 +43,10 @@ login > dashboard
           > this file will be used and read to compare students marks to assign a grade
 
         > option to create new classes for related modules
-          > reads "modules" file created by AcademicLeaders
+          > reads "academicLeaderModule.txt" file created by AcademicLeaders
+          > format for "academicLeaderModule.txt":
+            > M05,CC1,PhD,test,March,2026,Let the student to open booth,ModuleDefaultPic2.png
+            > Module ID,module name,level of education,student name,month,year,description,picture
           > page with drop down again to match classes to modules
           > once matches are saved it will be saved to "Classes.txt"
           > data could be stored in this format:
@@ -65,5 +68,6 @@ login > dashboard
           > same goes for "GradingSystem.txt" & "Classes.txt"
           > Implement searchbar to index items
 
+crud feedback from students
         
 
