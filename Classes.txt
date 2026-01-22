@@ -1,0 +1,4 @@
+ModuleID,ModuleName,LevelOfEdu,LecturerID,LecturerName,Month,Year,Description,ModulePic,Course,ClassID,ClassName,Room,Date,StartTime,EndTime
+M01,Code Optimization,PhD,lec1,Lecturer One,March,2026,Intro to SE,ModulePic1.png,Software Engineering,C005,Lecturer - Code Optimization with Python,E-08-01,24 January 2025,08:00,10:00
+M01,Code Optimization,PhD,lec1,Lecturer One,March,2026,Intro to SE,ModulePic1.png,Software Engineering,C006,Tutorial - Code optimization,B-04-02,2 March 2026,11:00,12:00
+M02,Book Keeping Strategies,Bachelor,lec2,Lecturer Two,April,2026,Basics of Accounting,ModulePic2.png,Accounting,C007,Tutorial: week6,B-05-12,4 April 2026,16:00,18:00

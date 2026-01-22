@@ -3,13 +3,16 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class defineGradingSystem extends JFrame implements ActionListener {
 
     private JTable table;
     private DefaultTableModel model;
-    private JTextField gradeField, minField, maxField;
-    private JButton addBtn, updateBtn, deleteBtn, refreshBtn, exportBtn, backBtn;
+    private JTextField gradeField;
+    private JSpinner minSpinner, maxSpinner;
+    private JButton addBtn, deleteBtn, refreshBtn, exportBtn, backBtn;
     private final String FILE_NAME = "GradingSystem.txt"; // store in TXT
 
     public defineGradingSystem() {
@@ -18,23 +21,27 @@ public class defineGradingSystem extends JFrame implements ActionListener {
 
         JLabel title = new JLabel("Grading System");
         title.setFont(new Font("Arial", Font.BOLD, 25));
-        title.setBounds(350, 10, 300, 40);
+        title.setBounds(300, 10, 300, 40);
         add(title);
 
+        // Grade input
         gradeField = new JTextField();
         gradeField.setBounds(150, 60, 100, 30);
         add(gradeField);
 
-        minField = new JTextField();
-        minField.setBounds(270, 60, 100, 30);
-        add(minField);
+        // Min and Max inputs using spinner
+        minSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
+        minSpinner.setBounds(270, 60, 60, 30);
+        minSpinner.setEditor(new JSpinner.NumberEditor(minSpinner, "#"));
+        add(minSpinner);
 
-        maxField = new JTextField();
-        maxField.setBounds(390, 60, 100, 30);
-        add(maxField);
+        maxSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
+        maxSpinner.setBounds(340, 60, 60, 30);
+        maxSpinner.setEditor(new JSpinner.NumberEditor(maxSpinner, "#"));
+        add(maxSpinner);
 
         addBtn = new JButton("Add");
-        addBtn.setBounds(510, 60, 80, 30);
+        addBtn.setBounds(410, 60, 80, 30);
         addBtn.addActionListener(this);
         add(addBtn);
 
@@ -45,28 +52,23 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         sp.setBounds(150, 110, 440, 250);
         add(sp);
 
-        updateBtn = new JButton("Update");
-        updateBtn.setBounds(150, 380, 100, 30);
-        updateBtn.addActionListener(this);
-        add(updateBtn);
-
         deleteBtn = new JButton("Delete");
-        deleteBtn.setBounds(270, 380, 100, 30);
+        deleteBtn.setBounds(150, 380, 100, 30);
         deleteBtn.addActionListener(this);
         add(deleteBtn);
 
         refreshBtn = new JButton("Refresh");
-        refreshBtn.setBounds(390, 380, 100, 30);
+        refreshBtn.setBounds(270, 380, 100, 30);
         refreshBtn.addActionListener(this);
         add(refreshBtn);
 
         exportBtn = new JButton("Export CSV");
-        exportBtn.setBounds(510, 380, 120, 30);
+        exportBtn.setBounds(390, 380, 120, 30);
         exportBtn.addActionListener(this);
         add(exportBtn);
 
         backBtn = new JButton("Back");
-        backBtn.setBounds(510, 430, 120, 30);
+        backBtn.setBounds(390, 430, 120, 30);
         backBtn.addActionListener(this);
         add(backBtn);
 
@@ -86,7 +88,7 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    // Load grades from TXT (CSV-style)
+    // Load grades from file
     private void loadGrades() {
         model.setRowCount(0);
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
@@ -100,9 +102,11 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error loading file.");
         }
+        sortGrades();
+        detectMissingRanges();
     }
 
-    // Save grades to TXT
+    // Save grades to file
     private void saveGrades() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_NAME))) {
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -115,40 +119,52 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         }
     }
 
-    // Export to CSV
-    private void exportToCSV() {
-        String exportFile = "GradingSystem_export.csv";
-        try (PrintWriter pw = new PrintWriter(new FileWriter(exportFile))) {
-            for (int i = 0; i < model.getRowCount(); i++) {
-                pw.println(model.getValueAt(i, 0) + "," +
-                        model.getValueAt(i, 1) + "," +
-                        model.getValueAt(i, 2));
+    // Sort grades descending by min value (highest first)
+    private void sortGrades() {
+        java.util.List<Object[]> rows = new ArrayList<>();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Object[] r = new Object[3];
+            r[0] = model.getValueAt(i, 0);
+            r[1] = Integer.parseInt(model.getValueAt(i, 1).toString());
+            r[2] = Integer.parseInt(model.getValueAt(i, 2).toString());
+            rows.add(r);
+        }
+        rows.sort(Comparator.comparingInt((Object[] r) -> (int) r[1]).reversed());
+        model.setRowCount(0);
+        for (Object[] r : rows) {
+            model.addRow(r);
+        }
+    }
+
+    // Detect missing ranges and warn
+    private void detectMissingRanges() {
+        java.util.List<int[]> ranges = new ArrayList<>();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            int min = Integer.parseInt(model.getValueAt(i, 1).toString());
+            int max = Integer.parseInt(model.getValueAt(i, 2).toString());
+            ranges.add(new int[]{min, max});
+        }
+        ranges.sort(Comparator.comparingInt(a -> a[0]));
+        int lastMax = -1;
+        for (int[] r : ranges) {
+            if (r[0] > lastMax + 1) {
+                JOptionPane.showMessageDialog(this, "Missing score range: " + (lastMax + 1) + " to " + (r[0] - 1));
             }
-            JOptionPane.showMessageDialog(this, "Exported to " + exportFile);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error exporting CSV.");
+            lastMax = r[1];
         }
     }
 
     // Validate input
-    private boolean validateInput(String grade, String minStr, String maxStr) {
-        try {
-            int min = Integer.parseInt(minStr);
-            int max = Integer.parseInt(maxStr);
-            if (min > max || min < 0 || max > 100) {
-                JOptionPane.showMessageDialog(this, "Invalid min/max range.");
+    private boolean validateInput(String grade, int min, int max) {
+        if (min > max || min < 0 || max > 100) {
+            JOptionPane.showMessageDialog(this, "Invalid min/max range.");
+            return false;
+        }
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (model.getValueAt(i, 0).toString().equalsIgnoreCase(grade)) {
+                JOptionPane.showMessageDialog(this, "Grade name already exists.");
                 return false;
             }
-            // check duplicate grade name
-            for (int i = 0; i < model.getRowCount(); i++) {
-                if (model.getValueAt(i, 0).toString().equalsIgnoreCase(grade)) {
-                    JOptionPane.showMessageDialog(this, "Grade name already exists.");
-                    return false;
-                }
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Min/Max must be integers.");
-            return false;
         }
         return true;
     }
@@ -157,46 +173,18 @@ public class defineGradingSystem extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addBtn) {
             String grade = gradeField.getText().trim();
-            String min = minField.getText().trim();
-            String max = maxField.getText().trim();
-            if (grade.isEmpty() || min.isEmpty() || max.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "All fields must be filled.");
+            int min = (int) minSpinner.getValue();
+            int max = (int) maxSpinner.getValue();
+            if (grade.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Grade name required.");
                 return;
             }
             if (validateInput(grade, min, max)) {
-                model.addRow(new String[]{grade, min, max});
+                model.addRow(new Object[]{grade, min, max});
+                sortGrades();
+                detectMissingRanges();
                 saveGrades();
             }
-        }
-
-        if (e.getSource() == updateBtn) {
-            int row = table.getSelectedRow();
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Select a row first.");
-                return;
-            }
-            String grade = gradeField.getText().trim();
-            String min = minField.getText().trim();
-            String max = maxField.getText().trim();
-            if (grade.isEmpty() || min.isEmpty() || max.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "All fields must be filled.");
-                return;
-            }
-            try {
-                int minVal = Integer.parseInt(min);
-                int maxVal = Integer.parseInt(max);
-                if (minVal > maxVal || minVal < 0 || maxVal > 100) {
-                    JOptionPane.showMessageDialog(this, "Invalid min/max range.");
-                    return;
-                }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Min/Max must be integers.");
-                return;
-            }
-            model.setValueAt(grade, row, 0);
-            model.setValueAt(min, row, 1);
-            model.setValueAt(max, row, 2);
-            saveGrades();
         }
 
         if (e.getSource() == deleteBtn) {
@@ -206,18 +194,30 @@ public class defineGradingSystem extends JFrame implements ActionListener {
                 return;
             }
             model.removeRow(row);
+            sortGrades();
+            detectMissingRanges();
             saveGrades();
         }
 
         if (e.getSource() == refreshBtn) {
             gradeField.setText("");
-            minField.setText("");
-            maxField.setText("");
+            minSpinner.setValue(0);
+            maxSpinner.setValue(0);
             loadGrades();
         }
 
         if (e.getSource() == exportBtn) {
-            exportToCSV();
+            String exportFile = "GradingSystem_export.csv";
+            try (PrintWriter pw = new PrintWriter(new FileWriter(exportFile))) {
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    pw.println(model.getValueAt(i, 0) + "," +
+                            model.getValueAt(i, 1) + "," +
+                            model.getValueAt(i, 2));
+                }
+                JOptionPane.showMessageDialog(this, "Exported to " + exportFile);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error exporting CSV.");
+            }
         }
 
         if (e.getSource() == backBtn) {

@@ -1,5 +1,7 @@
-M01,JAVA,Diploma,yaoren,January,2026,This is java language programming course,ModuleDefaultPic2.png
-M02,Python,Bachelor's Degree,lec1,May,2026,This is a python language programming course,ModuleDefaultPic.png
-M03,Introduction to AI,Bachelor's Degree,test,June,2026,This is AI course,ModuleDefaultPic.png
-M04,Responsive Web Design,Diploma,lec1,June,2026,This is a HTML + CSS language course,ModuleDefaultPic3.png
-M05,CC1,PhD,test,March,2026,Let the student to open booth,ModuleDefaultPic2.png
+moduleID,moduleName,levelOfEdu,lecturerID,lecturerName,month,year,description,modulePicture,course
+M01,Code Optimization,PhD,lec1,Lecturer One,March,2026,Intro to SE,ModulePic1.png,Software Engineering
+M02,Book Keeping Strategies,Bachelor,lec2,Lecturer Two,April,2026,Basics of Accounting,ModulePic2.png,Accounting
+M03,Human Behavioural Studies,Bachelor,lec1,Lecturer One,May,2026,Understanding Human Behavior,ModulePic3.png,Psychology
+M04,Pentesting,PhD,lec2,Lecturer Two,June,2026,Network Security Fundamentals,ModulePic4.png,CyberSecurity
+M05,Intro to OOP,Bachelor,lec4,Lecturer Four,June,2026,OOP with JAVA,ModulePic5.png,Computer Science
+
