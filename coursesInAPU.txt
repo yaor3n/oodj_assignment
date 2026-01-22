@@ -4,3 +4,6 @@ Psychology
 CyberSecurity
 Data Science
 Business Analytics
+Data Science
+Eletrical Engineering
+Mechanical Engineering

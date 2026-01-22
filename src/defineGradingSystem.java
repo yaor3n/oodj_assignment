@@ -1,10 +1,11 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 
 public class defineGradingSystem extends JFrame implements ActionListener {
 
@@ -13,7 +14,7 @@ public class defineGradingSystem extends JFrame implements ActionListener {
     private JTextField gradeField;
     private JSpinner minSpinner, maxSpinner;
     private JButton addBtn, deleteBtn, refreshBtn, exportBtn, backBtn;
-    private final String FILE_NAME = "GradingSystem.txt"; // store in TXT
+    private final String FILE_NAME = "GradingSystem.txt";
 
     public defineGradingSystem() {
         setTitle("Define Grading System");
@@ -24,12 +25,11 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         title.setBounds(300, 10, 300, 40);
         add(title);
 
-        // Grade input
+        // Inputs
         gradeField = new JTextField();
         gradeField.setBounds(150, 60, 100, 30);
         add(gradeField);
 
-        // Min and Max inputs using spinner
         minSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
         minSpinner.setBounds(270, 60, 60, 30);
         minSpinner.setEditor(new JSpinner.NumberEditor(minSpinner, "#"));
@@ -52,6 +52,7 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         sp.setBounds(150, 110, 440, 250);
         add(sp);
 
+        // Buttons
         deleteBtn = new JButton("Delete");
         deleteBtn.setBounds(150, 380, 100, 30);
         deleteBtn.addActionListener(this);
@@ -73,31 +74,26 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         add(backBtn);
 
         // Ensure file exists
-        File f = new File(FILE_NAME);
         try {
-            if (!f.exists()) {
-                f.createNewFile(); // create empty file if not exist
-            }
+            File f = new File(FILE_NAME);
+            if (!f.exists()) f.createNewFile();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error creating file.");
         }
 
         loadGrades();
-
         reusable.windowSetup(this);
         setVisible(true);
     }
 
-    // Load grades from file
+    // Load grades
     private void loadGrades() {
         model.setRowCount(0);
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 3) {
-                    model.addRow(data);
-                }
+                String[] parts = line.split(",");
+                if (parts.length == 3) model.addRow(parts);
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error loading file.");
@@ -106,7 +102,7 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         detectMissingRanges();
     }
 
-    // Save grades to file
+    // Save grades
     private void saveGrades() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_NAME))) {
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -119,9 +115,9 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         }
     }
 
-    // Sort grades descending by min value (highest first)
+    // Sort descending by min
     private void sortGrades() {
-        java.util.List<Object[]> rows = new ArrayList<>();
+        List<Object[]> rows = new ArrayList<>();
         for (int i = 0; i < model.getRowCount(); i++) {
             Object[] r = new Object[3];
             r[0] = model.getValueAt(i, 0);
@@ -131,14 +127,12 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         }
         rows.sort(Comparator.comparingInt((Object[] r) -> (int) r[1]).reversed());
         model.setRowCount(0);
-        for (Object[] r : rows) {
-            model.addRow(r);
-        }
+        for (Object[] r : rows) model.addRow(r);
     }
 
-    // Detect missing ranges and warn
+    // Detect missing ranges
     private void detectMissingRanges() {
-        java.util.List<int[]> ranges = new ArrayList<>();
+        List<int[]> ranges = new ArrayList<>();
         for (int i = 0; i < model.getRowCount(); i++) {
             int min = Integer.parseInt(model.getValueAt(i, 1).toString());
             int max = Integer.parseInt(model.getValueAt(i, 2).toString());
@@ -148,24 +142,39 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         int lastMax = -1;
         for (int[] r : ranges) {
             if (r[0] > lastMax + 1) {
-                JOptionPane.showMessageDialog(this, "Missing score range: " + (lastMax + 1) + " to " + (r[0] - 1));
+                JOptionPane.showMessageDialog(this, "Warning: missing score range " +
+                        (lastMax + 1) + " to " + (r[0] - 1));
             }
             lastMax = r[1];
         }
     }
 
-    // Validate input
+    // Validate new entry
     private boolean validateInput(String grade, int min, int max) {
         if (min > max || min < 0 || max > 100) {
             JOptionPane.showMessageDialog(this, "Invalid min/max range.");
             return false;
         }
+
+        // Duplicate grade name
         for (int i = 0; i < model.getRowCount(); i++) {
             if (model.getValueAt(i, 0).toString().equalsIgnoreCase(grade)) {
                 JOptionPane.showMessageDialog(this, "Grade name already exists.");
                 return false;
             }
         }
+
+        // Overlapping ranges
+        for (int i = 0; i < model.getRowCount(); i++) {
+            int existingMin = Integer.parseInt(model.getValueAt(i, 1).toString());
+            int existingMax = Integer.parseInt(model.getValueAt(i, 2).toString());
+            if (!(max < existingMin || min > existingMax)) {
+                JOptionPane.showMessageDialog(this, "Range overlaps with existing grade: " +
+                        model.getValueAt(i, 0) + " (" + existingMin + "-" + existingMax + ")");
+                return false;
+            }
+        }
+
         return true;
     }
 

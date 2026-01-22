@@ -7,17 +7,17 @@ import java.util.ArrayList;
 public class assignLecturer extends JFrame {
 
     private final String ACCOUNTS_FILE = "accounts.txt";
-    private final String ASSIGNED_FILE = "AssignedLecturers.txt";
+    private final String ASSIGNED_FILE = "lecturersAssignedToAcademicLeaders.txt";
 
-    private JComboBox<String> leaderDropdown;
     private JComboBox<String> lecturerDropdown;
+    private JComboBox<String> leaderDropdown;
     private JButton assignBtn, refreshBtn;
 
     private DefaultTableModel tableModel;
     private JTable table;
 
-    private final ArrayList<String[]> leaders = new ArrayList<>();
-    private final ArrayList<String[]> lecturers = new ArrayList<>();
+    private ArrayList<String[]> lecturers = new ArrayList<>();
+    private ArrayList<String[]> leaders = new ArrayList<>();
 
     public assignLecturer() {
 
@@ -25,36 +25,37 @@ public class assignLecturer extends JFrame {
         setLayout(null);
         reusable.windowSetup(this);
 
+        // ===== TITLE =====
         JLabel title = new JLabel("Assign Lecturers");
         title.setFont(new Font("Arial", Font.BOLD, 24));
         title.setBounds(300, 10, 400, 40);
         add(title);
 
-        // Leader dropdown
-        add(new JLabel("Academic Leader:")).setBounds(50, 70, 150, 25);
-        leaderDropdown = new JComboBox<>();
-        leaderDropdown.setBounds(180, 70, 250, 25);
-        add(leaderDropdown);
-
-        // Lecturer dropdown
-        add(new JLabel("Lecturer:")).setBounds(50, 110, 150, 25);
+        // ===== LECTURER DROPDOWN =====
+        addLabel("Lecturer:", 50, 70);
         lecturerDropdown = new JComboBox<>();
-        lecturerDropdown.setBounds(180, 110, 250, 25);
+        lecturerDropdown.setBounds(180, 70, 250, 25);
         add(lecturerDropdown);
 
-        // Assign button
+        // ===== LEADER DROPDOWN =====
+        addLabel("Academic Leader:", 50, 110);
+        leaderDropdown = new JComboBox<>();
+        leaderDropdown.setBounds(180, 110, 250, 25);
+        add(leaderDropdown);
+
+        // ===== ASSIGN BUTTON =====
         assignBtn = new JButton("Assign");
         assignBtn.setBounds(450, 90, 120, 30);
         assignBtn.addActionListener(e -> assignLecturer());
         add(assignBtn);
 
-        // Refresh button
+        // ===== REFRESH BUTTON =====
         refreshBtn = new JButton("Refresh");
         refreshBtn.setBounds(580, 90, 120, 30);
         refreshBtn.addActionListener(e -> loadAssignments());
         add(refreshBtn);
 
-        // Table to show assigned/unassigned lecturers
+        // ===== TABLE =====
         tableModel = new DefaultTableModel(new String[]{
                 "Lecturer ID", "Lecturer Name", "Assigned Academic Leader"
         }, 0);
@@ -69,26 +70,45 @@ public class assignLecturer extends JFrame {
         setVisible(true);
     }
 
+    // ===== ADD LABEL HELPER =====
+    private void addLabel(String text, int x, int y) {
+        JLabel label = new JLabel(text);
+        label.setBounds(x, y, 150, 25);
+        add(label);
+    }
+
     // ================= LOAD ACCOUNTS =================
     private void loadAccounts() {
-        leaders.clear();
         lecturers.clear();
-        leaderDropdown.removeAllItems();
+        leaders.clear();
         lecturerDropdown.removeAllItems();
+        leaderDropdown.removeAllItems();
 
         try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNTS_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] p = line.split(",");
-                if (p.length < 3) continue; // skip invalid
-                String role = p[1].trim();
-                if (role.equalsIgnoreCase("AcademicLeader")) {
-                    leaders.add(p);
-                    leaderDropdown.addItem(p[0] + " - " + p[2]); // ID - Name
-                } else if (role.equalsIgnoreCase("Lecturer")) {
-                    lecturers.add(p);
+                if (p.length < 8) continue; // skip invalid
+                String role = p[7].trim(); // role is the 8th column
+                String id = p[0].trim();
+                String name = p[1].trim();
+
+                if (role.equalsIgnoreCase("Lecturer")) {
+                    lecturers.add(new String[]{id, name});
+                } else if (role.equalsIgnoreCase("AcademicLeader")) {
+                    leaders.add(new String[]{id, name});
                 }
             }
+
+            // Populate dropdowns
+            for (String[] l : lecturers) {
+                lecturerDropdown.addItem(l[0] + " - " + l[1]);
+            }
+
+            for (String[] l : leaders) {
+                leaderDropdown.addItem(l[0] + " - " + l[1]);
+            }
+
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Failed to read accounts.txt");
         }
@@ -98,17 +118,28 @@ public class assignLecturer extends JFrame {
     private void loadAssignments() {
         tableModel.setRowCount(0);
 
-        // Load assigned lecturers
         ArrayList<String[]> assigned = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(ASSIGNED_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] p = line.split(",");
-                if (p.length >= 4) assigned.add(p); // LecturerID,LecturerName,LeaderID,LeaderName
+                if (p.length >= 4) assigned.add(p);
             }
-        } catch (IOException ignored) {} // file may not exist yet
+        } catch (IOException ignored) {} // may not exist yet
 
-        // Fill lecturer dropdown with unassigned lecturers
+        // show all lecturers with assigned leader or "None"
+        for (String[] lec : lecturers) {
+            String status = "None";
+            for (String[] a : assigned) {
+                if (lec[0].equals(a[0])) {
+                    status = a[2] + " - " + a[3]; // Leader ID - Name
+                    break;
+                }
+            }
+            tableModel.addRow(new Object[]{lec[0], lec[1], status});
+        }
+
+        // update lecturer dropdown to only include unassigned lecturers
         lecturerDropdown.removeAllItems();
         for (String[] lec : lecturers) {
             boolean isAssigned = false;
@@ -119,43 +150,30 @@ public class assignLecturer extends JFrame {
                 }
             }
             if (!isAssigned) {
-                lecturerDropdown.addItem(lec[0] + " - " + lec[2]);
+                lecturerDropdown.addItem(lec[0] + " - " + lec[1]);
             }
-        }
-
-        // Show all lecturers in table with their assigned leader or "None"
-        for (String[] lec : lecturers) {
-            String status = "None";
-            for (String[] a : assigned) {
-                if (lec[0].equals(a[0])) {
-                    status = a[2] + " - " + a[3]; // LeaderID - LeaderName
-                    break;
-                }
-            }
-            tableModel.addRow(new Object[]{lec[0], lec[2], status});
         }
     }
 
-    // ================= ASSIGN LECTURER =================
+    // ================= ASSIGN =================
     private void assignLecturer() {
-        if (leaderDropdown.getSelectedIndex() == -1 || lecturerDropdown.getSelectedIndex() == -1) {
-            JOptionPane.showMessageDialog(this, "Select both Academic Leader and Lecturer");
+        if (lecturerDropdown.getSelectedIndex() == -1 || leaderDropdown.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "Select both Lecturer and Academic Leader");
             return;
         }
 
-        String leaderSelection = (String) leaderDropdown.getSelectedItem();
-        String lecturerSelection = (String) lecturerDropdown.getSelectedItem();
+        String lecturerSel = (String) lecturerDropdown.getSelectedItem();
+        String leaderSel = (String) leaderDropdown.getSelectedItem();
 
-        // Extract IDs and Names
-        String[] leaderParts = leaderSelection.split(" - ");
+        String[] lecturerParts = lecturerSel.split(" - ");
+        String[] leaderParts = leaderSel.split(" - ");
+
+        String lecturerID = lecturerParts[0];
+        String lecturerName = lecturerParts[1];
         String leaderID = leaderParts[0];
         String leaderName = leaderParts[1];
 
-        String[] lecturerParts = lecturerSelection.split(" - ");
-        String lecturerID = lecturerParts[0];
-        String lecturerName = lecturerParts[1];
-
-        // Append to file
+        // append to file
         try (PrintWriter pw = new PrintWriter(new FileWriter(ASSIGNED_FILE, true))) {
             pw.println(lecturerID + "," + lecturerName + "," + leaderID + "," + leaderName);
         } catch (IOException e) {
@@ -163,7 +181,7 @@ public class assignLecturer extends JFrame {
             return;
         }
 
-        JOptionPane.showMessageDialog(this, "Lecturer assigned successfully");
+        JOptionPane.showMessageDialog(this, "Lecturer assigned successfully!");
         loadAssignments();
     }
 

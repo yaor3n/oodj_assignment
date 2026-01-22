@@ -4,4 +4,3 @@ M02,Book Keeping Strategies,Bachelor,lec2,Lecturer Two,April,2026,Basics of Acco
 M03,Human Behavioural Studies,Bachelor,lec1,Lecturer One,May,2026,Understanding Human Behavior,ModulePic3.png,Psychology
 M04,Pentesting,PhD,lec2,Lecturer Two,June,2026,Network Security Fundamentals,ModulePic4.png,CyberSecurity
 M05,Intro to OOP,Bachelor,lec4,Lecturer Four,June,2026,OOP with JAVA,ModulePic5.png,Computer Science
-
