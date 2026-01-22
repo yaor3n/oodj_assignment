@@ -14,10 +14,13 @@ public class academicLeaderReport extends JPanel {
     private int maxCount;
     private DefaultTableModel moduleTableModel; 
     private DefaultTableModel lecturerTableModel;
+    private DefaultTableModel feedbackTableModel;
     private JLabel totalModuleValue;
     private JLabel intakeValue;
     private JLabel totalLecturerValue;
     private int LecturerCount;
+    private JLabel avgRatingValue;
+    private JLabel totalFeedbackValue;
     
     
     public academicLeaderReport() {
@@ -40,7 +43,7 @@ public class academicLeaderReport extends JPanel {
       
       leftNavigation.add(Box.createVerticalStrut(20)); 
       leftNavigation.add(leftNavigationTitle("💬 STUDENT FEEDBACK"));
-      
+      leftNavigation.add(dropdownGroup("👥 Student Enrollment Summary", new String[]{"Feedback Overview"}));
       //right panel
       cardLayout=new CardLayout();
       cardPanel=new JPanel(cardLayout);
@@ -59,6 +62,9 @@ public class academicLeaderReport extends JPanel {
       
       cardPanel.add(defaultPage,"EMPTY");
       cardPanel.add(lecturerReport(),"Lecturer Overview");
+      
+      cardPanel.add(defaultPage,"EMPTY");
+      cardPanel.add(studentFeedbackReport(),"Feedback Overview");
       
       this.add(cardPanel, BorderLayout.CENTER);
       cardLayout.show(cardPanel, "EMPTY");
@@ -436,7 +442,6 @@ public class academicLeaderReport extends JPanel {
         lecturerOverview.setBackground(Color.WHITE);
         lecturerOverview.setBorder(BorderFactory.createEmptyBorder(10, 30, 30, 30));
 
-        // --- 1. TOP SECTION (Dashboard Header) ---
         JPanel topSection = new JPanel();
         topSection.setLayout(new BoxLayout(topSection, BoxLayout.Y_AXIS));
         topSection.setOpaque(false);
@@ -454,7 +459,7 @@ public class academicLeaderReport extends JPanel {
         topSection.add(cardAligner);
         topSection.add(Box.createVerticalStrut(25));
 
-        // --- 2. SEARCH BAR UI ---
+        // search bar
         JPanel filterContainer = new JPanel(new BorderLayout());
         filterContainer.setOpaque(false);
         filterContainer.add(new JLabel("📊 Lecturer Workload Registry") {{ setFont(new Font("Segoe UI Emoji", Font.BOLD, 14)); }}, BorderLayout.WEST);
@@ -472,9 +477,8 @@ public class academicLeaderReport extends JPanel {
         searchGroup.add(searchField);
         filterContainer.add(searchGroup, BorderLayout.EAST);
         topSection.add(filterContainer);
-        //topSection.add(Box.createVerticalStrut(10));
 
-        // --- 3. TABLE INITIALIZATION ---
+        // table
         String[] columns = {"Staff ID", "Full Name", "Email Address", "Gender", "Date of Birth", "Status"};
         lecturerTableModel = new DefaultTableModel(columns, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
@@ -483,15 +487,12 @@ public class academicLeaderReport extends JPanel {
         JScrollPane scrollPane = new JScrollPane(lecturerTable);
         academicLeaderReportUITools.reportTable(lecturerTable, scrollPane);
 
-        // --- 4. PERSISTENT HEADER SWITCHER LOGIC ---
         CardLayout lectCardLayout = new CardLayout();
         JPanel lectSwitcher = new JPanel(lectCardLayout);
         lectSwitcher.setOpaque(false);
-
-        // View 1: Normal Table
         lectSwitcher.add(scrollPane, "TABLE");
 
-        // View 2: Empty View that steals the Table Header to keep it visible
+        //no result found
         JPanel emptyViewWithHeader = new JPanel(new BorderLayout());
         emptyViewWithHeader.setOpaque(false);
         emptyViewWithHeader.setBackground(Color.WHITE);
@@ -500,7 +501,7 @@ public class academicLeaderReport extends JPanel {
         emptyViewWithHeader.add(academicLeaderReportUITools.noResultPanel(), BorderLayout.CENTER);
         lectSwitcher.add(emptyViewWithHeader, "EMPTY");
 
-        // --- 5. SEARCH LISTENER ---
+        // search listener
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(lecturerTableModel);
         lecturerTable.setRowSorter(sorter);
 
@@ -522,7 +523,7 @@ public class academicLeaderReport extends JPanel {
             public void changedUpdate(javax.swing.event.DocumentEvent e) { updateFilter(); }
         });
 
-        // --- 6. ACTION ROW (Sync and Export) ---
+        // actionrow
         JButton exportButton = academicLeaderReportUITools.createExportButton();
         exportButton.addActionListener(e -> {
             List<String> summary = new ArrayList<>();
@@ -532,7 +533,7 @@ public class academicLeaderReport extends JPanel {
 
         JPanel actionRow = academicLeaderReportUITools.createActionRow(academicLeaderReportUITools.syncTimeLabel(), exportButton);
 
-        // --- 7. FINAL ASSEMBLY ---
+        // assembly
         JPanel registryPanel = new JPanel(new BorderLayout(0, 10));
         registryPanel.setOpaque(false);
         registryPanel.add(lectSwitcher, BorderLayout.CENTER); // ADD Switcher Unit
@@ -543,6 +544,94 @@ public class academicLeaderReport extends JPanel {
         
         refreshData();
         return lecturerOverview;
+    }
+    
+    private JPanel studentFeedbackReport() {
+        JPanel feedbackPanel = new JPanel(new BorderLayout(0, 20));
+        feedbackPanel.setBackground(Color.WHITE);
+        feedbackPanel.setBorder(BorderFactory.createEmptyBorder(10, 30, 30, 30));
+
+        JPanel topSection = new JPanel();
+        topSection.setLayout(new BoxLayout(topSection, BoxLayout.Y_AXIS));
+        topSection.setOpaque(false);
+
+        JLabel title = new JLabel("Student Feedback Analysis");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        topSection.add(title);
+        topSection.add(Box.createVerticalStrut(15));
+
+        avgRatingValue = new JLabel("0.0");
+        totalFeedbackValue = new JLabel("0");
+
+        JPanel cardAligner = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        cardAligner.setOpaque(false);
+        cardAligner.add(academicLeaderReportUITools.createSummaryCard("AVERAGE RATING", avgRatingValue, new Color(255, 193, 7))); // Gold/Yellow
+        cardAligner.add(Box.createHorizontalStrut(15));
+        cardAligner.add(academicLeaderReportUITools.createSummaryCard("TOTAL FEEDBACKS", totalFeedbackValue, new Color(23, 162, 184))); // Teal
+        topSection.add(cardAligner);
+        topSection.add(Box.createVerticalStrut(25));
+
+        // search
+        JPanel filterContainer = new JPanel(new BorderLayout());
+        filterContainer.setOpaque(false);
+        filterContainer.add(new JLabel("💬 Qualitative Feedback Registry") {{ setFont(new Font("Segoe UI Emoji", Font.BOLD, 14)); }}, BorderLayout.WEST);
+
+        JTextField searchField = new JTextField();
+        searchField.setPreferredSize(new Dimension(250, 30));
+        searchField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(203, 213, 225)), BorderFactory.createEmptyBorder(0, 10, 0, 10)));
+
+        JPanel searchGroup = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        searchGroup.setOpaque(false);
+        searchGroup.add(new JLabel("Search Module/Lecturer:"));
+        searchGroup.add(searchField);
+        filterContainer.add(searchGroup, BorderLayout.EAST);
+        topSection.add(filterContainer);
+
+        // table
+        String[] columns = {"Student", "Module", "Lecturer", "Rating", "Comments"};
+        feedbackTableModel = new DefaultTableModel(columns, 0) {
+            @Override public boolean isCellEditable(int r, int c) { return false; }
+        };
+        JTable feedbackTable = new JTable(feedbackTableModel);
+        JScrollPane scrollPane = new JScrollPane(feedbackTable);
+        academicLeaderReportUITools.reportTable(feedbackTable, scrollPane);
+
+        // switch to no result panel
+        CardLayout cardLayout = new CardLayout();
+        JPanel switcher = new JPanel(cardLayout);
+        switcher.setOpaque(false);
+        switcher.add(scrollPane, "TABLE");
+
+        JPanel emptyView = new JPanel(new BorderLayout());
+        emptyView.setBackground(Color.WHITE);
+        emptyView.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        emptyView.add(feedbackTable.getTableHeader(), BorderLayout.NORTH);
+        emptyView.add(academicLeaderReportUITools.noResultPanel(), BorderLayout.CENTER);
+        switcher.add(emptyView, "EMPTY");
+
+        // filter
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(feedbackTableModel);
+        feedbackTable.setRowSorter(sorter);
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            private void filter() {
+                String text = searchField.getText();
+                sorter.setRowFilter(text.trim().isEmpty() ? null : RowFilter.regexFilter("(?i)" + text));
+                if (feedbackTable.getRowCount() == 0) cardLayout.show(switcher, "EMPTY");
+                else cardLayout.show(switcher, "TABLE");
+            }
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filter(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filter(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filter(); }
+        });
+
+        feedbackPanel.add(topSection, BorderLayout.NORTH);
+        feedbackPanel.add(switcher, BorderLayout.CENTER);
+        feedbackPanel.add(academicLeaderReportUITools.createActionRow(academicLeaderReportUITools.syncTimeLabel(), academicLeaderReportUITools.createExportButton()), BorderLayout.SOUTH);
+
+        return feedbackPanel;
     }
     
     public void refreshData() {
@@ -609,6 +698,44 @@ public class academicLeaderReport extends JPanel {
                 if (totalLecturerValue != null) totalLecturerValue.setText(String.valueOf(totalLecs));
             } catch (java.io.IOException e) {
                 System.err.println("Error reading accounts.txt: " + e.getMessage());
+            }
+        }
+        
+        if (feedbackTableModel != null) {
+            feedbackTableModel.setRowCount(0);
+            double totalStars = 0;
+            int feedbackCount = 0;
+
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("feedback.txt"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    
+                    String[] parts = line.split("\\|"); 
+
+                    if (parts.length >= 5) {
+                        String student = parts[0].trim();
+                        String module = parts[1].trim();
+                        String lecturer = parts[2].trim();
+                        String rating = parts[3].trim();
+                        String comment = parts[4].trim();
+
+                        feedbackTableModel.addRow(new Object[]{student, module, lecturer, rating + " ⭐", comment});
+
+                        try {
+                            totalStars += Double.parseDouble(rating);
+                            feedbackCount++;
+                        } catch (NumberFormatException e) {}
+                    }
+                }
+
+                if (totalFeedbackValue != null) totalFeedbackValue.setText(String.valueOf(feedbackCount));
+                if (avgRatingValue != null && feedbackCount > 0) {
+                    avgRatingValue.setText(String.format("%.1f", totalStars / feedbackCount));
+                }
+
+            } catch (java.io.IOException e) {
+                System.err.println("Error reading feedback.txt: " + e.getMessage());
             }
         }
     }
