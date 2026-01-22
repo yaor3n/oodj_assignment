@@ -43,11 +43,14 @@ public class adminDashboard extends JFrame {
             dispose();
         });
 
-        JButton viewFeedbackBtn = sidebarButton("View Feedback", 250);
-        viewFeedbackBtn.setBackground(new Color(30,41,59));
-        viewFeedbackBtn.setForeground(new Color(0xFFFFFF));
-        viewFeedbackBtn.addActionListener(e ->
-                JOptionPane.showMessageDialog(this, "Feedback page not implemented yet")
+        JButton ManageFeedbackBtn = sidebarButton("Manage Feedback", 250);
+        ManageFeedbackBtn.setBackground(new Color(30,41,59));
+        ManageFeedbackBtn.setForeground(new Color(0xFFFFFF));
+        ManageFeedbackBtn.addActionListener(e -> {
+            new manageFeedback();
+            this.dispose();
+                }
+
         );
 
         JButton logoutBtn = sidebarButton("Logout", 550);
@@ -59,7 +62,7 @@ public class adminDashboard extends JFrame {
         });
 
         sidebar.add(editProfileBtn);
-        sidebar.add(viewFeedbackBtn);
+        sidebar.add(ManageFeedbackBtn);
         sidebar.add(logoutBtn);
 
         // ===== APU LOGO =====

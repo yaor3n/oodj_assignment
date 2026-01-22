@@ -16,17 +16,26 @@ public class crudUsers extends JFrame {
     public crudUsers() {
 
         reusable.windowSetup(this);
+        setLayout(new BorderLayout());
+
+        JPanel heroBar = new JPanel(new BorderLayout());
+        heroBar.setBackground(new Color(30, 41, 59));
+        heroBar.setPreferredSize(new Dimension(0, 80));
+
+        JLabel titleLabel = new JLabel("Admin - User Management", SwingConstants.CENTER);
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+
+        heroBar.add(titleLabel, BorderLayout.CENTER);
+
+        // stays on top permanently
+        add(heroBar, BorderLayout.NORTH);
+
 
         // ========= MAIN SCROLLABLE PANEL =========
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(null);
         mainPanel.setPreferredSize(new Dimension(1000, 1000)); // taller than frame
-
-        // ========= TITLE =========
-        JLabel title = new JLabel("Admin - User Management");
-        title.setFont(new Font("Arial", Font.BOLD, 22));
-        title.setBounds(350, 20, 400, 30);
-        mainPanel.add(title);
 
         // ========= SEARCH =========
         JLabel searchLabel = new JLabel("Search:");
@@ -38,6 +47,8 @@ public class crudUsers extends JFrame {
         mainPanel.add(searchField);
 
         JButton searchBtn = new JButton("Search");
+        searchBtn.setBackground(new Color(30,41,59));
+        searchBtn.setForeground(new Color(0xFFFFFF));
         searchBtn.setBounds(440, 80, 100, 25);
         searchBtn.addActionListener(e ->
                 refreshTable(searchField.getText().trim())
@@ -45,20 +56,14 @@ public class crudUsers extends JFrame {
         mainPanel.add(searchBtn);
 
         JButton resetBtn = new JButton("Reset");
+        resetBtn.setBackground(new Color(30,41,59));
+        resetBtn.setForeground(new Color(0xFFFFFF));
         resetBtn.setBounds(560, 80, 100, 25);
         resetBtn.addActionListener(e -> {
             searchField.setText("");
             refreshTable("");
         });
         mainPanel.add(resetBtn);
-
-        JButton backBtn = new JButton("Go back");
-        backBtn.setBounds(900, 80, 100, 25);
-        backBtn.addActionListener(e -> {
-            new adminDashboard();
-            this.dispose();
-        });
-        mainPanel.add(backBtn);
 
         // ========= TABLE =========
         model = new DefaultTableModel(new String[]{
@@ -80,14 +85,29 @@ public class crudUsers extends JFrame {
 
         // ========= UPDATE / DELETE =========
         JButton updateBtn = new JButton("Update Selected");
-        updateBtn.setBounds(350, 430, 160, 35);
+        updateBtn.setBackground(new Color(40, 167, 69));
+        updateBtn.setForeground(new Color(0xFFFFFF));
+        updateBtn.setBounds(250, 430, 160, 40);
         updateBtn.addActionListener(e -> updateUsers());
         mainPanel.add(updateBtn);
 
         JButton deleteBtn = new JButton("Delete Selected");
-        deleteBtn.setBounds(530, 430, 160, 35);
+        deleteBtn.setBackground(new Color(220,53,69));
+        deleteBtn.setForeground(new Color(0xFFFFFF));
+        deleteBtn.setBounds(430, 430, 160, 40);
         deleteBtn.addActionListener(e -> deleteUser());
         mainPanel.add(deleteBtn);
+
+        JButton backBtn = new JButton("Back");
+        backBtn.setBackground(new Color(30,41,59));
+        backBtn.setForeground(new Color(0xFFFFFF));
+        backBtn.setBounds(610, 430, 160, 40);
+        backBtn.addActionListener(e -> {
+            new adminDashboard();
+            this.dispose();
+        });
+        mainPanel.add(backBtn);
+
 
         // ========= CREATE USER SECTION =========
         JLabel createTitle = new JLabel("Create New User");
@@ -117,6 +137,8 @@ public class crudUsers extends JFrame {
         JTextField course = addField(mainPanel, "Course (- if none)", labelX, fieldX, y);
 
         JButton createBtn = new JButton("Create User");
+        createBtn.setBackground(new Color(40, 167, 69));
+        createBtn.setForeground(new Color(0xFFFFFF));
         createBtn.setBounds(420, y + 50, 180, 40);
         createBtn.addActionListener(e -> {
             User u = new User(
@@ -143,7 +165,7 @@ public class crudUsers extends JFrame {
         add(scrollPane);
 
         scrollPane.getVerticalScrollBar().setPreferredSize(
-                new Dimension(25, Integer.MAX_VALUE)
+                new Dimension(15, Integer.MAX_VALUE)
         );
 
         // faster scroll

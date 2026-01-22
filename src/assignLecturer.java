@@ -11,7 +11,6 @@ public class assignLecturer extends JFrame {
 
     private JComboBox<String> lecturerDropdown;
     private JComboBox<String> leaderDropdown;
-    private JButton assignBtn, refreshBtn, backBtn;
 
     private DefaultTableModel tableModel;
     private JTable table;
@@ -21,73 +20,89 @@ public class assignLecturer extends JFrame {
 
     public assignLecturer() {
 
-        setTitle("Assign Lecturers to Academic Leaders");
-        setLayout(null);
-
-        // Apply reusable frame setup (size, center, bg, etc.)
         reusable.windowSetup(this);
+        setLayout(new BorderLayout());
 
-        // ===== TITLE =====
-        JLabel title = new JLabel("Assign Lecturers");
-        title.setFont(new Font("Arial", Font.BOLD, 28));
-        title.setBounds(350, 20, 400, 40);
-        add(title);
+        // ========= HERO BAR =========
+        JPanel heroBar = new JPanel(new BorderLayout());
+        heroBar.setBackground(new Color(30, 41, 59));
+        heroBar.setPreferredSize(new Dimension(0, 80));
 
-        // ===== LECTURER DROPDOWN =====
-        addLabel("Lecturer:", 100, 90);
+        JLabel titleLabel = new JLabel("Admin - Assign Lecturers", SwingConstants.CENTER);
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        heroBar.add(titleLabel, BorderLayout.CENTER);
+
+        add(heroBar, BorderLayout.NORTH);
+
+        // ========= MAIN PANEL =========
+        JPanel mainPanel = new JPanel(null);
+        mainPanel.setPreferredSize(new Dimension(1000, 700));
+
+        // ========= FORM =========
+        JLabel lecLabel = new JLabel("Lecturer:");
+        lecLabel.setBounds(250, 90, 150, 25);
+        mainPanel.add(lecLabel);
+
         lecturerDropdown = new JComboBox<>();
-        lecturerDropdown.setBounds(250, 90, 300, 30);
-        add(lecturerDropdown);
+        lecturerDropdown.setBounds(400, 90, 300, 25);
+        mainPanel.add(lecturerDropdown);
 
-        // ===== LEADER DROPDOWN =====
-        addLabel("Academic Leader:", 100, 140);
+        JLabel leaderLabel = new JLabel("Academic Leader:");
+        leaderLabel.setBounds(250, 130, 150, 25);
+        mainPanel.add(leaderLabel);
+
         leaderDropdown = new JComboBox<>();
-        leaderDropdown.setBounds(250, 140, 300, 30);
-        add(leaderDropdown);
+        leaderDropdown.setBounds(400, 130, 300, 25);
+        mainPanel.add(leaderDropdown);
 
-        // ===== ASSIGN BUTTON =====
-        assignBtn = new JButton("Assign");
-        assignBtn.setBounds(580, 115, 120, 30);
+        JButton assignBtn = new JButton("Assign");
+        assignBtn.setBackground(new Color(40, 167, 69));
+        assignBtn.setForeground(Color.WHITE);
+        assignBtn.setBounds(400, 180, 140, 35);
         assignBtn.addActionListener(e -> assignLecturer());
-        add(assignBtn);
+        mainPanel.add(assignBtn);
 
-        // ===== REFRESH BUTTON =====
-        refreshBtn = new JButton("Refresh");
-        refreshBtn.setBounds(580, 160, 120, 30);
+        JButton refreshBtn = new JButton("Refresh");
+        refreshBtn.setBackground(new Color(30, 41, 59));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setBounds(560, 180, 140, 35);
         refreshBtn.addActionListener(e -> loadAssignments());
-        add(refreshBtn);
+        mainPanel.add(refreshBtn);
 
-        // ===== BACK BUTTON =====
-        backBtn = new JButton("Back");
-        backBtn.setBounds(580, 205, 120, 30);
-        backBtn.addActionListener(e -> {
-            new adminDashboard();
-            this.dispose();
-        });
-        add(backBtn);
-
-        // ===== TABLE =====
+        // ========= TABLE =========
         tableModel = new DefaultTableModel(new String[]{
                 "Lecturer ID", "Lecturer Name", "Assigned Academic Leader"
         }, 0);
-        table = new JTable(tableModel);
-        JScrollPane sp = new JScrollPane(table);
-        sp.setBounds(100, 260, 600, 300);
-        add(sp);
 
-        // Load accounts and assignments
+        table = new JTable(tableModel);
+        table.setRowHeight(22);
+
+        JScrollPane tableScroll = new JScrollPane(table);
+        tableScroll.setBounds(100, 250, 880, 280);
+        mainPanel.add(tableScroll);
+
+        // ========= BACK BUTTON =========
+        JButton backBtn = new JButton("Back");
+        backBtn.setBackground(new Color(30, 41, 59));
+        backBtn.setForeground(Color.WHITE);
+        backBtn.setBounds(420, 560, 180, 40);
+        backBtn.addActionListener(e -> {
+            new adminDashboard();
+            dispose();
+        });
+        mainPanel.add(backBtn);
+
+        // ========= SCROLL =========
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // ========= LOAD DATA =========
         loadAccounts();
         loadAssignments();
 
         setVisible(true);
-    }
-
-    // ===== ADD LABEL HELPER =====
-    private void addLabel(String text, int x, int y) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font("Arial", Font.PLAIN, 16));
-        label.setBounds(x, y, 150, 25);
-        add(label);
     }
 
     // ================= LOAD ACCOUNTS =================
@@ -101,10 +116,11 @@ public class assignLecturer extends JFrame {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] p = line.split(",");
-                if (p.length < 8) continue; // skip invalid
-                String role = p[7].trim(); // role is the 8th column
+                if (p.length < 8) continue;
+
                 String id = p[0].trim();
                 String name = p[1].trim();
+                String role = p[7].trim();
 
                 if (role.equalsIgnoreCase("Lecturer")) {
                     lecturers.add(new String[]{id, name});
@@ -113,14 +129,11 @@ public class assignLecturer extends JFrame {
                 }
             }
 
-            // Populate dropdowns
-            for (String[] l : lecturers) {
+            for (String[] l : lecturers)
                 lecturerDropdown.addItem(l[0] + " - " + l[1]);
-            }
 
-            for (String[] l : leaders) {
+            for (String[] l : leaders)
                 leaderDropdown.addItem(l[0] + " - " + l[1]);
-            }
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Failed to read accounts.txt");
@@ -138,33 +151,30 @@ public class assignLecturer extends JFrame {
                 String[] p = line.split(",");
                 if (p.length >= 4) assigned.add(p);
             }
-        } catch (IOException ignored) {} // may not exist yet
+        } catch (IOException ignored) {}
 
-        // show all lecturers with assigned leader or "None"
         for (String[] lec : lecturers) {
             String status = "None";
             for (String[] a : assigned) {
                 if (lec[0].equals(a[0])) {
-                    status = a[2] + " - " + a[3]; // Leader ID - Name
+                    status = a[2] + " - " + a[3];
                     break;
                 }
             }
             tableModel.addRow(new Object[]{lec[0], lec[1], status});
         }
 
-        // update lecturer dropdown to only include unassigned lecturers
         lecturerDropdown.removeAllItems();
         for (String[] lec : lecturers) {
-            boolean isAssigned = false;
+            boolean used = false;
             for (String[] a : assigned) {
                 if (lec[0].equals(a[0])) {
-                    isAssigned = true;
+                    used = true;
                     break;
                 }
             }
-            if (!isAssigned) {
+            if (!used)
                 lecturerDropdown.addItem(lec[0] + " - " + lec[1]);
-            }
         }
     }
 
@@ -175,26 +185,17 @@ public class assignLecturer extends JFrame {
             return;
         }
 
-        String lecturerSel = (String) lecturerDropdown.getSelectedItem();
-        String leaderSel = (String) leaderDropdown.getSelectedItem();
+        String[] lec = lecturerDropdown.getSelectedItem().toString().split(" - ");
+        String[] leader = leaderDropdown.getSelectedItem().toString().split(" - ");
 
-        String[] lecturerParts = lecturerSel.split(" - ");
-        String[] leaderParts = leaderSel.split(" - ");
-
-        String lecturerID = lecturerParts[0];
-        String lecturerName = lecturerParts[1];
-        String leaderID = leaderParts[0];
-        String leaderName = leaderParts[1];
-
-        // append to file
         try (PrintWriter pw = new PrintWriter(new FileWriter(ASSIGNED_FILE, true))) {
-            pw.println(lecturerID + "," + lecturerName + "," + leaderID + "," + leaderName);
+            pw.println(lec[0] + "," + lec[1] + "," + leader[0] + "," + leader[1]);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Failed to save assignment");
+            JOptionPane.showMessageDialog(this, "Save failed");
             return;
         }
 
-        JOptionPane.showMessageDialog(this, "Lecturer assigned successfully!");
+        JOptionPane.showMessageDialog(this, "Lecturer assigned successfully");
         loadAssignments();
     }
 

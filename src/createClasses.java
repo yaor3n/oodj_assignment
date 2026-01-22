@@ -25,12 +25,23 @@ public class createClasses extends JFrame {
         reusable.windowSetup(this);
 
         JPanel panel = new JPanel(null);
+        panel.setBackground(new Color(0xFFFFFF));
         panel.setPreferredSize(new Dimension(1080, 900));
 
-        JLabel title = new JLabel("Admin - Create & Manage Classes");
-        title.setFont(new Font("Arial", Font.BOLD, 22));
-        title.setBounds(360, 20, 500, 30);
-        panel.add(title);
+        setLayout(new BorderLayout());
+
+        JPanel heroBar = new JPanel(new BorderLayout());
+        heroBar.setBackground(new Color(30, 41, 59));
+        heroBar.setPreferredSize(new Dimension(0, 80));
+
+        JLabel titleLabel = new JLabel("Admin - User Management", SwingConstants.CENTER);
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+
+        heroBar.add(titleLabel, BorderLayout.CENTER);
+
+        // stays on top permanently
+        add(heroBar, BorderLayout.NORTH);
 
         // MODULE
         panel.add(label("Module:", 120, 80));
@@ -84,11 +95,15 @@ public class createClasses extends JFrame {
 
         // CREATE BUTTON
         JButton createBtn = new JButton("Create Class");
+        createBtn.setBackground(new Color(40, 167, 69));
+        createBtn.setForeground(new Color(0xFFFFFF));
         createBtn.setBounds(300, 330, 200, 40);
         createBtn.addActionListener(e -> createClass());
         panel.add(createBtn);
 
         JButton backBtn = new JButton("Back");
+        backBtn.setBackground(new Color(30,41,59));
+        backBtn.setForeground(new Color(0xFFFFFF));
         backBtn.setBounds(550, 330, 200, 40);
         backBtn.addActionListener(e -> {
                 new adminDashboard();
@@ -112,6 +127,8 @@ public class createClasses extends JFrame {
 
         // DELETE BUTTON
         JButton deleteBtn = new JButton("Delete Selected");
+        deleteBtn.setBackground(new Color(220,53,69));
+        deleteBtn.setForeground(new Color(0xFFFFFF));
         deleteBtn.setBounds(430, 650, 220, 40);
         deleteBtn.addActionListener(e -> deleteSelected());
         panel.add(deleteBtn);

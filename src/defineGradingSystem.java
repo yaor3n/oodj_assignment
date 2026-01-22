@@ -1,9 +1,10 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 public class defineGradingSystem extends JFrame implements ActionListener {
 
@@ -15,14 +16,20 @@ public class defineGradingSystem extends JFrame implements ActionListener {
     private final String FILE_NAME = "GradingSystem.txt";
 
     public defineGradingSystem() {
-        // Use reusable frame method
+
         reusable.windowSetup(this);
 
-        // Title
-        JLabel title = new JLabel("Grading System");
-        title.setFont(new Font("Arial", Font.BOLD, 32));
-        title.setBounds(400, 20, 400, 40);
-        add(title);
+        JPanel heroBar = new JPanel(null);
+        heroBar.setBackground(new Color(30,41,59));
+        heroBar.setBounds(0, 0, getWidth(), 80);
+        add(heroBar);
+
+        JLabel titleLabel = new JLabel("Admin Dashboard", SwingConstants.CENTER);
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        titleLabel.setBounds(0, 20, getWidth(), 40);
+
+        heroBar.add(titleLabel);
 
         // Inputs
         JLabel gradeLbl = new JLabel("Grade:");
@@ -52,9 +59,18 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         add(maxSpinner);
 
         addBtn = new JButton("Add");
+        addBtn.setBackground(new Color(40, 167, 69));
+        addBtn.setForeground(new Color(0xFFFFFF));
         addBtn.setBounds(640, 90, 100, 35);
         addBtn.addActionListener(this);
         add(addBtn);
+
+        deleteBtn = new JButton("Delete");
+        deleteBtn.setBackground(new Color(220,53,69));
+        deleteBtn.setForeground(new Color(0xFFFFFF));
+        deleteBtn.setBounds(770, 90, 100, 35);
+        deleteBtn.addActionListener(this);
+        add(deleteBtn);
 
         // Table
         model = new DefaultTableModel(new String[]{"Grade", "Min", "Max"}, 0);
@@ -64,22 +80,23 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         add(sp);
 
         // Buttons below table
-        deleteBtn = new JButton("Delete");
-        deleteBtn.setBounds(150, 520, 140, 40);
-        deleteBtn.addActionListener(this);
-        add(deleteBtn);
-
         refreshBtn = new JButton("Refresh");
-        refreshBtn.setBounds(310, 520, 140, 40);
+        refreshBtn.setBackground(new Color(30,41,59));
+        refreshBtn.setForeground(new Color(0xFFFFFF));
+        refreshBtn.setBounds(290, 520, 160, 40);
         refreshBtn.addActionListener(this);
         add(refreshBtn);
 
         exportBtn = new JButton("Export CSV");
+        exportBtn.setBackground(new Color(30,41,59));
+        exportBtn.setForeground(new Color(0xFFFFFF));
         exportBtn.setBounds(470, 520, 160, 40);
         exportBtn.addActionListener(this);
         add(exportBtn);
 
         backBtn = new JButton("Back");
+        backBtn.setBackground(new Color(30,41,59));
+        backBtn.setForeground(new Color(0xFFFFFF));
         backBtn.setBounds(650, 520, 160, 40);
         backBtn.addActionListener(this);
         add(backBtn);
