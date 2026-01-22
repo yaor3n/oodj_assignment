@@ -431,11 +431,12 @@ public class academicLeaderReport extends JPanel {
         return totalModule;
     }
     
-    private JPanel lecturerReport(){
+    private JPanel lecturerReport() {
         JPanel lecturerOverview = new JPanel(new BorderLayout(0, 20));
         lecturerOverview.setBackground(Color.WHITE);
         lecturerOverview.setBorder(BorderFactory.createEmptyBorder(10, 30, 30, 30));
 
+        // --- 1. TOP SECTION (Dashboard Header) ---
         JPanel topSection = new JPanel();
         topSection.setLayout(new BoxLayout(topSection, BoxLayout.Y_AXIS));
         topSection.setOpaque(false);
@@ -443,55 +444,107 @@ public class academicLeaderReport extends JPanel {
 
         JLabel title = new JLabel("Lecturer Performance Overview");
         title.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        title.setAlignmentX(Component.LEFT_ALIGNMENT);
         topSection.add(title);
         topSection.add(Box.createVerticalStrut(15));
-        
-        List<academicLeaderModule> lecturers = academicLeaderFileManager.loadModules();
-        
+
+        totalLecturerValue = new JLabel("0");
         JPanel cardAligner = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         cardAligner.setOpaque(false);
-        cardAligner.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Total Lecturers Card
-        totalLecturerValue = new JLabel("0");
-        cardAligner.add(createSummaryCard("TOTAL LECTURERS", totalLecturerValue, new Color(0, 123, 255)));
-        cardAligner.add(Box.createHorizontalStrut(15));
-
+        cardAligner.add(academicLeaderReportUITools.createSummaryCard("TOTAL LECTURERS", totalLecturerValue, new Color(0, 123, 255)));
         topSection.add(cardAligner);
         topSection.add(Box.createVerticalStrut(25));
-        
+
+        // --- 2. SEARCH BAR UI ---
         JPanel filterContainer = new JPanel(new BorderLayout());
         filterContainer.setOpaque(false);
-        filterContainer.setAlignmentX(Component.LEFT_ALIGNMENT);
+        filterContainer.add(new JLabel("📊 Lecturer Workload Registry") {{ setFont(new Font("Segoe UI Emoji", Font.BOLD, 14)); }}, BorderLayout.WEST);
 
-        // Left side: Table Title
-        JLabel tableTitle = new JLabel("📊 Lecturer Workload Registry");
-        tableTitle.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
-        filterContainer.add(tableTitle, BorderLayout.WEST);
-
-        // Right side: Search Group 
         JPanel searchGroup = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         searchGroup.setOpaque(false);
-
-        JLabel filterLabel = new JLabel("Filter by Name:");
-        filterLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        
         JTextField searchField = new JTextField();
-        searchField.setPreferredSize(new Dimension(200, 30)); // Fixed size for clean look
-
-        searchGroup.add(filterLabel);
+        searchField.setPreferredSize(new Dimension(200, 30));
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(203, 213, 225)), 
+            BorderFactory.createEmptyBorder(0, 10, 0, 10)
+        ));
+        searchGroup.add(new JLabel("Filter by Name:"));
         searchGroup.add(searchField);
         filterContainer.add(searchGroup, BorderLayout.EAST);
-
         topSection.add(filterContainer);
-        topSection.add(Box.createVerticalStrut(10));
+        //topSection.add(Box.createVerticalStrut(10));
 
-        
-        
+        // --- 3. TABLE INITIALIZATION ---
+        String[] columns = {"Staff ID", "Full Name", "Email Address", "Gender", "Date of Birth", "Status"};
+        lecturerTableModel = new DefaultTableModel(columns, 0) {
+            @Override public boolean isCellEditable(int r, int c) { return false; }
+        };
+        JTable lecturerTable = new JTable(lecturerTableModel);
+        JScrollPane scrollPane = new JScrollPane(lecturerTable);
+        academicLeaderReportUITools.reportTable(lecturerTable, scrollPane);
+
+        // --- 4. PERSISTENT HEADER SWITCHER LOGIC ---
+        CardLayout lectCardLayout = new CardLayout();
+        JPanel lectSwitcher = new JPanel(lectCardLayout);
+        lectSwitcher.setOpaque(false);
+
+        // View 1: Normal Table
+        lectSwitcher.add(scrollPane, "TABLE");
+
+        // View 2: Empty View that steals the Table Header to keep it visible
+        JPanel emptyViewWithHeader = new JPanel(new BorderLayout());
+        emptyViewWithHeader.setOpaque(false);
+        emptyViewWithHeader.setBackground(Color.WHITE);
+        emptyViewWithHeader.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        emptyViewWithHeader.add(lecturerTable.getTableHeader(), BorderLayout.NORTH); // Header fixed at top
+        emptyViewWithHeader.add(academicLeaderReportUITools.noResultPanel(), BorderLayout.CENTER);
+        lectSwitcher.add(emptyViewWithHeader, "EMPTY");
+
+        // --- 5. SEARCH LISTENER ---
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(lecturerTableModel);
+        lecturerTable.setRowSorter(sorter);
+
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            private void updateFilter() {
+                String text = searchField.getText();
+                sorter.setRowFilter(text.trim().isEmpty() ? null : RowFilter.regexFilter("(?i)" + text));
+                if (lecturerTable.getRowCount() == 0) lectCardLayout.show(lectSwitcher, "EMPTY");
+                else lectCardLayout.show(lectSwitcher, "TABLE");
+
+                lectSwitcher.revalidate();
+                lectSwitcher.repaint();
+            }
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { updateFilter(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { updateFilter(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { updateFilter(); }
+        });
+
+        // --- 6. ACTION ROW (Sync and Export) ---
+        JButton exportButton = academicLeaderReportUITools.createExportButton();
+        exportButton.addActionListener(e -> {
+            List<String> summary = new ArrayList<>();
+            summary.add("Total Lecturers Registered," + totalLecturerValue.getText());
+            academicLeaderReportUITools.exportToCSV(lecturerTable, "Lecturer_Overview.csv", summary);
+        });
+
+        JPanel actionRow = academicLeaderReportUITools.createActionRow(academicLeaderReportUITools.syncTimeLabel(), exportButton);
+
+        // --- 7. FINAL ASSEMBLY ---
+        JPanel registryPanel = new JPanel(new BorderLayout(0, 10));
+        registryPanel.setOpaque(false);
+        registryPanel.add(lectSwitcher, BorderLayout.CENTER); // ADD Switcher Unit
+        registryPanel.add(actionRow, BorderLayout.SOUTH);      // ADD Button Unit
+
         lecturerOverview.add(topSection, BorderLayout.NORTH);
-
+        lecturerOverview.add(registryPanel, BorderLayout.CENTER);
+        
+        refreshData();
         return lecturerOverview;
     }
+    
     public void refreshData() {
         List<academicLeaderModule> modules = academicLeaderFileManager.loadModules();
 
@@ -522,6 +575,42 @@ public class academicLeaderReport extends JPanel {
             }
         }
         if (intakeValue != null) intakeValue.setText(topIntakeMonth + " (" + maxCount + ")");
+        
+        if (lecturerTableModel != null) {
+            lecturerTableModel.setRowCount(0);
+            int totalLecs = 0;
+
+            // Use try-with-resources to read the accounts file
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("accounts.txt"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+
+                    String[] parts = line.split(","); // Define parts here
+
+                    // Check if the role at index 9 is "Lecturer"
+                    if (parts.length >= 10 && parts[9].trim().equalsIgnoreCase("Lecturer")) {
+                        String id = parts[0].trim();
+                        String name = parts[1].trim();
+                        String email = parts[2].trim();
+                        String gender = parts[3].trim();
+                        String dob = parts[4].trim();
+
+                        // Check if lecturer is assigned to any current modules
+                        boolean isActive = modules.stream()
+                            .anyMatch(m -> m.getLecturerName().equalsIgnoreCase(name));
+
+                        lecturerTableModel.addRow(new Object[]{
+                            id, name, email, gender, dob, (isActive ? "Active" : "Inactive")
+                        });
+                        totalLecs++;
+                    }
+                }
+                if (totalLecturerValue != null) totalLecturerValue.setText(String.valueOf(totalLecs));
+            } catch (java.io.IOException e) {
+                System.err.println("Error reading accounts.txt: " + e.getMessage());
+            }
+        }
     }
     
     private JPanel createSummaryCard(String titleText, JLabel valueLabel, Color accentColor) {

@@ -1,7 +1,4 @@
-M01,JAVA,Diploma,yaoren,January,2026,This is java language programming course,ModuleDefaultPic2.png
-M02,Python,Bachelor's Degree,lec1,May,2026,This is a python language programming course,ModuleDefaultPic.png
-M03,Introduction to AI,Bachelor's Degree,test,June,2026,This is AI course,ModuleDefaultPic.png
-M04,Responsive Web Design,Diploma,lec1,June,2026,This is a HTML + CSS language course,ModuleDefaultPic3.png
-M05,CC1,PhD,test,March,2026,Let the student to open booth,ModuleDefaultPic2.png
-ee,ee,Bachelor's Degree,test,February,2026,ee,ModuleDefaultPic.png
-qq,qq,Foundation,lec1,January,2026,qq,ModuleDefaultPic.png
+M01,Python,Bachelor's Degree,U002,John Lee,April,2026,This is python programming language,ModuleDefaultPic.png,CyberSecurity
+M02,Java,Diploma,U002,John Lee,May,2026,Basic Java for beginner,ModuleDefaultPic.png,Business Analytics
+M03,C+,Foundation,U006,Siew Weng Tim,March,2026,C+ programming language for beginner,ModuleDefaultPic2.png,Business Analytics
+M04,Capture The Flag (CTF),Bachelor's Degree,U002,John Lee,February,2026,Max difficulty level for beginner,ModuleDefaultPic3.png,CyberSecurity

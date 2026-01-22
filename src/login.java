@@ -172,7 +172,7 @@ public class login extends JFrame implements ActionListener{
             String[] userData = academicLeaderFileManager.authenticate(username, password);
 
             if (userData != null) {
-                String role = userData[2].trim();
+                String role = userData[9].trim();
 
                 switch (role) {
                     case "Admin": new adminDashboard(); break;

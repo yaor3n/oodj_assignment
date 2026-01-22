@@ -2,6 +2,9 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -493,24 +496,30 @@ public class academicLeaderDashboard extends JFrame {
         
         List<String> lecturerList = academicLeaderFileManager.checkLecturerNames();
         JComboBox<String> lecturerBox = new JComboBox<>();
-        if (lecturerList == null || lecturerList.isEmpty()) {
-            lecturerBox.addItem("No Lecturers Found");
-            lecturerBox.setEnabled(false);
-            lecturerBox.setForeground(Color.RED);
+        if (lecturerList.isEmpty()) {
+            lecturerBox.addItem("No Lecturers Found"); lecturerBox.setEnabled(false);
         } else {
-            lecturerBox.addItem("-Select-");
-            for (String name : lecturerList) {
-                lecturerBox.addItem(name);
-            }
-            if (isEdit) {
-                lecturerBox.setSelectedItem(editModule.getLecturerName());
-            }
+            lecturerBox.addItem("-Select Lecturer-");
+            for (String lect : lecturerList) lecturerBox.addItem(lect);
+            if (isEdit) lecturerBox.setSelectedItem(editModule.getLecturerID() + " - " + editModule.getLecturerName());
         }
         
         JComboBox<String> monthBox = new JComboBox<>(new String[]{"-Select-", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
         JComboBox<String> yearBox = new JComboBox<>();
         int currentYear = java.time.LocalDate.now().getYear();
         for (int i = 0; i < 5; i++) yearBox.addItem(String.valueOf(currentYear + i));
+        
+        JComboBox<String> courseBox = new JComboBox<>();
+        courseBox.addItem("-Select Course-");
+        try (BufferedReader br = new BufferedReader(new FileReader("coursesInAPU.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) courseBox.addItem(line.trim());
+            }
+        } catch (IOException e) {
+            courseBox.addItem("Error loading file");
+        }
+        if (isEdit) courseBox.setSelectedItem(editModule.getCourse());
         
         JTextArea descArea = new JTextArea(4, 20);
         descArea.setLineWrap(true);
@@ -533,7 +542,8 @@ public class academicLeaderDashboard extends JFrame {
         addFormField(detailsContainer, "Assigned Lecturer", lecturerBox, gbc, 4);
         addFormField(detailsContainer, "Intake Month", monthBox, gbc, 5);
         addFormField(detailsContainer, "Intake Year", yearBox, gbc, 6);
-        addFormField(detailsContainer, "Description", descScroll, gbc, 7);
+        addFormField(detailsContainer, "Course", courseBox, gbc, 7);
+        addFormField(detailsContainer, "Description", descScroll, gbc, 8);
 
         // --- BUTTON PANEL (CENTERED) ---
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
@@ -569,28 +579,32 @@ public class academicLeaderDashboard extends JFrame {
             String code = codeField.getText().trim();
             String name = nameField.getText().trim();
             String description = descArea.getText().trim();
-            String selMonth = (String)monthBox.getSelectedItem();
-            String selQual = (String)qualificationBox.getSelectedItem();
-            String selLect = (String)lecturerBox.getSelectedItem();
-            int selYear = Integer.parseInt((String)yearBox.getSelectedItem());
-
-            if (code.isEmpty() || name.isEmpty() || description.isEmpty() || monthBox.getSelectedIndex() <= 0 || qualificationBox.getSelectedIndex() <= 0 || lecturerBox.getSelectedIndex() <= 0) {
+            String selectMonth = (String)monthBox.getSelectedItem();
+            String selectQualification = (String)qualificationBox.getSelectedItem();
+            String selectedLecturerFull = (String)lecturerBox.getSelectedItem();
+            String selectCourse = (String)courseBox.getSelectedItem();
+            int selectYear = Integer.parseInt((String)yearBox.getSelectedItem());
+            
+            if (code.isEmpty() || name.isEmpty() || description.isEmpty() || monthBox.getSelectedIndex() <= 0 || qualificationBox.getSelectedIndex() <= 0 || lecturerBox.getSelectedIndex() <= 0 || courseBox.getSelectedIndex() <= 0) {
                 JOptionPane.showMessageDialog(dialog, "All fields are required!", "Input Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            if (isDateInPast(selMonth, selYear)) {
+            if (isDateInPast(selectMonth, selectYear)) {
                 JOptionPane.showMessageDialog(dialog, "Cannot set intake to a past date.", "Date Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            academicLeaderModule newM = new academicLeaderModule(code, name, selQual, selLect, selMonth, selYear, description, selectedPath[0]);
-
+            
+            String lectID = selectedLecturerFull.split(" - ")[0].trim();
+            String lectName = selectedLecturerFull.split(" - ")[1].trim();
+            
+            academicLeaderModule newModule = new academicLeaderModule(code, name, selectQualification, lectID, lectName, selectMonth, selectYear, description, selectedPath[0], selectCourse);
+            
             if (isEdit) {
-                academicLeaderFileManager.updateModule(newM);
+                academicLeaderFileManager.updateModule(newModule);
                 JOptionPane.showMessageDialog(dialog, "Successfully edited module!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                academicLeaderFileManager.saveModule(newM);
+                academicLeaderFileManager.saveModule(newModule);
                 JOptionPane.showMessageDialog(dialog, "Successfully created new module!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
             

@@ -11,11 +11,11 @@ public class academicLeaderFileManager {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 3) {
-                    String fUser = parts[0].trim();
-                    String fPass = parts[1].trim();
+                if (parts.length >= 10) {
+                    String authenticateUser = parts[7].trim();
+                    String authenticatePassword = parts[8].trim();
                     
-                    if (username.equals(fUser) && password.equals(fPass)) {
+                    if (username.equals(authenticateUser) && password.equals(authenticatePassword)) {
                         return parts;
                     }
                 }
@@ -23,7 +23,7 @@ public class academicLeaderFileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null; // Return null if no match is found
+        return null; 
     }
     
     public static void saveModule(academicLeaderModule module) {
@@ -45,9 +45,9 @@ public class academicLeaderFileManager {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 8) {
-                    int yearValue = Integer.parseInt(parts[5].trim());
-                    modules.add(new academicLeaderModule(parts[0], parts[1], parts[2], parts[3], parts[4], yearValue ,parts[6],parts[7]));
+                if (parts.length >= 10) {
+                    int yearValue = Integer.parseInt(parts[6].trim());
+                    modules.add(new academicLeaderModule(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], yearValue ,parts[7], parts[8], parts[9]));
                 }
             }
         } catch (IOException e) {
@@ -86,15 +86,15 @@ public class academicLeaderFileManager {
     
     public static List<String> checkLecturerNames(){
         List<String> lecturers = new ArrayList<>();
-        File file = new File("accounts.txt");
+        File file = new File(ACCOUNT_FILE);
         
         if (!file.exists())return lecturers;
         try (BufferedReader br = new BufferedReader(new FileReader(file))){
             String line;
             while ((line = br.readLine()) !=null){
                 String[]parts = line.split(",");
-                if (parts.length>=3 && parts[2].trim().equals("Lecturer")){
-                    lecturers.add(parts[0].trim());
+                if (parts.length>=10 && parts[9].trim().equals("Lecturer")){
+                    lecturers.add(parts[0].trim() + " - " + parts[1].trim());
                 }
             }
         }catch (IOException e){

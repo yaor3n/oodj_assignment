@@ -231,10 +231,11 @@ public class academicLeaderUserProfile extends JPanel {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 8 && parts[7].trim().equalsIgnoreCase("AcademicLeader")) {
-                    String updatedLine = parts[0] + "," + parts[1] + "," + parts[2] + "," + parts[3] + "," + parts[4] + "," + newUsername + "," + newPassword + "," + parts[7].trim() + "," + parts[8];
+                if (parts.length >= 10 && parts[9].trim().equalsIgnoreCase("AcademicLeader")) {
+                    String updatedLine = String.join(",", parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], newUsername, newPassword, parts[9], (parts.length > 10 ? parts[10] : "") 
+                );
                 accounts.add(updatedLine);
-                    updated = true;
+                updated = true;
                 } else {
                     accounts.add(line);
                 }
@@ -308,17 +309,16 @@ public class academicLeaderUserProfile extends JPanel {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 8 && parts[7].trim().equalsIgnoreCase("AcademicLeader")) {
-                    idField.setText(parts[0].trim());
-                    nameField.setText(parts[1].trim());
-                    emailField.setText(parts[2].trim());
-                    genderField.setText(parts[3].trim());
-                    dobField.setText(parts[4].trim());
-                    usernameField.setText(parts[5].trim());
-                    passwordField.setText(parts[6].trim());
-                    
-                    String displayRole = parts[7].trim().replace("AcademicLeader", "Academic Leader");
-                    roleField.setText(displayRole);
+                if (parts.length >= 10 && parts[9].trim().equalsIgnoreCase("AcademicLeader")) {
+                    idField.setText(parts[0].trim());       // U004
+                    nameField.setText(parts[1].trim());     // Ong Szi Kai
+                    emailField.setText(parts[2].trim());    // ozk@gmail.com
+                    genderField.setText(parts[3].trim());   // male
+                    dobField.setText(parts[4].trim());      // 1 January 2005
+                    usernameField.setText(parts[7].trim()); // SkyOng (Index 7 now)
+                    passwordField.setText(parts[8].trim()); // Sky#123 (Index 8 now)
+
+                    roleField.setText("Academic Leader");
                     break; 
                 }
             }
