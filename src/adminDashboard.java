@@ -1,82 +1,109 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
-public class adminDashboard extends JFrame implements ActionListener {
+public class adminDashboard extends JFrame {
 
-    private JLabel titleLabel;
-    private JButton logoutButton, crudUsersButton, assignLecButton, createClassesButton, defineGradingSystemButton;
+    private JPanel sidebar;
+    private boolean sidebarVisible = false;
 
-    adminDashboard() {
+    public adminDashboard() {
 
-        titleLabel = new JLabel("Admin Dashboard");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 25));
-        titleLabel.setBounds(400, 50, 300, 50);
-        this.add(titleLabel);
-
-        crudUsersButton = new JButton("CRUD Users");
-        crudUsersButton.setFont(new Font("Arial", Font.BOLD, 25));
-        crudUsersButton.addActionListener(this);
-        crudUsersButton.setBounds(370,125,300,75);
-        crudUsersButton.setForeground(new Color(0x000000));
-        crudUsersButton.setBackground(new Color(0xffffff));
-        this.add(crudUsersButton);
-
-        assignLecButton = new JButton("Assign Lecturers");
-        assignLecButton.setFont(new Font("Arial", Font.BOLD, 25));
-        assignLecButton.addActionListener(this);
-        assignLecButton.setBounds(370,225,300,75);
-        assignLecButton.setForeground(new Color(0x000000));
-        assignLecButton.setBackground(new Color(0xffffff));
-        this.add(assignLecButton);
-
-        createClassesButton = new JButton("Create Classes");
-        createClassesButton.setFont(new Font("Arial", Font.BOLD, 25));
-        createClassesButton.addActionListener(this);
-        createClassesButton.setBounds(370,325,300,75);
-        createClassesButton.setForeground(new Color(0x000000));
-        createClassesButton.setBackground(new Color(0xffffff));
-        this.add(createClassesButton);
-
-        defineGradingSystemButton = new JButton("Define Grading System");
-        defineGradingSystemButton.setFont(new Font("Arial", Font.BOLD, 25));
-        defineGradingSystemButton.addActionListener(this);
-        defineGradingSystemButton.setBounds(370,425,300,75);
-        defineGradingSystemButton.setForeground(new Color(0x000000));
-        defineGradingSystemButton.setBackground(new Color(0xffffff));
-        this.add(defineGradingSystemButton);
-
-        logoutButton = new JButton("Logout");
-        logoutButton.setFont(new Font("Arial", Font.BOLD, 25));
-        logoutButton.addActionListener(this);
-        logoutButton.setBounds(420, 510, 200, 60);
-        this.add(logoutButton);
-
+        setLayout(null);
         reusable.windowSetup(this);
-        this.setVisible(true);
+
+        // ===== TOP BAR =====
+        JLabel titleLabel = new JLabel("Admin Dashboard");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        titleLabel.setBounds(120, 20, 400, 40);
+        add(titleLabel);
+
+        JButton toggleSidebarBtn = new JButton("☰");
+        toggleSidebarBtn.setFont(new Font("Arial", Font.BOLD, 20));
+        toggleSidebarBtn.setBounds(20, 20, 50, 40);
+        toggleSidebarBtn.addActionListener(e -> toggleSidebar());
+        add(toggleSidebarBtn);
+
+        // ===== SIDEBAR =====
+        sidebar = new JPanel(null);
+        sidebar.setBackground(new Color(0xf0f0f0));
+        sidebar.setBounds(-220, 0, 220, 650);
+        add(sidebar);
+
+        JLabel sidebarTitle = new JLabel("Menu");
+        sidebarTitle.setFont(new Font("Arial", Font.BOLD, 18));
+        sidebarTitle.setBounds(20, 30, 180, 30);
+        sidebar.add(sidebarTitle);
+
+        JButton editProfileBtn = sidebarButton("Edit Profile", 80);
+        editProfileBtn.addActionListener(e -> {
+            new adminEditProfile();
+            dispose();
+        });
+
+        JButton viewFeedbackBtn = sidebarButton("View Feedback", 130);
+        viewFeedbackBtn.addActionListener(e ->
+                JOptionPane.showMessageDialog(this, "Feedback page not implemented yet")
+        );
+
+        JButton logoutBtn = sidebarButton("Logout", 180);
+        logoutBtn.addActionListener(e -> {
+            new userSelect();
+            dispose();
+        });
+
+        sidebar.add(editProfileBtn);
+        sidebar.add(viewFeedbackBtn);
+        sidebar.add(logoutBtn);
+
+        // ===== MAIN BUTTONS (2x2 GRID) =====
+        add(mainButton("CRUD Users", 300, 120, e -> {
+            new crudUsers();
+            dispose();
+        }));
+
+        add(mainButton("Assign Lecturers", 650, 120, e -> {
+            new assignLecturer();
+            dispose();
+        }));
+
+        add(mainButton("Create Classes", 300, 260, e -> {
+            new createClasses();
+            dispose();
+        }));
+
+        add(mainButton("Define Grading System", 650, 260, e -> {
+            new defineGradingSystem();
+            dispose();
+        }));
+
+        setVisible(true);
+    }
+
+    // ===== HELPERS =====
+    private JButton mainButton(String text, int x, int y, java.awt.event.ActionListener a) {
+        JButton btn = new JButton(text);
+        btn.setBounds(x, y, 300, 90);
+        btn.setFont(new Font("Arial", Font.BOLD, 20));
+        btn.setBackground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.addActionListener(a);
+        return btn;
+    }
+
+    private JButton sidebarButton(String text, int y) {
+        JButton btn = new JButton(text);
+        btn.setBounds(20, y, 180, 35);
+        btn.setFocusPainted(false);
+        return btn;
+    }
+
+    private void toggleSidebar() {
+        sidebar.setBounds(sidebarVisible ? -220 : 0, 0, 220, 650);
+        sidebarVisible = !sidebarVisible;
+        repaint();
     }
 
     public static void main(String[] args) {
         new adminDashboard();
-    }
-
-    @Override
-    public void actionPerformed (ActionEvent e) {
-        if (e.getSource() == logoutButton) {
-            new userSelect();
-            this.dispose();
-        } else if (e.getSource() == crudUsersButton) {
-            new crudUsers();
-            this.dispose();
-        } else if (e.getSource() == createClassesButton) {
-            new createClasses();
-            this.dispose();
-        } else if (e.getSource() == assignLecButton) {
-            new assignLecturer();
-            this.dispose();
-        } else if (e.getSource() == defineGradingSystemButton) {
-            new defineGradingSystem();
-            this.dispose();
-        }
     }
 }

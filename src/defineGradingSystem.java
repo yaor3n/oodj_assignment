@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
@@ -17,31 +15,44 @@ public class defineGradingSystem extends JFrame implements ActionListener {
     private final String FILE_NAME = "GradingSystem.txt";
 
     public defineGradingSystem() {
-        setTitle("Define Grading System");
-        setLayout(null);
+        // Use reusable frame method
+        reusable.windowSetup(this);
 
+        // Title
         JLabel title = new JLabel("Grading System");
-        title.setFont(new Font("Arial", Font.BOLD, 25));
-        title.setBounds(300, 10, 300, 40);
+        title.setFont(new Font("Arial", Font.BOLD, 32));
+        title.setBounds(400, 20, 400, 40);
         add(title);
 
         // Inputs
+        JLabel gradeLbl = new JLabel("Grade:");
+        gradeLbl.setBounds(150, 90, 80, 30);
+        add(gradeLbl);
+
         gradeField = new JTextField();
-        gradeField.setBounds(150, 60, 100, 30);
+        gradeField.setBounds(230, 90, 120, 35);
         add(gradeField);
 
+        JLabel minLbl = new JLabel("Min:");
+        minLbl.setBounds(370, 90, 40, 30);
+        add(minLbl);
+
         minSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
-        minSpinner.setBounds(270, 60, 60, 30);
+        minSpinner.setBounds(410, 90, 70, 35);
         minSpinner.setEditor(new JSpinner.NumberEditor(minSpinner, "#"));
         add(minSpinner);
 
+        JLabel maxLbl = new JLabel("Max:");
+        maxLbl.setBounds(500, 90, 40, 30);
+        add(maxLbl);
+
         maxSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
-        maxSpinner.setBounds(340, 60, 60, 30);
+        maxSpinner.setBounds(540, 90, 70, 35);
         maxSpinner.setEditor(new JSpinner.NumberEditor(maxSpinner, "#"));
         add(maxSpinner);
 
         addBtn = new JButton("Add");
-        addBtn.setBounds(410, 60, 80, 30);
+        addBtn.setBounds(640, 90, 100, 35);
         addBtn.addActionListener(this);
         add(addBtn);
 
@@ -49,27 +60,27 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         model = new DefaultTableModel(new String[]{"Grade", "Min", "Max"}, 0);
         table = new JTable(model);
         JScrollPane sp = new JScrollPane(table);
-        sp.setBounds(150, 110, 440, 250);
+        sp.setBounds(150, 150, 780, 350); // bigger table
         add(sp);
 
-        // Buttons
+        // Buttons below table
         deleteBtn = new JButton("Delete");
-        deleteBtn.setBounds(150, 380, 100, 30);
+        deleteBtn.setBounds(150, 520, 140, 40);
         deleteBtn.addActionListener(this);
         add(deleteBtn);
 
         refreshBtn = new JButton("Refresh");
-        refreshBtn.setBounds(270, 380, 100, 30);
+        refreshBtn.setBounds(310, 520, 140, 40);
         refreshBtn.addActionListener(this);
         add(refreshBtn);
 
         exportBtn = new JButton("Export CSV");
-        exportBtn.setBounds(390, 380, 120, 30);
+        exportBtn.setBounds(470, 520, 160, 40);
         exportBtn.addActionListener(this);
         add(exportBtn);
 
         backBtn = new JButton("Back");
-        backBtn.setBounds(390, 430, 120, 30);
+        backBtn.setBounds(650, 520, 160, 40);
         backBtn.addActionListener(this);
         add(backBtn);
 
@@ -82,11 +93,10 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         }
 
         loadGrades();
-        reusable.windowSetup(this);
         setVisible(true);
     }
 
-    // Load grades
+    // === Load / Save / Sort / Validate ===
     private void loadGrades() {
         model.setRowCount(0);
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
@@ -102,7 +112,6 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         detectMissingRanges();
     }
 
-    // Save grades
     private void saveGrades() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_NAME))) {
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -115,7 +124,6 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         }
     }
 
-    // Sort descending by min
     private void sortGrades() {
         List<Object[]> rows = new ArrayList<>();
         for (int i = 0; i < model.getRowCount(); i++) {
@@ -130,7 +138,6 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         for (Object[] r : rows) model.addRow(r);
     }
 
-    // Detect missing ranges
     private void detectMissingRanges() {
         List<int[]> ranges = new ArrayList<>();
         for (int i = 0; i < model.getRowCount(); i++) {
@@ -149,14 +156,12 @@ public class defineGradingSystem extends JFrame implements ActionListener {
         }
     }
 
-    // Validate new entry
     private boolean validateInput(String grade, int min, int max) {
         if (min > max || min < 0 || max > 100) {
             JOptionPane.showMessageDialog(this, "Invalid min/max range.");
             return false;
         }
 
-        // Duplicate grade name
         for (int i = 0; i < model.getRowCount(); i++) {
             if (model.getValueAt(i, 0).toString().equalsIgnoreCase(grade)) {
                 JOptionPane.showMessageDialog(this, "Grade name already exists.");
@@ -164,7 +169,6 @@ public class defineGradingSystem extends JFrame implements ActionListener {
             }
         }
 
-        // Overlapping ranges
         for (int i = 0; i < model.getRowCount(); i++) {
             int existingMin = Integer.parseInt(model.getValueAt(i, 1).toString());
             int existingMax = Integer.parseInt(model.getValueAt(i, 2).toString());
@@ -194,9 +198,7 @@ public class defineGradingSystem extends JFrame implements ActionListener {
                 detectMissingRanges();
                 saveGrades();
             }
-        }
-
-        if (e.getSource() == deleteBtn) {
+        } else if (e.getSource() == deleteBtn) {
             int row = table.getSelectedRow();
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "Select a row first.");
@@ -206,16 +208,12 @@ public class defineGradingSystem extends JFrame implements ActionListener {
             sortGrades();
             detectMissingRanges();
             saveGrades();
-        }
-
-        if (e.getSource() == refreshBtn) {
+        } else if (e.getSource() == refreshBtn) {
             gradeField.setText("");
             minSpinner.setValue(0);
             maxSpinner.setValue(0);
             loadGrades();
-        }
-
-        if (e.getSource() == exportBtn) {
+        } else if (e.getSource() == exportBtn) {
             String exportFile = "GradingSystem_export.csv";
             try (PrintWriter pw = new PrintWriter(new FileWriter(exportFile))) {
                 for (int i = 0; i < model.getRowCount(); i++) {
@@ -227,9 +225,7 @@ public class defineGradingSystem extends JFrame implements ActionListener {
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Error exporting CSV.");
             }
-        }
-
-        if (e.getSource() == backBtn) {
+        } else if (e.getSource() == backBtn) {
             new adminDashboard();
             dispose();
         }

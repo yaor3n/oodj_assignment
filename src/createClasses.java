@@ -63,7 +63,7 @@ public class createClasses extends JFrame {
         panel.add(monthBox);
 
         yearBox = new JComboBox<>();
-        for (int y = 2024; y <= 2030; y++) yearBox.addItem(y);
+        for (int y = 2026; y <= 2030; y++) yearBox.addItem(y);
         yearBox.setBounds(460, 200, 80, 25);
         panel.add(yearBox);
 
@@ -87,6 +87,14 @@ public class createClasses extends JFrame {
         createBtn.setBounds(300, 330, 200, 40);
         createBtn.addActionListener(e -> createClass());
         panel.add(createBtn);
+
+        JButton backBtn = new JButton("Back");
+        backBtn.setBounds(550, 330, 200, 40);
+        backBtn.addActionListener(e -> {
+                new adminDashboard();
+                this.dispose();
+        });
+        panel.add(backBtn);
 
         // TABLE
         model = new DefaultTableModel(

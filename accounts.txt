@@ -1,4 +1,4 @@
-U001,Jane Doe,janedoe@gmail.com,female,33 January 2005,Jane,123,Student,Computer Science
+U001,Jane Doe,janedoe@gmail.com,female,31 January 2005,Jane,123,Student,Computer Science
 U002,John Lee,johnlee@gmail.com,male,1 December 2000,Johnathan,321,Lecturer,Data Structure
 U003,Yao Ren,yr@gmail.com,male,5 November 2005,yaor3n,123,Admin,-
 U004,Ong Szi Kai,ozk@gmail.com,male,1 January 2005,SkyOng,Sky#123,AcademicLeader,School of Technology

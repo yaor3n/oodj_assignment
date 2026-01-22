@@ -11,7 +11,7 @@ public class assignLecturer extends JFrame {
 
     private JComboBox<String> lecturerDropdown;
     private JComboBox<String> leaderDropdown;
-    private JButton assignBtn, refreshBtn;
+    private JButton assignBtn, refreshBtn, backBtn;
 
     private DefaultTableModel tableModel;
     private JTable table;
@@ -23,37 +23,48 @@ public class assignLecturer extends JFrame {
 
         setTitle("Assign Lecturers to Academic Leaders");
         setLayout(null);
+
+        // Apply reusable frame setup (size, center, bg, etc.)
         reusable.windowSetup(this);
 
         // ===== TITLE =====
         JLabel title = new JLabel("Assign Lecturers");
-        title.setFont(new Font("Arial", Font.BOLD, 24));
-        title.setBounds(300, 10, 400, 40);
+        title.setFont(new Font("Arial", Font.BOLD, 28));
+        title.setBounds(350, 20, 400, 40);
         add(title);
 
         // ===== LECTURER DROPDOWN =====
-        addLabel("Lecturer:", 50, 70);
+        addLabel("Lecturer:", 100, 90);
         lecturerDropdown = new JComboBox<>();
-        lecturerDropdown.setBounds(180, 70, 250, 25);
+        lecturerDropdown.setBounds(250, 90, 300, 30);
         add(lecturerDropdown);
 
         // ===== LEADER DROPDOWN =====
-        addLabel("Academic Leader:", 50, 110);
+        addLabel("Academic Leader:", 100, 140);
         leaderDropdown = new JComboBox<>();
-        leaderDropdown.setBounds(180, 110, 250, 25);
+        leaderDropdown.setBounds(250, 140, 300, 30);
         add(leaderDropdown);
 
         // ===== ASSIGN BUTTON =====
         assignBtn = new JButton("Assign");
-        assignBtn.setBounds(450, 90, 120, 30);
+        assignBtn.setBounds(580, 115, 120, 30);
         assignBtn.addActionListener(e -> assignLecturer());
         add(assignBtn);
 
         // ===== REFRESH BUTTON =====
         refreshBtn = new JButton("Refresh");
-        refreshBtn.setBounds(580, 90, 120, 30);
+        refreshBtn.setBounds(580, 160, 120, 30);
         refreshBtn.addActionListener(e -> loadAssignments());
         add(refreshBtn);
+
+        // ===== BACK BUTTON =====
+        backBtn = new JButton("Back");
+        backBtn.setBounds(580, 205, 120, 30);
+        backBtn.addActionListener(e -> {
+            new adminDashboard();
+            this.dispose();
+        });
+        add(backBtn);
 
         // ===== TABLE =====
         tableModel = new DefaultTableModel(new String[]{
@@ -61,9 +72,10 @@ public class assignLecturer extends JFrame {
         }, 0);
         table = new JTable(tableModel);
         JScrollPane sp = new JScrollPane(table);
-        sp.setBounds(50, 160, 650, 300);
+        sp.setBounds(100, 260, 600, 300);
         add(sp);
 
+        // Load accounts and assignments
         loadAccounts();
         loadAssignments();
 
@@ -73,6 +85,7 @@ public class assignLecturer extends JFrame {
     // ===== ADD LABEL HELPER =====
     private void addLabel(String text, int x, int y) {
         JLabel label = new JLabel(text);
+        label.setFont(new Font("Arial", Font.PLAIN, 16));
         label.setBounds(x, y, 150, 25);
         add(label);
     }
