@@ -87,6 +87,13 @@ public class academicLeaderDashboard extends JFrame{
         new academicLeaderDashboard();
     }
 
+    private void filterModules() {
+        String filterText = searchField.getText().toLowerCase();
+        List<academicLeaderModule> allModules = academicLeaderModuleFileManager.loadModules();
+        List<academicLeaderModule> filtered = allModules.stream().filter(m -> m.getName().toLowerCase().contains(filterText)).collect(Collectors.toList());
+        displayModules(filtered);
+    }
+
     private void refreshDashboard() {
         centerPanel.removeAll();
         List<academicLeaderModule> modules = academicLeaderModuleFileManager.loadModules();

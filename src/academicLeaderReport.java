@@ -269,6 +269,21 @@ public class academicLeaderReport extends JPanel {
         topSection.add(filterContainer, BorderLayout.SOUTH);
         totalModule.add(topSection, BorderLayout.NORTH);
         
+        
+        
+        //no result
+        JPanel noResult = new JPanel(new GridBagLayout());
+        noResult.setBackground(Color.WHITE);
+        noResult.setOpaque(true);
+        noResult.setVisible(false);
+        noResult.setBorder(BorderFactory.createEmptyBorder(25,0,0,0));
+        
+        
+        JLabel emptyText = new JLabel("NO RESULT FOUND");
+        emptyText.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        emptyText.setForeground(new Color(148,163,184));
+        noResult.add(emptyText);
+        
         // Inside totalModuleReport() (table)
         String[] columns = {"Module Code", "Module Name", "Level", "Lecturer","Intake Month","Year"};
         DefaultTableModel model = new DefaultTableModel(columns, 0){
@@ -280,27 +295,62 @@ public class academicLeaderReport extends JPanel {
         for (academicLeaderModule m : modules) {
             model.addRow(new Object[]{m.getCode(), m.getName(), m.getQualification(), m.getLecturerName(), m.getIntakeMonth(), m.getYear()});
         }
-
+        
+        //table
         JTable moduleTable = new JTable(model) {
             @Override
             public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
-                Component rowColor = super.prepareRenderer(renderer, row, column);
+                Component component = super.prepareRenderer(renderer, row, column);              
                 if (!isRowSelected(row)) {
-                    // Alternating colors: White and Very Light Grey
-                    rowColor.setBackground(row % 2 == 0 ? Color.WHITE : new Color(242, 242, 242));
+                    component.setBackground(row % 2 == 0 ? Color.WHITE : new Color(242, 242, 242));
                 }
-                return rowColor;
+                
+                if (component instanceof JComponent) {
+                    ((JComponent) component).setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+                }
+                return component;
             }
         };
+        
         moduleTable.setRowHeight(30); 
-        moduleTable.setShowGrid(false);
-        moduleTable.setIntercellSpacing(new Dimension(0, 0));
-        moduleTable.getTableHeader().setBackground(new Color(245, 247, 250));
-        moduleTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        moduleTable.getTableHeader().setPreferredSize(new Dimension(0, 25));
+        moduleTable.setGridColor(new Color(230,230,230));
+        moduleTable.setShowGrid(true);
+        moduleTable.setIntercellSpacing(new Dimension(1, 1));
+        moduleTable.getTableHeader().setPreferredSize(new Dimension(0, 25));      
+        moduleTable.getTableHeader().setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JLabel header = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                header.setBackground(new Color(226, 232, 240)); 
+                header.setFont(new Font("Segoe UI", Font.BOLD, 12));
+                header.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, new Color(203, 213, 225)),BorderFactory.createEmptyBorder(0, 10, 0, 0)));
+                return header;
+            }
+        });
+        
         
         //make the table header move to left
         ((JLabel)moduleTable.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.LEFT);
+        
+        CardLayout tableCardLayout = new CardLayout();
+        JPanel tableContainer = new JPanel(tableCardLayout);
+        tableContainer.setOpaque(false);
+        
+        tableContainer.add(moduleTable, "TABLE");
+        tableContainer.add(noResult, "EMPTY");
+        
+        JScrollPane scrollPane = new JScrollPane(tableContainer);
+        //scrollPane.setBorder(BorderFactory.createLineBorder(new Color(230,230,230),1));
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setColumnHeaderView(moduleTable.getTableHeader());
+        
+        JPanel headerCorner = new JPanel();
+        headerCorner.setBackground(new Color(226, 232, 240));
+        headerCorner.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(203, 213, 225)));
+        scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, headerCorner);
         
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         moduleTable.setRowSorter(sorter);
@@ -309,20 +359,24 @@ public class academicLeaderReport extends JPanel {
             String selectedYear = (String) yearFilter.getSelectedItem();
             String selectedMonth = (String) monthFilter.getSelectedItem();
             
-            List<RowFilter<Object, Object>> filters = new ArrayList<>();
-            
+            List<RowFilter<Object, Object>> filters = new ArrayList<>();           
             if (!selectedYear.equals("All Years")) {filters.add(RowFilter.regexFilter(selectedYear, 5));}
             if (!selectedMonth.equals("All Months")) {filters.add(RowFilter.regexFilter(selectedMonth, 4));}
             
             sorter.setRowFilter(RowFilter.andFilter(filters));
+            
+            if (moduleTable.getRowCount()==0){
+                tableCardLayout.show(tableContainer, "EMPTY");
+            }else{
+                tableCardLayout.show(tableContainer, "TABLE");
+            }
+            
+            scrollPane.revalidate();
+            scrollPane.repaint();
         };
 
         yearFilter.addActionListener(filterAction);
         monthFilter.addActionListener(filterAction);
-        
-        JScrollPane scrollPane = new JScrollPane(moduleTable);
-        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(230,230,230),1));
-        scrollPane.getViewport().setBackground(Color.WHITE);
         
         String currentTime = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(java.time.LocalDateTime.now());
         JLabel lastUpdatedLabel = new JLabel("Last synced: " + currentTime);
@@ -353,10 +407,11 @@ public class academicLeaderReport extends JPanel {
         registryPanel.setOpaque(false);
         JLabel registryTitle = new JLabel("📊 Complete Module Registry");
         registryTitle.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
-        registryPanel.add(registryTitle, BorderLayout.NORTH);
+        registryPanel.add(registryTitle, BorderLayout.NORTH);       
         registryPanel.add(scrollPane, BorderLayout.CENTER); 
         registryPanel.add(actionRow, BorderLayout.SOUTH);
-
+        
+        totalModule.add(topSection, BorderLayout.NORTH);
         totalModule.add(registryPanel, BorderLayout.CENTER);
         return totalModule;
     }
@@ -416,3 +471,5 @@ public class academicLeaderReport extends JPanel {
         }
     }
 }
+
+///
