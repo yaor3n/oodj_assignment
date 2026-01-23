@@ -84,7 +84,7 @@ public class login extends JFrame implements ActionListener {
                                     new studentDashboard();
                                     break;
                                 case "AcademicStaff":
-                                    new academicStaffDashboard();
+                                    new academicLeaderDashboard();
                                     break;
                                 default:
                                     JOptionPane.showMessageDialog(this,

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 U001,Jane Doe,janedoe@gmail.com,female,31 January 2005,Jane,123,Student,Computer Science
 U002,John Lee,johnlee@gmail.com,male,1 December 2000,Johnathan,321,Lecturer,Data Structure
 U003,Yao Ren,yr@gmail.com,male,5 November 2005,yaor3n,123,Admin,-
@@ -6,3 +7,15 @@ U005,Raul Mahendran,raul@gmail.com,male,5 January 2006,Raulll,R4ul#123,Student,C
 U006,Siew Weng Tim,swt@gmail.com,male,1 October 2005,wengtimmm,Tim#123,Lecturer,Database Management
 U007,Testing,test@gmail.com,female,1 February 2005,test,Test#123,Student,Humanities
 U008,Sum Ting Wong,stw@gmail.com,,,tingwong,wong#123,Lecturer,-
+=======
+test,123,Lecturer
+lec1,123,Lecturer
+stud1,123,Student
+stud2,321,Student
+staff1,123,AcademicStaff
+admin,123,Admin
+student,123,Student
+raul,321,Student
+yaoren,123,Lecturer
+sky,sky,Lecturer
+>>>>>>> c67e84c (sky update)
