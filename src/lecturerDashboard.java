@@ -16,7 +16,9 @@ public class lecturerDashboard extends JFrame {
   private JButton btnFeed;
   private JButton backBtn;
   private int sidebarWidth = 250;
+  private JButton editProfileBtn;
 
+  private boolean modulesVisible = true;
   private String username;
   private String lecturerID;
   private String lecturerName;
@@ -99,13 +101,13 @@ public class lecturerDashboard extends JFrame {
 
   private List<String> loadCoursesForLecturer() {
     List<String> list = new ArrayList<>();
-    try (BufferedReader r = new BufferedReader(new FileReader("accounts.txt"))) {
+    try (BufferedReader r = new BufferedReader(new FileReader("lecturerCourse.txt"))) {
       String line;
       while ((line = r.readLine()) != null) {
-        String[] p = line.split(",", 9);
-        if (p.length == 9 && p[5].equals(username) && p[8] != null) {
-          if (!list.contains(p[8]))
-            list.add(p[8]);
+        String[] p = line.split(",", 4);
+        if (p.length == 4 && p[2].equals(username) && p[3] != null) {
+          if (!list.contains(p[3]))
+            list.add(p[3]);
         }
       }
     } catch (IOException e) {
@@ -115,7 +117,7 @@ public class lecturerDashboard extends JFrame {
 
   private List<String[]> loadModulesForCourse(String course) {
     List<String[]> list = new ArrayList<>();
-    try (BufferedReader r = new BufferedReader(new FileReader("coursesInAPU.txt"))) {
+    try (BufferedReader r = new BufferedReader(new FileReader("academicLeaderModule.txt"))) {
       String line;
       while ((line = r.readLine()) != null) {
         String[] p = line.split(",", -1);
@@ -128,8 +130,9 @@ public class lecturerDashboard extends JFrame {
   }
 
   private void showCourseSelection() {
-    sidebar.removeAll();
-    sidebar.setPreferredSize(new Dimension(0, 0));
+    lecturerModule = null;
+    setupNavigationOnlySidebar();
+
     contentPanel.removeAll();
 
     JPanel mainContainer = new JPanel(new BorderLayout(20, 20));
@@ -159,7 +162,45 @@ public class lecturerDashboard extends JFrame {
 
     mainContainer.add(scrollPane, BorderLayout.CENTER);
     contentPanel.add(mainContainer, BorderLayout.CENTER);
+
     refresh();
+  }
+
+  private void setupNavigationOnlySidebar() {
+    sidebar.removeAll();
+    sidebar.setPreferredSize(new Dimension(0, 750));
+
+    try {
+      File imgFile = new File("images/APUlogo.png");
+      if (imgFile.exists()) {
+        ImageIcon rawIcon = new ImageIcon(imgFile.getAbsolutePath());
+        Image scaledImg = rawIcon.getImage().getScaledInstance(120, 105, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(scaledImg));
+        logoLabel.setBounds(65, 20, 120, 105);
+        sidebar.add(logoLabel);
+      }
+    } catch (Exception e) {
+    }
+
+    NicerButton editProfileBtn = new NicerButton("Profile", darkNavy, hoverNavy, 15);
+    editProfileBtn.setBounds(25, 140, 200, 45);
+    editProfileBtn.addActionListener(e -> new lecturerEditProfile(username));
+    sidebar.add(editProfileBtn);
+
+    NicerButton logoutBtn = new NicerButton("Logout", new Color(220, 53, 69), new Color(180, 40, 50), 15);
+    logoutBtn.setBounds(25, 610, 200, 45);
+    logoutBtn.addActionListener(e -> {
+      int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout",
+          JOptionPane.YES_NO_OPTION);
+      if (confirm == JOptionPane.YES_OPTION) {
+        new login();
+        this.dispose();
+      }
+    });
+    sidebar.add(logoutBtn);
+
+    sidebar.revalidate();
+    sidebar.repaint();
   }
 
   private JPanel createCourseCard(String courseName) {
@@ -201,10 +242,19 @@ public class lecturerDashboard extends JFrame {
   }
 
   private void showModuleSidebar() {
+    List<String[]> modules = loadModulesForCourse(selectedCourse);
+
+    if (modules == null || modules.isEmpty()) {
+      JOptionPane.showMessageDialog(this, "No modules found for this course", "Empty Course",
+          JOptionPane.WARNING_MESSAGE);
+      return;
+    }
+
     sidebar.removeAll();
+    sidebar.setPreferredSize(new Dimension(sidebarWidth, 750));
 
     try {
-      File imgFile = new File("APUlogo.png");
+      File imgFile = new File("images/APUlogo.png");
       if (imgFile.exists()) {
         ImageIcon rawIcon = new ImageIcon(imgFile.getAbsolutePath());
         Image scaledImg = rawIcon.getImage().getScaledInstance(120, 105, Image.SCALE_SMOOTH);
@@ -213,33 +263,52 @@ public class lecturerDashboard extends JFrame {
         sidebar.add(logoLabel);
       }
     } catch (Exception e) {
-      System.err.println("Error loading logo: " + e.getMessage());
     }
 
-    JLabel moduleHeader = new JLabel("Modules", SwingConstants.CENTER);
-    moduleHeader.setFont(new Font("Arial", Font.BOLD, 18));
-    moduleHeader.setBounds(25, 150, 200, 30);
-    moduleHeader.setForeground(new Color(30, 41, 59));
+    NicerButton editBtn = new NicerButton("Edit Profile", darkNavy, hoverNavy, 15);
+    editBtn.setBounds(25, 140, 200, 45);
+    editBtn.addActionListener(e -> new lecturerEditProfile(username));
+    sidebar.add(editBtn);
+
+    String arrow = modulesVisible ? "▼ " : "▶ ";
+    JLabel moduleHeader = new JLabel(arrow + "Modules", SwingConstants.LEFT);
+    moduleHeader.setFont(new Font("Arial", Font.BOLD, 16));
+    moduleHeader.setBounds(35, 205, 180, 30);
+    moduleHeader.setForeground(new Color(71, 85, 105));
+    moduleHeader.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    moduleHeader.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent e) {
+        modulesVisible = !modulesVisible;
+        showModuleSidebar();
+      }
+    });
     sidebar.add(moduleHeader);
 
-    List<String[]> modules = loadModulesForCourse(selectedCourse);
-
-    int yOffset = 200;
-
-    if (modules != null && !modules.isEmpty()) {
+    int yOffset = 240;
+    if (modulesVisible) {
       for (String[] m : modules) {
         JButton btn = sidebarButton(m[1], yOffset);
-        btn.addActionListener(e -> {
-          loadModuleDashboard(m);
-        });
+        btn.addActionListener(e -> loadModuleDashboard(m));
         sidebar.add(btn);
         yOffset += 55;
       }
+    }
 
+    NicerButton logoutBtn = new NicerButton("Logout", new Color(220, 53, 69), new Color(180, 40, 50), 15);
+    logoutBtn.setBounds(25, 610, 200, 45);
+    logoutBtn.addActionListener(e -> {
+      int confirm = JOptionPane.showConfirmDialog(this, "Logout?", "Confirm", JOptionPane.YES_NO_OPTION);
+      if (confirm == JOptionPane.YES_OPTION) {
+        new login();
+        dispose();
+      }
+    });
+    sidebar.add(logoutBtn);
+
+    if (lecturerModule == null && !modules.isEmpty()) {
       loadModuleDashboard(modules.get(0));
     }
 
-    sidebar.setPreferredSize(new Dimension(sidebarWidth, Math.max(800, yOffset)));
     sidebar.revalidate();
     sidebar.repaint();
   }

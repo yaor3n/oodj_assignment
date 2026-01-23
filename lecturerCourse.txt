@@ -1,0 +1,6 @@
+U001,Lecturer 1,lecturer1,Cybersecurity
+U001,Lecturer 1,lecturer1,Software Engineering
+U001,Lecturer 1,lecturer1,Accounting
+U001,Lecturer 1,lecturer1,Psychology
+U001,Lecturer 1,lecturer1,Data Science
+U001,Lecturer 1,lecturer1,Business Analytics

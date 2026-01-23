@@ -1,6 +1,5 @@
 public class Main {
   public static void main(String[] args) {
-    // new login();
-    new lecturerDashboard("lecturer1");
+    new login();
   }
 }
