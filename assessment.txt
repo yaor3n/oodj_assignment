@@ -9,3 +9,4 @@ ASS006,U007,lecturer1,Software Engineer,Introduction to Python,Exam 1,lecturer1,
 ASS007,U007,lecturer1,Cybersecurity,OODJ,Quiz 2,lecturer1,2026-01-01,Quiz,
 ASS008,U007,lecturer1,Cybersecurity,OODJ,Quiz 3,lecturer1,2026-01-01,Quiz,
 ASS009,U007,lecturer1,Cybersecurity,OODJ,Assignment 2,lecturer1,2026-01-01,Assignment,
+ASS010,U007,lecturer1,Cybersecurity,OODJ,Exam 2,lecturer1,2026-01-01,Exam,trial exam. Good Luck

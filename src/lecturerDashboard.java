@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import utils.NicerButton;
 
 public class lecturerDashboard extends JFrame {
 
@@ -14,7 +15,7 @@ public class lecturerDashboard extends JFrame {
   private JButton btnAss;
   private JButton btnFeed;
   private JButton backBtn;
-  private int sidebarWidth = 200;
+  private int sidebarWidth = 250;
 
   private String username;
   private String lecturerID;
@@ -22,11 +23,13 @@ public class lecturerDashboard extends JFrame {
   private String selectedCourse;
   private String lecturerModule;
 
-  Color colorSidebar = new Color(169, 169, 169);
+  Color colorSidebar = new Color(241, 245, 249);
   Color colorHeader = new Color(90, 90, 90);
-  Color colorBackground = new Color(245, 245, 245);
+  Color colorBackground = new Color(255, 255, 255);
   Color googleBlue = new Color(66, 133, 244);
   Color colorBorder = new Color(200, 200, 200);
+  Color darkNavy = new Color(30, 41, 59);
+  Color hoverNavy = new Color(51, 65, 85);
 
   public lecturerDashboard(String username) {
     this.username = username;
@@ -41,7 +44,7 @@ public class lecturerDashboard extends JFrame {
     sidebar = new JPanel();
     sidebar.setBackground(colorSidebar);
     sidebar.setPreferredSize(new Dimension(0, 0));
-    sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+    sidebar.setLayout(null);
     add(sidebar, BorderLayout.WEST);
 
     JPanel header = new JPanel(new BorderLayout());
@@ -71,6 +74,12 @@ public class lecturerDashboard extends JFrame {
 
     showCourseSelection();
     setVisible(true);
+  }
+
+  private JButton sidebarButton(String text, int y) {
+    NicerButton btn = new NicerButton(text, darkNavy, hoverNavy, 15);
+    btn.setBounds(25, y, 200, 45);
+    return btn;
   }
 
   private void loadLecturerData(String username) {
@@ -122,48 +131,117 @@ public class lecturerDashboard extends JFrame {
     sidebar.removeAll();
     sidebar.setPreferredSize(new Dimension(0, 0));
     contentPanel.removeAll();
-    JPanel center = new JPanel(new GridBagLayout());
-    center.setBackground(colorBackground);
-    GridBagConstraints gbc = new GridBagConstraints();
-    gbc.gridwidth = GridBagConstraints.REMAINDER;
-    gbc.insets = new Insets(10, 10, 10, 10);
-    JLabel label = new JLabel("Select a Course");
-    label.setFont(new Font("Arial", Font.BOLD, 30));
-    center.add(label, gbc);
-    for (String c : loadCoursesForLecturer()) {
-      JButton btn = new JButton(c);
-      btn.setPreferredSize(new Dimension(300, 50));
-      btn.addActionListener(e -> {
-        selectedCourse = c;
-        showModuleSidebar();
-      });
-      center.add(btn, gbc);
+
+    JPanel mainContainer = new JPanel(new BorderLayout(20, 20));
+    mainContainer.setBackground(colorBackground);
+    mainContainer.setBorder(new EmptyBorder(40, 60, 40, 60));
+
+    JLabel label = new JLabel("Select a Course", SwingConstants.CENTER);
+    label.setFont(new Font("Arial", Font.BOLD, 28));
+    label.setBorder(new EmptyBorder(0, 0, 20, 0));
+    mainContainer.add(label, BorderLayout.NORTH);
+
+    JPanel gridPanel = new JPanel(new GridLayout(0, 3, 25, 25));
+    gridPanel.setBackground(colorBackground);
+
+    for (String courseName : loadCoursesForLecturer()) {
+      gridPanel.add(createCourseCard(courseName));
     }
-    contentPanel.add(center, BorderLayout.CENTER);
+
+    JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    wrapper.setBackground(colorBackground);
+    wrapper.add(gridPanel);
+
+    JScrollPane scrollPane = new JScrollPane(wrapper);
+    scrollPane.setBorder(null);
+    scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+    scrollPane.getViewport().setBackground(colorBackground);
+
+    mainContainer.add(scrollPane, BorderLayout.CENTER);
+    contentPanel.add(mainContainer, BorderLayout.CENTER);
     refresh();
+  }
+
+  private JPanel createCourseCard(String courseName) {
+    JPanel card = new JPanel(new GridBagLayout());
+    card.setPreferredSize(new Dimension(250, 250));
+    card.setMinimumSize(new Dimension(250, 250));
+    card.setMaximumSize(new Dimension(250, 250));
+    card.setBackground(Color.WHITE);
+    card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
+    card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+    JLabel nameLabel = new JLabel(
+        "<html><body style='width: 150px; text-align: center;'>" + courseName + "</body></html>");
+    nameLabel.setFont(new Font("Arial", Font.BOLD, 22));
+    nameLabel.setForeground(new Color(50, 50, 50));
+    card.add(nameLabel);
+
+    card.addMouseListener(new java.awt.event.MouseAdapter() {
+      @Override
+      public void mouseEntered(java.awt.event.MouseEvent e) {
+        card.setBackground(new Color(250, 250, 250));
+        card.setBorder(BorderFactory.createLineBorder(googleBlue, 2));
+      }
+
+      @Override
+      public void mouseExited(java.awt.event.MouseEvent e) {
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
+      }
+
+      @Override
+      public void mousePressed(java.awt.event.MouseEvent e) {
+        selectedCourse = courseName;
+        showModuleSidebar();
+      }
+    });
+
+    return card;
   }
 
   private void showModuleSidebar() {
     sidebar.removeAll();
-    List<String[]> modules = loadModulesForCourse(selectedCourse);
-    if (modules.isEmpty())
-      return;
 
-    for (String[] m : modules) {
-      JButton btn = new JButton(m[1]);
-      btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-      btn.setFocusPainted(false);
-      btn.addActionListener(e -> {
-        loadModuleDashboard(m);
-        refresh();
-      });
-      sidebar.add(btn);
-      sidebar.add(Box.createVerticalStrut(5));
+    try {
+      File imgFile = new File("APUlogo.png");
+      if (imgFile.exists()) {
+        ImageIcon rawIcon = new ImageIcon(imgFile.getAbsolutePath());
+        Image scaledImg = rawIcon.getImage().getScaledInstance(120, 105, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(scaledImg));
+        logoLabel.setBounds(65, 20, 120, 105);
+        sidebar.add(logoLabel);
+      }
+    } catch (Exception e) {
+      System.err.println("Error loading logo: " + e.getMessage());
     }
 
-    sidebar.setPreferredSize(new Dimension(sidebarWidth, 0));
-    refresh();
-    loadModuleDashboard(modules.get(0));
+    JLabel moduleHeader = new JLabel("Modules", SwingConstants.CENTER);
+    moduleHeader.setFont(new Font("Arial", Font.BOLD, 18));
+    moduleHeader.setBounds(25, 150, 200, 30);
+    moduleHeader.setForeground(new Color(30, 41, 59));
+    sidebar.add(moduleHeader);
+
+    List<String[]> modules = loadModulesForCourse(selectedCourse);
+
+    int yOffset = 200;
+
+    if (modules != null && !modules.isEmpty()) {
+      for (String[] m : modules) {
+        JButton btn = sidebarButton(m[1], yOffset);
+        btn.addActionListener(e -> {
+          loadModuleDashboard(m);
+        });
+        sidebar.add(btn);
+        yOffset += 55;
+      }
+
+      loadModuleDashboard(modules.get(0));
+    }
+
+    sidebar.setPreferredSize(new Dimension(sidebarWidth, Math.max(800, yOffset)));
+    sidebar.revalidate();
+    sidebar.repaint();
   }
 
   private void loadModuleDashboard(String[] module) {
@@ -183,8 +261,8 @@ public class lecturerDashboard extends JFrame {
     backContainer.add(backBtn);
 
     JPanel moduleHeader = new JPanel(new BorderLayout());
-    moduleHeader.setBackground(new Color(230, 230, 230));
-    moduleHeader.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+    moduleHeader.setBackground(colorSidebar);
+    moduleHeader.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3));
     moduleHeader.setPreferredSize(new Dimension(0, 45));
     JLabel nameLbl = new JLabel(lecturerModule, SwingConstants.CENTER);
     nameLbl.setFont(new Font("Arial", Font.BOLD, 18));
@@ -259,9 +337,7 @@ public class lecturerDashboard extends JFrame {
   private void toggleSidebar() {
     int currentWidth = sidebar.getPreferredSize().width;
     int newWidth = (currentWidth == 0) ? sidebarWidth : 0;
-
     sidebar.setPreferredSize(new Dimension(newWidth, 0));
-
     this.getContentPane().revalidate();
     this.getContentPane().repaint();
   }
