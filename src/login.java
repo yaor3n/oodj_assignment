@@ -23,7 +23,7 @@ public void actionPerformed(ActionEvent e) {
                     new adminDashboard();
                     break;
                 case "Lecturer":
-                    new lecturerDashboard();
+                    new lecturerDashboard(username);
                     break;
                 case "Student":
                     new studentDashboard();

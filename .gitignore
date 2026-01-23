@@ -28,3 +28,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 /build/
+
+### ignore this for wengtim ###
+src/lecturerDB.java.BAK

@@ -1,0 +1,16 @@
+U011,Siew Weng Tim,U007,Lecturer 1,OODJ,Assignment 1,50
+U012,Raul User,U007,Lecturer 1,OODJ,Assignment 1,100
+U013,Yao Ren,U007,Lecturer 1,OODJ,Assignment 1,100
+U011,Siew Weng Tim,U007,Lecturer 1,OODJ,Exam 1,100
+U012,Raul User,U007,Lecturer 1,OODJ,Exam 1,100
+U013,Yao Ren,U007,Lecturer 1,OODJ,Exam 1,100
+U011,Siew Weng Tim,U007,Lecturer 1,OODJ,Quiz 2,50
+U012,Raul User,U007,Lecturer 1,OODJ,Quiz 2,100
+U013,Yao Ren,U007,Lecturer 1,OODJ,Quiz 2,100
+U011,Siew Weng Tim,U007,Lecturer 1,Introduction to Javascript,Assignment 1,
+U012,Raul User,U007,Lecturer 1,Introduction to Javascript,Assignment 1,
+U014,Bob,U007,Lecturer 1,Introduction to Javascript,Assignment 1,
+U015,User 1,U007,Lecturer 1,Introduction to Javascript,Assignment 1,
+U016,User 2,U007,Lecturer 1,Introduction to Javascript,Assignment 1,
+U017,User 3,U007,Lecturer 1,Introduction to Javascript,Assignment 1,
+U018,User 4,U007,Lecturer 1,Introduction to Javascript,Assignment 1,

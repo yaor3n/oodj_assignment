@@ -1,0 +1,11 @@
+# id,lecturerID,lecturerUsername,courseName,moduleName,title,createdBy,submissionDate,type,description
+
+ASS001,U007,lecturer1,Cybersecurity,OODJ,Assignment 1,lecturer1,2026-01-01,Assignment,This is the description of this assignment for OODJ
+ASS002,U007,lecturer1,Cybersecurity,CTF,Assignment 2,lecturer1,2026-01-01,Assignment,This is the description of this assignment for CTF
+ASS003,U007,lecturer1,Database Management,Introduction to Javascript,Assignment 1,lecturer1,2026-01-01,Assignment,This is the description of this assignment for Introduction to JS
+ASS004,U007,lecturer1,Cybersecurity,OODJ,Quiz 1,lecturer1,2026-01-01,Quiz,this is the quiz to do. please finish
+ASS005,U007,lecturer1,Cybersecurity,OODJ,Exam 1,lecturer1,2026-01-01,Exam,this is final exam. dont fail
+ASS006,U007,lecturer1,Software Engineer,Introduction to Python,Exam 1,lecturer1,2026-01-01,Exam,
+ASS007,U007,lecturer1,Cybersecurity,OODJ,Quiz 2,lecturer1,2026-01-01,Quiz,
+ASS008,U007,lecturer1,Cybersecurity,OODJ,Quiz 3,lecturer1,2026-01-01,Quiz,
+ASS009,U007,lecturer1,Cybersecurity,OODJ,Assignment 2,lecturer1,2026-01-01,Assignment,
