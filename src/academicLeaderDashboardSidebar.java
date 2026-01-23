@@ -6,7 +6,7 @@ public class academicLeaderDashboardSidebar extends JPanel {
     private JButton reportBtn;
     private JButton profileBtn;
     private JButton logoutBtn;
-    private Runnable toggleAction; // To trigger sidebar closing from within
+    private Runnable toggleAction;
     
     public academicLeaderDashboardSidebar(Runnable toggleAction){
         this.toggleAction = toggleAction;
@@ -35,7 +35,7 @@ public class academicLeaderDashboardSidebar extends JPanel {
         JLabel logoLabel = new JLabel();
         ImageIcon icon = new ImageIcon("APUlogo.png");
         if(icon.getImage() != null) {
-            Image img = icon.getImage().getScaledInstance(75, 45, Image.SCALE_SMOOTH);
+            Image img = icon.getImage().getScaledInstance(65, 45, Image.SCALE_SMOOTH);
             logoLabel.setIcon(new ImageIcon(img));
         }
         

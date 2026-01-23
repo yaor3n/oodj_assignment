@@ -67,6 +67,7 @@ public class academicLeaderDashboard extends JFrame{
         actionRow.add(createButton);
         topContainer.add(actionRow);
         dashboard.add(topContainer, BorderLayout.NORTH);
+
         //card
         centerPanel = new JPanel(new GridLayout(0, 3, 20, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
