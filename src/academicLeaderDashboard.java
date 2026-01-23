@@ -16,18 +16,21 @@ public class academicLeaderDashboard extends JFrame {
 
         reusable.windowSetup(this);
         this.setLayout(new BorderLayout());
+
         // Sidebar
         sidebar = new JPanel();
-        sidebar.setBackground(new Color(180, 180, 180)); // Light grey as per sketch
+        sidebar.setBackground(new Color(180, 180, 180)); // Light grey
         sidebar.setPreferredSize(new Dimension(200, 0));
         sidebar.setLayout(new BorderLayout());
+
         // Logo area
         JPanel logoPanel = new JPanel();
         logoPanel.setBackground(new Color(120, 120, 120));
         logoPanel.setPreferredSize(new Dimension(0, 60));
         logoPanel.add(new JLabel("Logo"));
         sidebar.add(logoPanel, BorderLayout.NORTH);
-        // Side labels
+
+        // Sidebar buttons
         sidebar.add(new JButton("Dashboard"));
         sidebar.add(new JButton("Report"));
         sidebar.setVisible(false);
@@ -67,6 +70,7 @@ public class academicLeaderDashboard extends JFrame {
         createButton.addActionListener(e -> showCreateDialog());
         actionRow.add(createButton);
         topContainer.add(actionRow);
+
         dashboard.add(topContainer, BorderLayout.NORTH);
 
         // Center panel for cards
@@ -93,7 +97,6 @@ public class academicLeaderDashboard extends JFrame {
         List<academicLeaderModule> modules = academicLeaderModuleFileManager.loadModules();
 
         for (academicLeaderModule m : modules) {
-            // Card Header with 3-dot button
             JPanel moduleCard = new JPanel(new BorderLayout());
             moduleCard.setPreferredSize(new Dimension(280, 180));
             moduleCard.setBackground(Color.WHITE);
@@ -108,7 +111,6 @@ public class academicLeaderDashboard extends JFrame {
             cardHeader.add(dotBtn);
             moduleCard.add(cardHeader, BorderLayout.NORTH);
 
-            // Card Center showing Module Name
             JLabel nameLabel = new JLabel(m.getName(), SwingConstants.CENTER);
             nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
             moduleCard.add(nameLabel, BorderLayout.CENTER);

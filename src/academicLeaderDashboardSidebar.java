@@ -10,7 +10,7 @@ public class academicLeaderDashboardSidebar extends JPanel {
     
     public academicLeaderDashboardSidebar(Runnable toggleAction){
         this.toggleAction = toggleAction;
-        this.setBackground(new Color(45,45,45));
+        this.setBackground(new Color(241, 245, 249));
         this.setLayout(new BorderLayout());
         
         sidebarTopSection();
@@ -21,10 +21,10 @@ public class academicLeaderDashboardSidebar extends JPanel {
     private void sidebarTopSection(){
         JPanel sidebarTop = new JPanel(new BorderLayout());
         sidebarTop.setOpaque(false);
-        sidebarTop.setPreferredSize(new Dimension(200, 50)); // Match Header Heig
+        sidebarTop.setPreferredSize(new Dimension(160, 50)); // Match Header Heig
         
-        JButton sidebarCloseBtn = new JButton("☰");
-        sidebarCloseBtn.setForeground(Color.WHITE);
+        JButton sidebarCloseBtn = new JButton("☰");      
+        sidebarCloseBtn.setForeground(Color.BLACK);
         sidebarCloseBtn.setBorderPainted(false);
         sidebarCloseBtn.setContentAreaFilled(false);
         sidebarCloseBtn.setFocusPainted(false);
@@ -72,7 +72,8 @@ public class academicLeaderDashboardSidebar extends JPanel {
         bottomPanel.add(Box.createVerticalStrut(10));
 
         logoutBtn = new JButton("Logout");
-        logoutBtn.setBackground(new Color(220, 53, 69)); // Modern Red
+        logoutBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        logoutBtn.setBackground(new Color(220, 53, 69)); 
         logoutBtn.setForeground(Color.WHITE);
         logoutBtn.setFocusPainted(false);
         logoutBtn.setBorderPainted(false);
@@ -86,11 +87,11 @@ public class academicLeaderDashboardSidebar extends JPanel {
     
     private void styleSidebarButton(JButton btn, JPanel container) {
         btn.setMaximumSize(new Dimension(200, 45));
-        btn.setBackground(new Color(60, 70, 85));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setBackground(new Color(30, 41, 59));
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
-        btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setAlignmentX(Component.CENTER_ALIGNMENT);
         container.add(btn);
