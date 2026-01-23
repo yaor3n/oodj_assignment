@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.List;
 
@@ -31,8 +29,11 @@ public class academicLeaderDashboard extends JFrame {
         sidebar.add(logoPanel, BorderLayout.NORTH);
 
         // Sidebar buttons
-        sidebar.add(new JButton("Dashboard"));
-        sidebar.add(new JButton("Report"));
+        JPanel buttonPanel = new JPanel(new GridLayout(0, 1));
+        buttonPanel.add(new JButton("Dashboard"));
+        buttonPanel.add(new JButton("Report"));
+        sidebar.add(buttonPanel, BorderLayout.CENTER);
+
         sidebar.setVisible(false);
         this.add(sidebar, BorderLayout.WEST);
 
@@ -69,21 +70,20 @@ public class academicLeaderDashboard extends JFrame {
         createButton.setPreferredSize(new Dimension(150, 40));
         createButton.addActionListener(e -> showCreateDialog());
         actionRow.add(createButton);
-        topContainer.add(actionRow);
 
+        topContainer.add(actionRow);
         dashboard.add(topContainer, BorderLayout.NORTH);
 
         // Center panel for cards
         centerPanel = new JPanel(new GridLayout(0, 3, 20, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        gridWrapper = new JPanel(new BorderLayout());
-        gridWrapper.add(centerPanel, BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane(centerPanel);
         scrollPane.setBorder(null);
         dashboard.add(scrollPane, BorderLayout.CENTER);
 
         refreshDashboard();
+
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
@@ -107,8 +107,8 @@ public class academicLeaderDashboard extends JFrame {
             JButton dotBtn = new JButton("...");
             dotBtn.setBorderPainted(false);
             dotBtn.setContentAreaFilled(false);
-
             cardHeader.add(dotBtn);
+
             moduleCard.add(cardHeader, BorderLayout.NORTH);
 
             JLabel nameLabel = new JLabel(m.getName(), SwingConstants.CENTER);
