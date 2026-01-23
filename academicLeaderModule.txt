@@ -1,17 +1,6 @@
-<<<<<<< HEAD
 moduleID,moduleName,levelOfEdu,lecturerID,lecturerName,month,year,description,modulePicture,course
 M01,Code Optimization,PhD,lec1,Lecturer One,March,2026,Intro to SE,ModulePic1.png,Software Engineering
 M02,Book Keeping Strategies,Bachelor,lec2,Lecturer Two,April,2026,Basics of Accounting,ModulePic2.png,Accounting
 M03,Human Behavioural Studies,Bachelor,lec1,Lecturer One,May,2026,Understanding Human Behavior,ModulePic3.png,Psychology
 M04,Pentesting,PhD,lec2,Lecturer Two,June,2026,Network Security Fundamentals,ModulePic4.png,CyberSecurity
 M05,Intro to OOP,Bachelor,lec4,Lecturer Four,June,2026,OOP with JAVA,ModulePic5.png,Computer Science
-=======
-M-01,JAVA,Diploma,sky ong,January,2025,This is the module,default
-E3,sky,Bachelor's Degree,ali,May,2025,popo,default
-abu,ayam,PhD,lec1,October,2025,itik,ModuleDefaultPic.png
-aniya,aniya,Bachelor's Degree,sky,May,2025,tyt,C:\Users\User\OneDrive\Pictures\Screenshots\Screenshot 2025-12-22 142315.png
-B02,Python,Diploma,sky,April,2026,python first class,ModuleDefaultPic2.png
-B12,RWDD,Certificate,yaoren,December,2025,NEW MODULE,ModuleDefaultPic3.png
-CP001,Capstone Project,Diploma,Assigned Lecturer,August,2025,new project,ModuleDefaultPic3.png
-S01,Sejarahh,Master's Degree,sky,February,2026,new course,ModuleDefaultPic2.png
->>>>>>> da63efc (update progress)
