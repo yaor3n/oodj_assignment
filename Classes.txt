@@ -2,3 +2,15 @@ M01,Code Optimization,PhD,lec1,Lecturer One,March,2026,Intro to SE,ModulePic1.pn
 M02,Book Keeping Strategies,Bachelor,lec2,Lecturer Two,April,2026,Basics of Accounting,ModulePic2.png,Accounting,C007,Tutorial: week6,B-05-12,4 April 2026,16:00,18:00
 M04,Pentesting,PhD,lec2,Lecturer Two,June,2026,Network Security Fundamentals,ModulePic4.png,CyberSecurity,C008,Tutorial: Ethics for Pentesting,Tech Lab-06-04,7 May 2026,09:00,10:00
 M03,Human Behavioural Studies,Bachelor,lec1,Lecturer One,May,2026,Understanding Human Behavior,ModulePic3.png,Psychology,C009,Lecture: The Human Mind,B-04-05,5 January 2026,15:00,16:00
+M001,CTF Strategies,Degree,L001,Shahab,November,2025,img.png,Degree in Cybersecurity,C001,CTF-Lab63,TechLab6-03,13 February 2026,8:00,10:00
+M002,Java Development,Degree,L003,Siew Weng Tim,November,2025,java.png,Computer Science,C002,Lab-2-1,TechBlock-A,14 February 2026,10:00,12:00
+M003,Database Systems,Diploma,L004,John Lee,January,2026,db.png,Information Technology,C003,Lecture-Hall-1,Main-Block,15 February 2026,08:00,11:00
+M004,Network Security,Degree,L001,Shahab,March,2026,net.png,Cybersecurity,C001,Cyber-Range,TechBlock-C,16 February 2026,14:00,16:00
+M005,Human Computer Interaction,Degree,L005,Jane Doe,November,2025,hci.png,Software Engineering,C004,Design-Studio,Media-Wing,17 February 2026,09:00,12:00
+M006,Digital Marketing,Diploma,L006,Vishwanth,February,2026,mkt.png,Business Management,C005,Room-302,Business-Block,18 February 2026,11:00,13:00
+M007,Ethical Hacking,Degree,L007,Raul Mahendran,April,2026,hack.png,Degree in Cybersecurity,C001,Sec-Lab-1,TechBlock-C,19 February 2026,08:00,10:00
+M008,Data Structures,Degree,L003,Siew Weng Tim,January,2026,ds.png,Computer Science,C002,Lab-2-2,TechBlock-A,20 February 2026,13:00,15:00
+M009,Web Development,Diploma,L008,Jane Doe,December,2025,web.png,Software Engineering,C004,Lab-1-5,TechBlock-B,21 February 2026,10:00,12:00
+M010,Cloud Computing,Degree,L004,John Lee,May,2026,cloud.png,Information Technology,C003,Server-Room-B,Main-Block,22 February 2026,15:00,17:00
+M011,Computer Forensics,Degree,L002,Henry,June,2025,png.png,Degree in Cybersecurity,C006,Audi1,BlockB,3 February 2026,15:00,17:00
+M001,CTF Strategies-LAB62,Degree,L001,Shahab,November,2025,img.png,Degree in Cybersecurity,C001,CTF-Lab62,TechLab6-03,14 February 2026,8:00,10:00

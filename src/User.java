@@ -27,4 +27,17 @@ public class User {
         return id + "," + fullName + "," + email + "," + gender + "," + dob + ","
                 + username + "," + password + "," + role + "," + course;
     }
+
+    public String getUsername() {
+        return this.username;
+    }
+    public String getRole() {
+        return this.role;
+    }
+    public String getPassword() {
+        return this.password;
+    }
+    public String getfullName() {
+        return this.fullName;
+    }
 }

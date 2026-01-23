@@ -38,4 +38,3 @@ public class Student {
         this.password = password;
     }
 }
-
