@@ -5,4 +5,4 @@ U004,Ong Szi Kai,ozk@gmail.com,male,1 January 2005,SkyOng,Sky#123,AcademicLeader
 U005,Raul Mahendran,raul@gmail.com,male,5 January 2006,Raulll,R4ul#123,Student,Cybersecurity
 U006,Siew Weng Tim,swt@gmail.com,male,1 October 2005,wengtimmm,Tim#123,Lecturer,Database Management
 U007,Testing,test@gmail.com,female,1 February 2005,test,Test#123,Student,Humanities
-U008,Sum Ting Wong,stw@gmail.com,,,tingwong,wong#123,,-
+U008,Sum Ting Wong,stw@gmail.com,,,tingwong,wong#123,Lecturer,-

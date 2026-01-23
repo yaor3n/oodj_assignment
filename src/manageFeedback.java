@@ -49,14 +49,18 @@ public class manageFeedback extends JFrame {
 
         // ===== DELETE BUTTON =====
         JButton deleteBtn = new JButton("Delete Selected Feedback");
-        deleteBtn.setBounds(380, 460, 260, 40);
+        deleteBtn.setBackground(new Color(220,53,69));
+        deleteBtn.setForeground(new Color(0xFFFFFF));
+        deleteBtn.setBounds(300, 460, 260, 40);
         deleteBtn.setFont(new Font("Arial", Font.BOLD, 16));
         deleteBtn.addActionListener(e -> deleteFeedback());
         add(deleteBtn);
 
         // ===== BACK BUTTON =====
-        JButton backBtn = new JButton("\u2190 Back");
-        backBtn.setBounds(40, 460, 120, 40);
+        JButton backBtn = new JButton("Back");
+        backBtn.setBackground(new Color(30,41,59));
+        backBtn.setForeground(new Color(0xFFFFFF));
+        backBtn.setBounds(600, 460, 120, 40);
         backBtn.addActionListener(e -> {
             new adminDashboard();
             dispose();
