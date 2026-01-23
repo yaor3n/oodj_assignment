@@ -5,7 +5,6 @@ import java.util.List;
 public class academicLeaderDashboard extends JFrame {
 
     private JPanel centerPanel;
-    private JPanel gridWrapper;
     private JPanel sidebar;
     private boolean sidebarVisible = false;
     private final Color BACKGROUND_COLOR = new Color(240, 244, 248);
@@ -16,19 +15,16 @@ public class academicLeaderDashboard extends JFrame {
         this.setLayout(new BorderLayout());
 
         // Sidebar
-        sidebar = new JPanel();
-        sidebar.setBackground(new Color(180, 180, 180)); // Light grey
+        sidebar = new JPanel(new BorderLayout());
+        sidebar.setBackground(new Color(180, 180, 180));
         sidebar.setPreferredSize(new Dimension(200, 0));
-        sidebar.setLayout(new BorderLayout());
 
-        // Logo area
         JPanel logoPanel = new JPanel();
         logoPanel.setBackground(new Color(120, 120, 120));
         logoPanel.setPreferredSize(new Dimension(0, 60));
         logoPanel.add(new JLabel("Logo"));
         sidebar.add(logoPanel, BorderLayout.NORTH);
 
-        // Sidebar buttons
         JPanel buttonPanel = new JPanel(new GridLayout(0, 1));
         buttonPanel.add(new JButton("Dashboard"));
         buttonPanel.add(new JButton("Report"));
@@ -41,7 +37,7 @@ public class academicLeaderDashboard extends JFrame {
         JPanel dashboard = new JPanel(new BorderLayout());
         this.add(dashboard, BorderLayout.CENTER);
 
-        // Top container (header + button row)
+        // Top container
         JPanel topContainer = new JPanel();
         topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
 
@@ -50,7 +46,6 @@ public class academicLeaderDashboard extends JFrame {
         header.setBackground(Color.DARK_GRAY);
         header.setPreferredSize(new Dimension(0, 50));
 
-        // Hamburger button
         JButton hamburgerButton = new JButton("☰");
         hamburgerButton.setForeground(Color.WHITE);
         hamburgerButton.setBorderPainted(false);
@@ -61,25 +56,25 @@ public class academicLeaderDashboard extends JFrame {
         JLabel headerTitle = new JLabel("Academic Leader Dashboard", SwingConstants.CENTER);
         headerTitle.setForeground(Color.WHITE);
         header.add(headerTitle, BorderLayout.CENTER);
-
         topContainer.add(header);
 
         // Action row
         JPanel actionRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         JButton createButton = new JButton("Create Modules");
         createButton.setPreferredSize(new Dimension(150, 40));
-        createButton.addActionListener(e -> showCreateDialog());
+        createButton.addActionListener(e -> showModuleDialog(null)); // null = new module
         actionRow.add(createButton);
-
         topContainer.add(actionRow);
+
         dashboard.add(topContainer, BorderLayout.NORTH);
 
-        // Center panel for cards
+        // Center panel for module cards
         centerPanel = new JPanel(new GridLayout(0, 3, 20, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JScrollPane scrollPane = new JScrollPane(centerPanel);
         scrollPane.setBorder(null);
+        scrollPane.getViewport().setBackground(BACKGROUND_COLOR);
         dashboard.add(scrollPane, BorderLayout.CENTER);
 
         refreshDashboard();
@@ -88,13 +83,9 @@ public class academicLeaderDashboard extends JFrame {
         this.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new academicLeaderDashboard();
-    }
-
     private void refreshDashboard() {
         centerPanel.removeAll();
-        List<academicLeaderModule> modules = academicLeaderModuleFileManager.loadModules();
+        List<academicLeaderModule> modules = academicLeaderFileManager.loadModules();
 
         for (academicLeaderModule m : modules) {
             JPanel moduleCard = new JPanel(new BorderLayout());
@@ -115,6 +106,9 @@ public class academicLeaderDashboard extends JFrame {
             nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
             moduleCard.add(nameLabel, BorderLayout.CENTER);
 
+            // Right-click menu for edit/delete
+            moduleCard.setComponentPopupMenu(createCardPopup(m));
+
             centerPanel.add(moduleCard);
         }
 
@@ -122,26 +116,50 @@ public class academicLeaderDashboard extends JFrame {
         centerPanel.repaint();
     }
 
-    public void showCreateDialog() {
-        JDialog dialog = new JDialog(this, "Create New Module", true);
+    private JPopupMenu createCardPopup(academicLeaderModule m) {
+        JPopupMenu popupMenu = new JPopupMenu();
+
+        JMenuItem editItem = new JMenuItem("Edit Module");
+        JMenuItem deleteItem = new JMenuItem("Delete Module");
+
+        editItem.addActionListener(e -> showModuleDialog(m));
+        deleteItem.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to delete " + m.getName() + "?",
+                    "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                academicLeaderFileManager.deleteModule(m.getCode());
+                refreshDashboard();
+            }
+        });
+
+        popupMenu.add(editItem);
+        popupMenu.add(new JSeparator());
+        popupMenu.add(deleteItem);
+
+        return popupMenu;
+    }
+
+    private void showModuleDialog(academicLeaderModule editModule) {
+        boolean isEdit = (editModule != null);
+
+        JDialog dialog = new JDialog(this, isEdit ? "Edit Module" : "Create Module", true);
         dialog.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JTextField codeField = new JTextField("", 20);
-        JTextField nameField = new JTextField("", 20);
+        JTextField codeField = new JTextField(isEdit ? editModule.getCode() : "", 20);
+        if (isEdit) codeField.setEditable(false);
 
-        String[] qualifications = {"Diploma", "Bachelor's Degree", "Master's Degree", "PhD"};
-        JComboBox<String> qualificationBox = new JComboBox<>(qualifications);
+        JTextField nameField = new JTextField(isEdit ? editModule.getName() : "", 20);
+        JComboBox<String> qualificationBox = new JComboBox<>(new String[]{"Diploma", "Bachelor's Degree", "Master's Degree", "PhD"});
 
-        List<String> lecturerList = academicLeaderModuleFileManager.checkLecturerNames();
-        JComboBox<String> lecturerBox = new JComboBox<>(lecturerList.toArray(new String[0]));
-        if (lecturerList.isEmpty()) {
-            lecturerBox.addItem("No Lecturers Found");
-        }
+        List<String> lecturers = academicLeaderFileManager.checkLecturerNames();
+        JComboBox<String> lecturerBox = new JComboBox<>(lecturers.toArray(new String[0]));
+        if (lecturers.isEmpty()) lecturerBox.addItem("No Lecturers Found");
 
-        JTextArea descriptionArea = new JTextArea("", 5, 20);
+        JTextArea descriptionArea = new JTextArea(isEdit ? editModule.getDescription() : "", 5, 20);
         descriptionArea.setLineWrap(true);
         descriptionArea.setWrapStyleWord(true);
         JScrollPane descriptionScroll = new JScrollPane(descriptionArea);
@@ -158,7 +176,7 @@ public class academicLeaderDashboard extends JFrame {
         gbc.gridx = 1; gbc.weighty = 1.0; dialog.add(descriptionScroll, gbc);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton saveButton = new JButton("Create");
+        JButton saveButton = new JButton(isEdit ? "Save Changes" : "Create");
         JButton cancelButton = new JButton("Cancel");
 
         saveButton.addActionListener(e -> {
@@ -174,17 +192,21 @@ public class academicLeaderDashboard extends JFrame {
             }
 
             academicLeaderModule newModule = new academicLeaderModule(code, name, qualification, lecturer, description);
-            academicLeaderModuleFileManager.saveModule(newModule);
 
-            JOptionPane.showMessageDialog(dialog, "Module Created Successfully!");
+            if (isEdit) {
+                academicLeaderFileManager.updateModule(newModule);
+            } else {
+                academicLeaderFileManager.saveModule(newModule);
+            }
+
             refreshDashboard();
             dialog.dispose();
         });
 
         cancelButton.addActionListener(e -> dialog.dispose());
-
         buttonPanel.add(cancelButton);
         buttonPanel.add(saveButton);
+
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2; gbc.weighty = 0;
         dialog.add(buttonPanel, gbc);
 
@@ -198,5 +220,9 @@ public class academicLeaderDashboard extends JFrame {
         sidebar.setVisible(sidebarVisible);
         this.revalidate();
         this.repaint();
+    }
+
+    public static void main(String[] args) {
+        new academicLeaderDashboard();
     }
 }
