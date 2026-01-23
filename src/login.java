@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class login extends JFrame implements ActionListener {
     private JLabel titleLabel, usernameLabel, passwordLabel;
@@ -11,7 +8,10 @@ public class login extends JFrame implements ActionListener {
     private JPasswordField passwordInput;
     private JButton loginButton, backButton;
 
-    login() {
+    public login() {
+        // Window setup
+        setTitle("University Login");
+        setLayout(null);
 
         titleLabel = new JLabel("Login Page");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 25));
@@ -46,8 +46,8 @@ public class login extends JFrame implements ActionListener {
 
         backButton = new JButton("Back");
         backButton.setFont(new Font("Arial", Font.BOLD, 25));
-        backButton.addActionListener(this);
         backButton.setBounds(420, 510, 200, 55);
+        backButton.addActionListener(this);
         this.add(backButton);
 
         reusable.windowSetup(this);
@@ -57,63 +57,41 @@ public class login extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            String username = usernameInput.getText();
-            String password = new String(passwordInput.getPassword());
-            boolean found = false;
+            String username = usernameInput.getText().trim();
+            String password = new String(passwordInput.getPassword()).trim();
 
-            try (BufferedReader br = new BufferedReader(new FileReader("accounts.txt"))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    if (parts.length == 3) {
-                        String fileUsername = parts[0].trim();
-                        String filePassword = parts[1].trim();
-                        String role = parts[2].trim();
+            // OOP: Call the handler to find the user in the 9-column CSV
+            User user = AccountFileHandler.authenticate(username, password);
 
-                        if (username.equals(fileUsername) && password.equals(filePassword)) {
-                            found = true;
-                            Session.currentUsername = username;
+            if (user != null) {
+                Session.currentUsername = user.getUsername();
+                String role = user.getRole();
 
-                            switch (role) {
-                                case "Admin":
-                                    new adminDashboard();
-                                    break;
-                                case "Lecturer":
-                                    new lecturerDashboard();
-                                    break;
-                                case "Student":
-                                    new studentDashboard();
-                                    break;
-                                case "AcademicStaff":
-                                    new academicStaffDashboard();
-                                    break;
-                                default:
-                                    JOptionPane.showMessageDialog(this,
-                                            "Unknown role in account file!",
-                                            "Error",
-                                            JOptionPane.ERROR_MESSAGE);
-                                    return;
-                            }
-
-                            this.dispose();
-                            return;
-                        }
-                    }
+                // Redirect based on role in index 7 of accounts.txt
+                switch (role) {
+                    case "Admin":
+                        new adminDashboard();
+                        break;
+                    case "Lecturer":
+                        new lecturerDashboard();
+                        break;
+                    case "Student":
+                        new studentDashboard();
+                        break;
+                    case "AcademicLeader": // Matches U004 role in your file
+                        new academicStaffDashboard();
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(this, "Unknown Role: " + role);
+                        return;
                 }
-
-                if (!found) {
-                    JOptionPane.showMessageDialog(this,
-                            "Invalid username or password!",
-                            "Login Failed",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this,
-                        "Error reading account file!",
-                        "File Error",
-                        JOptionPane.ERROR_MESSAGE);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid credentials or incomplete account data!");
             }
+        } else if (e.getSource() == backButton) {
+            new userSelect();
+            this.dispose();
         }
     }
 }

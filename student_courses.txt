@@ -1,8 +1,7 @@
-raul|CS101
-raul|CS101
-raul|abu
-raul|abu
-raul|CS202
-raul|aniya
-raul|B02
-raul|B12
+U011,Raul User,CTF Strategies
+U011,Raul User,Ethical Hacking
+U011,Raul User,Computer Forensics
+U011,Raul User,Computer Forensics
+U011,Raul User,Computer Forensics
+U011,Raul User,Ethical Hacking
+U011,Raul Mahendran,CTF Strategies-LAB62

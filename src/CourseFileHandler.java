@@ -57,27 +57,42 @@ public class CourseFileHandler {
     }
 
     // get feedback to display
-    public static List<Feedback> getFeedbackForStudent(String username) {
-        List<Feedback> myFeedback = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("feedback.txt"))) {
+    public static List<Feedback> getFeedbackForStudent(String targetStudentId) {
+        List<Feedback> feedbackList = new ArrayList<>();
+        File file = new File("feedback.txt");
+
+        if (!file.exists()) return feedbackList;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
+                // \\| is required because | is a special regex character
                 String[] parts = line.split("\\|");
-                // Filter: only add feedback if the username matches
-                if (parts.length >= 5 && parts[0].equals(username)) {
-                    myFeedback.add(new Feedback(
-                            parts[0],
-                            parts[1],
-                            parts[2],
-                            parts[4],
-                            Integer.parseInt(parts[3])
-                    ));
+
+                if (parts.length >= 5) {
+                    String studentId = parts[0].trim();
+
+                    if (studentId.equalsIgnoreCase(targetStudentId)) {
+                        try {
+                            String module = parts[1].trim();
+                            String lecturer = parts[2].trim();
+                            int rating = Integer.parseInt(parts[3].trim());
+                            String comment = parts[4].trim();
+
+
+                            String reply = (parts.length >= 6) ? parts[5].trim() : "";
+
+                            feedbackList.add(new Feedback(studentId, module, lecturer, comment, rating, reply));
+                        } catch (NumberFormatException e) {
+                            System.err.println("Skipping line with invalid rating format: " + line);
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
-            System.out.println("Feedback file not found or empty.");
+            e.printStackTrace();
         }
-        return myFeedback;
+        return feedbackList;
     }
 
     // save feedback

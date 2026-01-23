@@ -1,170 +1,195 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.List;
-import java.io.File;
 
 public class studentRegisterClass extends JFrame implements ActionListener {
-
-    private JComboBox<String> courseCombo;
-    private JTextPane detailsPane; // Changed from JTextArea for HTML support
-    private JLabel imageLabel;     // New label for course image
+    private JComboBox<String> moduleCombo;
+    private JTextPane detailsPane;
+    private JLabel imageLabel;
     private JButton registerBtn, backBtn;
+    private List<Module> availableModules;
+    private Student currentStudent;
 
-    private List<Course> courses;
+    private final Color BACKGROUND = new Color(209, 213, 219);
+    private final Color NAVY_SLATE = new Color(30, 41, 59);
+    private final Color WHITE_CARD = Color.WHITE;
+    private final Color TEXT_MAIN = new Color(30, 41, 59);
 
     public studentRegisterClass() {
-        setTitle("Class Registration");
-        setSize(900, 600);
-        setLayout(null);
+        currentStudent = AccountFileHandler.getStudent(Session.currentUsername);
+        String studentCourse = currentStudent.getCourse();
+        availableModules = ClassFileHandler.getModulesForStudent(studentCourse);
+
+        setTitle("Module Registration");
+        setSize(950, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        courses = CourseFileHandler.getAllCourses();
+        JPanel mainWrapper = new JPanel(new BorderLayout());
+        mainWrapper.setBackground(BACKGROUND);
+        mainWrapper.setBorder(new EmptyBorder(30, 40, 30, 40));
+        add(mainWrapper);
 
-        // Title
-        JLabel title = new JLabel("Class Registration");
-        title.setFont(new Font("Arial", Font.BOLD, 28));
-        title.setForeground(new Color(43, 80, 110)); // Dark Blue color
-        title.setBounds(300, 20, 300, 40);
-        add(title);
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setOpaque(false);
+        headerPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
 
-        // ===== Course Selection =====
-        JLabel selectLbl = new JLabel("Select Course:");
-        selectLbl.setFont(new Font("Arial", Font.PLAIN, 14));
-        selectLbl.setBounds(100, 85, 120, 30);
-        add(selectLbl);
+        JLabel title = new JLabel("Course Enrollment");
+        title.setFont(new Font("Arial", Font.BOLD, 32));
+        title.setForeground(TEXT_MAIN);
 
-        courseCombo = new JComboBox<>();
-        for (Course c : courses) {
-            courseCombo.addItem(c.getCode() + " - " + c.getName());
+        JLabel subTitle = new JLabel("Available modules for: " + studentCourse);
+        subTitle.setFont(new Font("Arial", Font.PLAIN, 16));
+        subTitle.setForeground(new Color(71, 85, 105));
+
+        headerPanel.add(title, BorderLayout.NORTH);
+        headerPanel.add(subTitle, BorderLayout.SOUTH);
+        mainWrapper.add(headerPanel, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new BorderLayout(0, 20));
+        centerPanel.setOpaque(false);
+
+        moduleCombo = new JComboBox<>();
+        moduleCombo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        for (Module m : availableModules) {
+            moduleCombo.addItem(m.getName());
         }
-        courseCombo.setBounds(210, 85, 590, 35);
-        courseCombo.addActionListener(this);
-        add(courseCombo);
+        moduleCombo.addActionListener(this);
+        centerPanel.add(moduleCombo, BorderLayout.NORTH);
 
-        //  container for course info
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(null);
-        infoPanel.setBounds(100, 140, 700, 300);
-        infoPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        infoPanel.setBackground(Color.WHITE);
-        add(infoPanel);
+        JPanel infoCard = new JPanel(new BorderLayout(20, 0));
+        infoCard.setBackground(WHITE_CARD);
+        infoCard.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(148, 163, 184), 1),
+                new EmptyBorder(20, 20, 20, 20)
+        ));
 
-        // image box
-        imageLabel = new JLabel("No Image", SwingConstants.CENTER);
-        imageLabel.setBounds(15, 15, 270, 270);
-        imageLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        imageLabel.setOpaque(true);
-        imageLabel.setBackground(new Color(245, 245, 245));
-        infoPanel.add(imageLabel);
+        imageLabel = new JLabel("Loading Image...", SwingConstants.CENTER);
+        imageLabel.setPreferredSize(new Dimension(300, 300));
+        imageLabel.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
+        infoCard.add(imageLabel, BorderLayout.WEST);
 
-        // Right Side: Details (Scrollable
         detailsPane = new JTextPane();
+        detailsPane.setContentType("text/html");
         detailsPane.setEditable(false);
-        detailsPane.setContentType("text/html"); // Allows HTML styling
+        detailsPane.setBackground(WHITE_CARD);
 
-        JScrollPane scrollPane = new JScrollPane(detailsPane);
-        scrollPane.setBounds(300, 15, 385, 270);
-        scrollPane.setBorder(null); // Cleaner look
-        infoPanel.add(scrollPane);
+        JScrollPane scroll = new JScrollPane(detailsPane);
+        scroll.setBorder(null);
+        infoCard.add(scroll, BorderLayout.CENTER);
 
-        // buttons
-        registerBtn = new JButton("Register Course");
-        registerBtn.setBounds(300, 470, 140, 45);
-        registerBtn.setBackground(new Color(76, 175, 80)); // Green
-        registerBtn.setForeground(Color.WHITE);
-        registerBtn.setFocusPainted(false);
-        registerBtn.addActionListener(this);
-        add(registerBtn);
+        centerPanel.add(infoCard, BorderLayout.CENTER);
+        mainWrapper.add(centerPanel, BorderLayout.CENTER);
+
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
+        footer.setOpaque(false);
+        footer.setBorder(new EmptyBorder(20, 0, 0, 0));
 
         backBtn = new JButton("Back");
-        backBtn.setBounds(460, 470, 140, 45);
+        backBtn.setPreferredSize(new Dimension(120, 45));
+        backBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         backBtn.addActionListener(this);
-        add(backBtn);
 
-        // initialize display
-        if (courses != null && !courses.isEmpty()) {
-            updateDescription(0);
-        } else {
-            JOptionPane.showMessageDialog(this, "No courses available. Check courses.txt path.");
-        }
+        registerBtn = new JButton("Confirm Registration");
+        registerBtn.setPreferredSize(new Dimension(220, 45));
+        registerBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        registerBtn.setBackground(NAVY_SLATE);
+        registerBtn.setForeground(Color.WHITE);
+        registerBtn.setOpaque(true);
+        registerBtn.setBorderPainted(false);
+        registerBtn.setContentAreaFilled(true);
+        registerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        registerBtn.addActionListener(this);
 
+        footer.add(backBtn);
+        footer.add(registerBtn);
+        mainWrapper.add(footer, BorderLayout.SOUTH);
+
+        if (!availableModules.isEmpty()) updateDisplay(0);
         setVisible(true);
     }
 
-    private void updateDescription(int index) {
-        if (index < 0 || index >= courses.size()) return;
+    private void updateDisplay(int index) {
+        Module m = availableModules.get(index);
 
-        Course c = courses.get(index);
-
-        // 1. Update Image Logic
-        displayImage(c.getImageFilePath());
-
-        // 2. Update Details with HTML
-        String html = "<html><body style='font-family: Arial; margin: 10px;'>" +
-                "<h2 style='color: #2b506e; margin-bottom: 0;'>" + c.getName() + "</h2>" +
-                "<p style='color: #555;'><b>Code:</b> " + c.getCode() + "</p>" +
-                "<hr>" +
-                "<b>Lecturer:</b> " + c.getLecturer() + "<br>" +
-                "<b>Qualification:</b> " + c.getQualification() + "<br>" +
-                "<b>Intake:</b> " + c.getIntakeMonth() + " " + c.getYear() + "<br><br>" +
-                "<b>Course Description:</b><br>" +
-                "<p style='font-style: italic;'>" + c.getDescription() + "</p>" +
-                "</body></html>";
-
+        String html = "<html><body style='font-family: Arial; padding: 10px;'>" +
+                "<h2 style='color: #1e293b; margin-bottom: 0;'>" + m.getName() + "</h2>" +
+                "<p style='color: #64748b;'><b>Lecturer:</b> " + m.getLecturer() + "</p>" +
+                "<hr color='#e2e8f0'>" +
+                "<div style='color: #334155; font-size: 12px;'>" +
+                "<b>Schedule Details:</b><br>" + m.getDetails() +
+                "</div></body></html>";
         detailsPane.setText(html);
-        detailsPane.setCaretPosition(0); // Scroll back to top
-    }
 
-    private void displayImage(String path) {
         try {
-            File imgFile = new File(path);
-            if (imgFile.exists()) {
-                ImageIcon icon = new ImageIcon(path);
-                // Scale to fit label: 270x270
-                Image img = icon.getImage().getScaledInstance(270, 270, Image.SCALE_SMOOTH);
-                imageLabel.setIcon(new ImageIcon(img));
-                imageLabel.setText("");
-            } else {
-                imageLabel.setIcon(null);
-                imageLabel.setText("<html><center>Image Not Found<br>(" + path + ")</center></html>");
-            }
+            ImageIcon icon = new ImageIcon(m.getImagePath());
+            Image img = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+            imageLabel.setIcon(new ImageIcon(img));
+            imageLabel.setText("");
         } catch (Exception e) {
             imageLabel.setIcon(null);
-            imageLabel.setText("Error loading image");
+            imageLabel.setText("Image not available");
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == courseCombo) {
-            updateDescription(courseCombo.getSelectedIndex());
-        }
-
-        if (e.getSource() == registerBtn) {
-            int index = courseCombo.getSelectedIndex();
+        if (e.getSource() == moduleCombo) {
+            updateDisplay(moduleCombo.getSelectedIndex());
+        } else if (e.getSource() == registerBtn) {
+            int index = moduleCombo.getSelectedIndex();
             if (index != -1) {
-                Course selected = courses.get(index);
+                Module selected = availableModules.get(index);
+                String studentId = currentStudent.id.trim();
+                String moduleName = selected.getName().trim();
 
-                String warningMsg = "<html>Are you sure you want to register for <b>" + selected.getName() + "</b>?<br>" + "Once you register, you cannot undo it.</html>";
+                boolean alreadyRegistered = false;
+                File file = new File("student_courses.txt");
 
-                int response =JOptionPane.showConfirmDialog(
-                        this,
-                        warningMsg,
-                        "Confirm Registration",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE
-                );
+                if (file.exists()) {
+                    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length >= 3) {
+                                if (parts[0].trim().equalsIgnoreCase(studentId) &&
+                                        parts[2].trim().equalsIgnoreCase(moduleName)) {
+                                    alreadyRegistered = true;
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
 
-                if (response == JOptionPane.YES_OPTION) {
-                    CourseFileHandler.registerStudent(Session.currentUsername, selected);
-                    JOptionPane.showMessageDialog(this, "Successfully registered for: " + selected.getName());
+                if (alreadyRegistered) {
+                    JOptionPane.showMessageDialog(this,
+                            "You are already registered for: " + moduleName,
+                            "Duplicate Registration",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                int choice = JOptionPane.showConfirmDialog(this,
+                        "Register for " + moduleName + "?", "Confirm", JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    boolean success = ClassFileHandler.registerStudentToModule(
+                            studentId, currentStudent.fullName, moduleName);
+
+                    if (success) {
+                        JOptionPane.showMessageDialog(this, "Registration successful!");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error updating registration.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
-        }
-
-        if (e.getSource() == backBtn) {
+        } else if (e.getSource() == backBtn) {
             new studentDashboard();
             dispose();
         }

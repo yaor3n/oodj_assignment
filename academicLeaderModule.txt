@@ -1,0 +1,5 @@
+M001,CTF Strategies,Degree,L001,Shahab,November,2025,description,Degree in Cybersecurity
+M002,Introduction to Programming,L002,Henry,June,2025,description,Degree in Software Engineering
+M003,Academic Research Studies,L003,Iman,June,2025,description,Degree in AI
+M004,Computer Forensics,Degree,L001,Shahab,November,2025,description, Degree in Cybersecurity
+M005,Ethical Hacking,Degree,L002,Henry,June 2025,description,Degree in Cybersecurity
