@@ -35,7 +35,7 @@ public class login extends JFrame implements ActionListener{
         leftPanel.add(apuLogo, gbcLeft);
         
         JLabel leftLabel = new JLabel("Assessment Feedback System");       
-        leftLabel.setFont(new Font("Segoe UI", Font.BOLD, 18)); // Made it larger for hierarchy
+        leftLabel.setFont(new Font("Segoe UI", Font.BOLD, 18)); 
         leftLabel.setForeground(new Color(30, 41, 59));      
         gbcLeft.gridy = 1;
         gbcLeft.insets = new Insets(10, 0, 0, 0);

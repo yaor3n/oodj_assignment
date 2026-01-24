@@ -27,7 +27,6 @@ public class academicLeaderFileManager {
     }
     
     public static void saveModule(academicLeaderModule module) {
-        // Use true for append mode. PrintWriter.println adds the newline automatically.
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("academicLeaderModule.txt", true)))) {
             out.println(module.toString()); 
         } catch (IOException e) {
@@ -35,7 +34,6 @@ public class academicLeaderFileManager {
         }
     }
 
-    // Read all modules from the file and turn them into Objects
     public static List<academicLeaderModule> loadModules() {
         List<academicLeaderModule> modules = new ArrayList<>();
         File file = new File(MODULE_FILE);
@@ -76,7 +74,6 @@ public class academicLeaderFileManager {
     public static void saveNewModule(List<academicLeaderModule> modules) {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(MODULE_FILE, false)))) {
             for (academicLeaderModule m : modules) {
-                // Using m.toString() ensures the 7th field (Intake) is included!
                 out.println(m.toString()); 
             }
         } catch (IOException e) {

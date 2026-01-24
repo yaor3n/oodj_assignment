@@ -54,12 +54,11 @@ public class academicLeaderDashboard extends JFrame {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // --- DASHBOARD PAGE ---
+        //dashboard
         JPanel dashboardPage = new JPanel(new BorderLayout());
         dashboardPage.setBackground(BACKGROUND_COLOR);
         dashboardPage.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
-        // 1. TOP CONTROLS SECTION
         JPanel controlsPanel = new JPanel();
         controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS)); // Stack rows vertically
         controlsPanel.setOpaque(false);
@@ -86,12 +85,11 @@ public class academicLeaderDashboard extends JFrame {
         searchField.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
-                // Change border to a darker grey/blue and icon to black when active
                 searchField.setBorder(BorderFactory.createCompoundBorder(
                     new javax.swing.border.LineBorder(new Color(100, 100, 100), 2, true),
                     BorderFactory.createEmptyBorder(5, 30, 5, 15)
                 ));
-                searchIcon.setForeground(Color.BLACK); // Make icon pop
+                searchIcon.setForeground(Color.BLACK); 
 
                 if (searchField.getText().equals("Search")) {
                     searchField.setText(""); 
@@ -100,7 +98,6 @@ public class academicLeaderDashboard extends JFrame {
             }
             @Override
             public void focusLost(java.awt.event.FocusEvent e) {
-                // Revert to light grey border and icon when user clicks away
                 searchField.setBorder(BorderFactory.createCompoundBorder(
                     new javax.swing.border.LineBorder(new Color(210, 210, 210), 1, true),
                     BorderFactory.createEmptyBorder(5, 30, 5, 15)
@@ -147,10 +144,8 @@ public class academicLeaderDashboard extends JFrame {
         controlsPanel.add(actionRow);
         dashboardPage.add(controlsPanel, BorderLayout.NORTH);
 
-        // 2. MODULE REGISTRY CONTAINER
         JPanel registryContainer = new JPanel(new BorderLayout());
         registryContainer.setBackground(new Color(248,250,252));
-        //registryContainer.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
 
         centerPanel = new JPanel(new GridLayout(0, 3, 25, 25));
         centerPanel.setBackground(new Color(248,250,252));
@@ -230,9 +225,6 @@ public class academicLeaderDashboard extends JFrame {
         this.setVisible(true);
     }
 
-//    public static void main(String[] args) {
-//        new academicLeaderDashboard();
-//    }
     
     private void filterModules() {
         String filterText = searchField.getText().toLowerCase();
@@ -350,7 +342,6 @@ public class academicLeaderDashboard extends JFrame {
 
                 moduleCard.add(cardImg, BorderLayout.NORTH);
                 moduleCard.add(contentPanel, BorderLayout.CENTER);
-                //JPanel moduleCard = createModuleCard(m); 
                 centerPanel.add(moduleCard);
             }
         }
@@ -394,7 +385,6 @@ public class academicLeaderDashboard extends JFrame {
         dialog.setSize(800, 600); 
         dialog.getContentPane().setBackground(BACKGROUND_COLOR);
 
-        // --- MAIN SCROLLABLE CONTAINER ---
         JPanel mainContent = new JPanel();
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
         mainContent.setBackground(BACKGROUND_COLOR);
@@ -546,7 +536,6 @@ public class academicLeaderDashboard extends JFrame {
         addFormField(detailsContainer, "Course", courseBox, gbc, 7);
         addFormField(detailsContainer, "Description", descScroll, gbc, 8);
 
-        // --- BUTTON PANEL (CENTERED) ---
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         buttonPanel.setOpaque(false);
         JButton saveBtn = new JButton(isEdit ? "Update Module" : "Save Module");
@@ -621,8 +610,6 @@ public class academicLeaderDashboard extends JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-
-    // --- HELPER METHODS FOR MODERN LOOK ---
 
     private void styleDialogButton(JButton btn) {
         btn.setFont(new Font("Segoe UI", Font.PLAIN, 12));

@@ -139,20 +139,17 @@ public class academicLeaderReportUITools {
         File fileToSave = new File(downloadsPath, fileName);
 
         try (FileWriter fw = new FileWriter(fileToSave)) {
-            // 1. Write Custom Summary Header
             fw.write("REPORT: " + fileName.replace(".csv", "").toUpperCase() + "\n");
             for (String line : summaryLines) {
                 fw.write(line + "\n");
             }
-            fw.write("\n"); // Blank line before table
+            fw.write("\n"); 
 
-            // 2. Write Table Headers
             for (int i = 0; i < table.getColumnCount(); i++) {
                 fw.write(table.getColumnName(i) + (i == table.getColumnCount() - 1 ? "" : ","));
             }
             fw.write("\n");
 
-            // 3. Write Table Data
             for (int row = 0; row < table.getRowCount(); row++) {
                 for (int col = 0; col < table.getColumnCount(); col++) {
                     Object value = table.getValueAt(row, col);

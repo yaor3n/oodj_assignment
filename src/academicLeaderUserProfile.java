@@ -15,8 +15,7 @@ public class academicLeaderUserProfile extends JPanel {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
 
-        // 1. INITIALIZE COMPONENTS
-        idField = new JLabel("AL6767");
+        idField = new JLabel("User ID");
         nameField = createProfileTextField();
         emailField = createProfileTextField();
         genderField = createProfileTextField();
@@ -33,7 +32,6 @@ public class academicLeaderUserProfile extends JPanel {
         passwordField.setOpaque(false);
         passwordField.setEchoChar('•');
         passwordField.setEditable(false);
-        //stylePasswordField(passField);
         
         JButton eyeButton = new JButton("👁️");
         eyeButton.setFont(new Font("Segoe UI Emoji", Font.PLAIN,14));
@@ -270,7 +268,7 @@ public class academicLeaderUserProfile extends JPanel {
     private JTextField createProfileTextField() {
         JTextField tf = new JTextField();
         tf.setPreferredSize(new Dimension(380, 38));
-        tf.setEditable(false); // Default
+        tf.setEditable(false); 
         tf.setBackground(new Color(245, 245, 245)); 
         tf.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(215, 220, 225), 1),

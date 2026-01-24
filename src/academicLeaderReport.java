@@ -1,4 +1,3 @@
-//master-detail layout
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -14,18 +13,7 @@ public class academicLeaderReport extends JPanel {
     private String topIntakeMonth;
     private int maxCount;
     private DefaultTableModel moduleTableModel, lecturerTableModel, feedbackTableModel, studentEnrollmentTableModel, resultsTableModel, lecturerRatingTableModel;
-//    private DefaultTableModel lecturerTableModel;
-//    private DefaultTableModel feedbackTableModel;
-//    private DefaultTableModel studentEnrollmentTableModel;
-//    private DefaultTableModel resultsTableModel;
     private JLabel totalModuleValue, intakeValue, totalLecturerValue, averageRatingValue, totalFeedbackValue, topModule, overallPassRate, topPerformingModule, topLecturer, systemAverageRating;
-//    private JLabel intakeValue;
-//    private JLabel totalLecturerValue;
-//    private JLabel averageRatingValue;
-//    private JLabel totalFeedbackValue;
-//    private JLabel topModule;
-//    private JLabel overallPassRate;
-//    private JLabel topPerformingModule;
     
     public academicLeaderReport() {
       this.setLayout(new BorderLayout());
@@ -89,7 +77,6 @@ public class academicLeaderReport extends JPanel {
         reportTypeTitle.setFont(new Font("Segoe UI Emoji",Font.BOLD,14));
         reportTypeTitle.setBackground(new Color(226, 232, 240));
         reportTypeTitle.setForeground(new Color(100,116,139));
-        //reportTypeTitle.setBorder(BorderFactory.createEmptyBorder(25,24,10,10));
         
         reportTypeTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         reportTypeTitle.setHorizontalAlignment(SwingConstants.LEFT);
@@ -125,7 +112,6 @@ public class academicLeaderReport extends JPanel {
         mainReportType.addActionListener(e -> {
             boolean isVisible = itemPanel.isVisible();
             itemPanel.setVisible(!isVisible);
-            // Highlight the parent when open
             mainReportType.setOpaque(!isVisible);
             mainReportType.setBackground(new Color(241, 245, 249)); 
         });
@@ -157,7 +143,6 @@ public class academicLeaderReport extends JPanel {
     }
     
     private void addHoverEffect(JButton hover) {
-        // Very light grey tint for hover
         Color hoverBackground = new Color(241, 245, 249); 
 
         hover.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -701,16 +686,14 @@ public class academicLeaderReport extends JPanel {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                // Get the value from the "Average Rating" column (Index 2)
                 String ratingStr = table.getValueAt(row, 2).toString().split(" ")[0];
                 double rating = Double.parseDouble(ratingStr);
 
                 if (!isSelected) {
                     if (rating < 3.0) {
-                        component.setBackground(new Color(254, 226, 226)); // Light Red background
-                        component.setForeground(new Color(153, 27, 27));   // Dark Red text
+                        component.setBackground(new Color(254, 226, 226)); 
+                        component.setForeground(new Color(153, 27, 27));  
                     } else {
-                        // Keep your standard striped pattern
                         component.setBackground(row % 2 == 0 ? Color.WHITE : new Color(242, 242, 242));
                         component.setForeground(Color.BLACK);
                     }
@@ -1015,7 +998,6 @@ public class academicLeaderReport extends JPanel {
                         String gender = parts[3].trim();
                         String dob = parts[4].trim();
 
-                        // Check if lecturer is assigned to any current modules
                         boolean isActive = modules.stream().anyMatch(m -> m.getLecturerName().equalsIgnoreCase(name));
                         lecturerTableModel.addRow(new Object[]{
                             id, name, email, gender, dob, (isActive ? "Active" : "Inactive")
