@@ -229,9 +229,9 @@ public class academicLeaderDashboard extends JFrame {
         this.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new academicLeaderDashboard();
-    }
+//    public static void main(String[] args) {
+//        new academicLeaderDashboard();
+//    }
     
     private void filterModules() {
         String filterText = searchField.getText().toLowerCase();
@@ -507,7 +507,7 @@ public class academicLeaderDashboard extends JFrame {
         JComboBox<String> monthBox = new JComboBox<>(new String[]{"-Select-", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
         JComboBox<String> yearBox = new JComboBox<>();
         int currentYear = java.time.LocalDate.now().getYear();
-        for (int i = 0; i < 5; i++) yearBox.addItem(String.valueOf(currentYear + i));
+        for (int i = 0; i < 3; i++) yearBox.addItem(String.valueOf(currentYear + i));
         
         JComboBox<String> courseBox = new JComboBox<>();
         courseBox.addItem("-Select Course-");

@@ -14,7 +14,6 @@ public class login extends JFrame implements ActionListener{
         JPanel loginPage = new JPanel(new GridLayout(1,2));
         loginPage.setPreferredSize(new Dimension(1050,500));
         loginPage.setBackground(Color.WHITE);
-        //loginPage.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         
         //left side
         JPanel leftPanel = new JPanel (new GridBagLayout());
@@ -43,13 +42,13 @@ public class login extends JFrame implements ActionListener{
         leftPanel.add(leftLabel, gbcLeft);
         
         JTextArea leftContent = new JTextArea("A unified platform designed for Asia Pacific University (APU) to streamline assessment workflows and provide real-time, constructive feedback for academic excellence.");
-        leftContent.setLineWrap(true);       // Moves text to next line at the edge
-        leftContent.setWrapStyleWord(true);  // Prevents words from being cut in half
-        leftContent.setEditable(false);      // Makes it read-only
-        leftContent.setFocusable(false);     // Prevents cursor interaction
+        leftContent.setLineWrap(true);       
+        leftContent.setWrapStyleWord(true);  
+        leftContent.setEditable(false);     
+        leftContent.setFocusable(false);   
         leftContent.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         
-//        
+  
         leftContent.setForeground(new Color(100, 116, 139)); 
         leftContent.setPreferredSize(new Dimension(330, 100)); 
         
@@ -62,7 +61,6 @@ public class login extends JFrame implements ActionListener{
         JPanel rightPanel = new JPanel(new GridBagLayout());
         rightPanel.setOpaque(true);
         rightPanel.setBackground(Color.WHITE);
-        //green color line beside right panel
         rightPanel.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(4, 140, 90)));
         
         GridBagConstraints gbcRight = new GridBagConstraints();
@@ -172,6 +170,7 @@ public class login extends JFrame implements ActionListener{
             String[] userData = academicLeaderFileManager.authenticate(username, password);
 
             if (userData != null) {
+                userSession.loggedInUserId = userData[0].trim();
                 String role = userData[9].trim();
 
                 switch (role) {

@@ -213,6 +213,29 @@ public class academicLeaderUserProfile extends JPanel {
     }
 
     // (Remaining methods updateProfile, styleProfileCard, createProfileTextField, addProfileRow, loadProfileFromFile stay exactly the same as previous)
+    private void loadProfileFromFile() {
+        String currentID = userSession.loggedInUserId;
+        
+        try (BufferedReader br = new BufferedReader(new FileReader("accounts.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 10 && parts[0].trim().equals(currentID)) {
+                    idField.setText(parts[0].trim());       
+                    nameField.setText(parts[1].trim());     
+                    emailField.setText(parts[2].trim());    
+                    genderField.setText(parts[3].trim());   
+                    dobField.setText(parts[4].trim());      
+                    usernameField.setText(parts[7].trim()); 
+                    passwordField.setText(parts[8].trim()); 
+                    roleField.setText("Academic Leader");
+                    break; 
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading profile: " + e.getMessage());
+        }
+    }
     
     private void updateProfile() {
         String newUsername = usernameField.getText().trim();
@@ -231,7 +254,7 @@ public class academicLeaderUserProfile extends JPanel {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 10 && parts[9].trim().equalsIgnoreCase("AcademicLeader")) {
+                if (parts.length >= 10 && parts[0].trim().equals(userSession.loggedInUserId)) {
                     String updatedLine = String.join(",", parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], newUsername, newPassword, parts[9], (parts.length > 10 ? parts[10] : "") 
                 );
                 accounts.add(updatedLine);
@@ -304,26 +327,4 @@ public class academicLeaderUserProfile extends JPanel {
         panel.add(comp, gbc);
     }
 
-    private void loadProfileFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader("accounts.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 10 && parts[9].trim().equalsIgnoreCase("AcademicLeader")) {
-                    idField.setText(parts[0].trim());       // U004
-                    nameField.setText(parts[1].trim());     // Ong Szi Kai
-                    emailField.setText(parts[2].trim());    // ozk@gmail.com
-                    genderField.setText(parts[3].trim());   // male
-                    dobField.setText(parts[4].trim());      // 1 January 2005
-                    usernameField.setText(parts[7].trim()); // SkyOng (Index 7 now)
-                    passwordField.setText(parts[8].trim()); // Sky#123 (Index 8 now)
-
-                    roleField.setText("Academic Leader");
-                    break; 
-                }
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error loading profile: " + e.getMessage());
-        }
-    }
 }

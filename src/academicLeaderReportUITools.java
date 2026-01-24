@@ -39,7 +39,7 @@ public class academicLeaderReportUITools {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JLabel header = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 header.setBackground(new Color(226, 232, 240)); 
-                header.setFont(new Font("Segoe UI", Font.BOLD, 12));
+                header.setFont(new Font("Segoe UI Emoji", Font.BOLD, 12));
                 header.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, new Color(203, 213, 225)),BorderFactory.createEmptyBorder(0, 10, 0, 0)));
                 header.setHorizontalAlignment(SwingConstants.LEFT);
                 return header;
