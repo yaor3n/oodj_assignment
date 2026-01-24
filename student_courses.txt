@@ -11,3 +11,10 @@ U015,User 1,Introduction to Javascript
 U016,User 2,Introduction to Javascript
 U017,User 3,Introduction to Javascript
 U018,User 4,Introduction to Javascript
+U011,Raul User,CTF Strategies
+U011,Raul User,Ethical Hacking
+U011,Raul User,Computer Forensics
+U011,Raul User,Computer Forensics
+U011,Raul User,Computer Forensics
+U011,Raul User,Ethical Hacking
+U011,Raul Mahendran,CTF Strategies-LAB62

@@ -26,7 +26,7 @@ public class login extends JFrame implements ActionListener{
 
         //apu logo
         JLabel apuLogo = new JLabel();
-        ImageIcon icon = new ImageIcon("APUlogo.png");
+        ImageIcon icon = new ImageIcon("images/APUlogo.png");
         if(icon.getImage() != null) {
             Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
             apuLogo.setIcon(new ImageIcon(img));
@@ -173,10 +173,11 @@ public class login extends JFrame implements ActionListener{
 
             if (userData != null) {
                 String role = userData[9].trim();
+                Session.currentUsername = userData[7].trim();
 
                 switch (role) {
                     case "Admin": new adminDashboard(); break;
-                    case "Lecturer": new lecturerDashboard(); break;
+                    case "Lecturer": new lecturerDashboard(username); break;
                     case "Student": new studentDashboard(); break;
                     case "AcademicLeader": new academicLeaderDashboard(); break;
                     default:

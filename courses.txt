@@ -3,8 +3,6 @@ CS101,Programming 1,Diploma,Mr Lim,March,2025,Introduction to Java,images/java.p
 CP001,Capstone Project,Diploma,Assigned Lecturer,August,2025,new project,ModuleDefaultPic3.png
 B12,RWDD,Certificate,yaoren,December,2025,NEW MODULE,ModuleDefaultPic3.png
 CS202,OOP Design,Degree,Dr Tan,July,2025,Object-oriented principles,images/oop.png
+S01,Sejarahh,Master's Degree,sky,February,2026,new course,ModuleDefaultPic2.png
 E3,sky,Bachelor's Degree,ali,May,2025,popo,default
 M-01,JAVA,Diploma,sky ong,January,2025,This is the module,default
-S01,Sejarahh,Master's Degree,sky,February,2026,new course,ModuleDefaultPic2.png
-abu,ayam,PhD,lec1,October,2025,itik,ModuleDefaultPic.png
-aniya,aniya,Bachelor's Degree,sky,May,2025,tyt,C:\Users\User\OneDrive\Pictures\Screenshots\Screenshot 2025-12-22 142315.png

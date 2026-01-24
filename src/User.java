@@ -4,19 +4,23 @@ public class User {
     String email;
     String gender;
     String dob;
+    String phoneNo;
+    String age;
     String username;
     String password;
     String role;
     String course;
 
     public User(String id, String fullName, String email, String gender,
-                String dob, String username, String password,
+                String dob, String phoneNo, String age, String username, String password,
                 String role, String course) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.gender = gender;
         this.dob = dob;
+        this.phoneNo = phoneNo;
+        this.age = age;
         this.username = username;
         this.password = password;
         this.role = role;
@@ -24,7 +28,7 @@ public class User {
     }
 
     public String toFileString() {
-        return id + "," + fullName + "," + email + "," + gender + "," + dob + ","
+        return id + "," + fullName + "," + email + "," + gender + "," + dob + "," + phoneNo + "," + age + ","
                 + username + "," + password + "," + role + "," + course;
     }
 

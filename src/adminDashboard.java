@@ -57,7 +57,7 @@ public class adminDashboard extends JFrame {
         logoutBtn.setBackground(new Color(220, 53, 69));
         logoutBtn.setForeground(Color.WHITE);
         logoutBtn.addActionListener(e -> {
-            new userSelect();
+            new login();
             dispose();
         });
 

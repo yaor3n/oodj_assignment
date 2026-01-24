@@ -35,13 +35,13 @@ public class Course {
 
     // ===== File Format =====
     public String toFileString() {
-        return code + "|" + name + "|" + qualification + "|" + lecturer + "|"
-                + intakeMonth + "|" + year + "|" + description + "|" + imageFilePath;
+        return code + "," + name + "," + qualification + "," + lecturer + ","
+                + intakeMonth + "," + year + "," + description + "," + imageFilePath;
     }
 
     public static Course fromFileString(String line) {
 
-        String[] parts = line.split("\\|");
+        String[] parts = line.split("\\,");
 
         if (parts.length != 8) {
             throw new IllegalArgumentException("Invalid course line: " + line);

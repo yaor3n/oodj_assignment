@@ -128,6 +128,10 @@ public class crudUsers extends JFrame {
         y += gap;
         JTextField dob = addField(mainPanel, "DOB", labelX, fieldX, y);
         y += gap;
+        JTextField phoneNo = addField(mainPanel, "DOB", labelX, fieldX, y);
+        y += gap;
+        JTextField age = addField(mainPanel, "DOB", labelX, fieldX, y);
+        y += gap;
         JTextField username = addField(mainPanel, "Username", labelX, fieldX, y);
         y += gap;
         JTextField password = addField(mainPanel, "Password", labelX, fieldX, y);
@@ -147,6 +151,8 @@ public class crudUsers extends JFrame {
                     email.getText().trim(),
                     gender.getText().trim(),
                     dob.getText().trim(),
+                    phoneNo.getText().trim(),
+                    age.getText().trim(),
                     username.getText().trim(),
                     password.getText().trim(),
                     role.getText().trim(),
@@ -195,10 +201,10 @@ public class crudUsers extends JFrame {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] p = line.split(",");
-                if (p.length == 9) {
+                if (p.length == 11) {
                     allUsers.add(new User(
                             p[0], p[1], p[2], p[3], p[4],
-                            p[5], p[6], p[7], p[8]
+                            p[5], p[6], p[7], p[8], p[9], p[10]
                     ));
                 }
             }
