@@ -202,6 +202,7 @@ public class academicLeaderDashboard extends JFrame {
         sidebarPanel.getLogoutBtn().addActionListener(e -> {
             int confirmation = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout Confirmation", JOptionPane.YES_NO_OPTION);
             if (confirmation ==JOptionPane.YES_OPTION){
+                userSession.clear();
                 new login();
                 this.dispose();
             }
