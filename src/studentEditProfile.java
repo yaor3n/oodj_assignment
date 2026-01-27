@@ -2,203 +2,234 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-// ===== Main Frame =====
 public class studentEditProfile extends JFrame implements ActionListener {
 
-    private JTextField usernameField;
+    private JTextField nameField, emailField, dobField, genderField, usernameField, courseField;
+    private JLabel idLabel, roleLabel;
     private JPasswordField passwordField;
-    private JTextField roleField;
-    private JTextField displayNameField;
-
-
-    private JButton editBtn, saveBtn, backBtn;
-
+    private JButton editBtn, saveBtn, backBtn, cancelBtn;
+    private JPanel buttonContainer;
+    private CardLayout buttonCardLayout;
     private Student student;
 
     public studentEditProfile() {
+        // Load current student from Session
+        this.student = AccountFileHandler.getStudent(Session.currentUsername);
+
+        if (this.student == null) {
+            JOptionPane.showMessageDialog(null, "User data not found. Please log in again.");
+            this.dispose();
+            return;
+        }
+
         // Basic frame setup
-        setLayout(null);
-        setTitle("Edit Profile");
-        setSize(1024, 700);
+        setTitle("Student Profile Management");
+        setSize(800, 800);
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.WHITE);
+
+        // 1. PAGE TITLE
+        JLabel pageTitle = new JLabel("👤 My Student Profile", SwingConstants.CENTER);
+        pageTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        pageTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        add(pageTitle, BorderLayout.NORTH);
+
+        // 2. CONTENT PANEL (SCROLLABLE)
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBackground(Color.WHITE);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 30, 50));
+
+        // --- Personal Info Card ---
+        JPanel personalCard = createCardPanel("📝 Personal Information");
+        idLabel = new JLabel(student.id);
+        nameField = createStyledTextField(student.fullName);
+        emailField = createStyledTextField(student.email);
+        genderField = createStyledTextField(student.gender);
+        dobField = createStyledTextField(student.dob);
+
+        addProfileRow(personalCard, "Student ID", idLabel, 0);
+        addProfileRow(personalCard, "Full Name", nameField, 1);
+        addProfileRow(personalCard, "Email", emailField, 2);
+        addProfileRow(personalCard, "Gender", genderField, 3);
+        addProfileRow(personalCard, "Date of Birth", dobField, 4);
+
+        // --- Account Credentials Card ---
+        JPanel accountCard = createCardPanel("🔐 Account & Course");
+        usernameField = createStyledTextField(student.getUsername());
+        courseField = createStyledTextField(student.getCourse());
+        roleLabel = new JLabel(student.getRole());
+
+        // Password with Eye Toggle
+        passwordField = new JPasswordField(student.getPassword());
+        passwordField.setBorder(null);
+        passwordField.setOpaque(false);
+        JPanel passwordWrapper = createPasswordWrapper(passwordField);
+
+        addProfileRow(accountCard, "Username", usernameField, 0);
+        addProfileRow(accountCard, "Password", passwordWrapper, 1);
+        addProfileRow(accountCard, "Course", courseField, 2);
+        addProfileRow(accountCard, "Access Role", roleLabel, 3);
+
+        // 3. BUTTONS (CardLayout)
+        buttonCardLayout = new CardLayout();
+        buttonContainer = new JPanel(buttonCardLayout);
+        buttonContainer.setOpaque(true);
+
+        // View Mode Buttons
+        JPanel viewPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        viewPanel.setOpaque(true);
+        editBtn = createActionButton("Edit Profile", new Color(51, 65, 85));
+        backBtn = createActionButton("Back", new Color(108, 117, 125));
+        viewPanel.add(backBtn);
+        viewPanel.add(editBtn);
+
+        // Edit Mode Buttons
+        JPanel editPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        editPanel.setOpaque(true);
+        saveBtn = createActionButton("Save Changes", new Color(40, 167, 69));
+        cancelBtn = createActionButton("Cancel", new Color(220, 53, 69));
+        editPanel.add(cancelBtn);
+        editPanel.add(saveBtn);
+
+        buttonContainer.add(viewPanel, "VIEW");
+        buttonContainer.add(editPanel, "EDIT");
+
+        // Assembly
+        contentPanel.add(personalCard);
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(accountCard);
+        contentPanel.add(Box.createVerticalStrut(30));
+        contentPanel.add(buttonContainer);
+
+        JScrollPane scroll = new JScrollPane(contentPanel);
+        scroll.setBorder(null);
+        add(scroll, BorderLayout.CENTER);
+
+        // Initial State
+        setEditMode(false);
+
+        editBtn.addActionListener(this);
+        saveBtn.addActionListener(this);
+        cancelBtn.addActionListener(this);
+        backBtn.addActionListener(this);
+
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Load current student
-        student = AccountFileHandler.getStudent(Session.currentUsername);
-
-        // ===== Title =====
-        JLabel title = new JLabel("Edit Profile");
-        title.setFont(new Font("Arial", Font.BOLD, 26));
-        title.setBounds(420, 40, 300, 50);
-        add(title);
-
-        // ===== Rounded Background Panel =====
-        RoundedBackgroundPanel bgPanel = new RoundedBackgroundPanel(new Color(160, 190, 170), 60);
-        bgPanel.setBounds(60, 120, 900, 450);
-        bgPanel.setLayout(null);
-        add(bgPanel);
-
-        // ===== Avatar =====
-        AvatarPanel avatar = new AvatarPanel(student.getDisplayName());
-        avatar.setBounds(80, 140, 150, 150);
-        bgPanel.add(avatar);
-
-        // ===== Fields =====
-
-        displayNameField = new JTextField(student.getDisplayName());
-        displayNameField.setBounds(300, 100, 450, 50);
-        displayNameField.setEditable(false);
-        bgPanel.add(displayNameField);
-
-        usernameField = new JTextField(student.getUsername());
-        usernameField.setBounds(300, 170, 450, 50);
-        usernameField.setEditable(false);
-        bgPanel.add(usernameField);
-
-        passwordField = new JPasswordField(student.getPassword());
-        passwordField.setBounds(300, 240, 450, 50);
-        passwordField.setEditable(false);
-        bgPanel.add(passwordField);
-
-        roleField = new JTextField(student.getRole());
-        roleField.setBounds(300, 310, 450, 50);
-        roleField.setEditable(false);
-        bgPanel.add(roleField);
-
-        //RoundedBorder fieldBorder = new RoundedBorder(20, new Color(90, 120, 100));
-        //usernameField.setBorder(fieldBorder);
-        //passwordField.setBorder(fieldBorder);
-        //roleField.setBorder(fieldBorder);
-
-        // ===== Buttons =====
-        editBtn = new JButton("Edit");
-        editBtn.setBounds(300, 370, 120, 50);
-        editBtn.addActionListener(this);
-        bgPanel.add(editBtn);
-
-        saveBtn = new JButton("Save");
-        saveBtn.setBounds(440, 370, 120, 50);
-        saveBtn.setEnabled(false);
-        saveBtn.addActionListener(this);
-        bgPanel.add(saveBtn);
-
-        backBtn = new JButton("Back");
-        backBtn.setBounds(580, 370, 120, 50);
-        backBtn.addActionListener(this);
-        bgPanel.add(backBtn);
-
         setVisible(true);
+    }
+
+    private void setEditMode(boolean editing) {
+        JTextField[] fields = {nameField, emailField, dobField, genderField, usernameField, courseField};
+        for (JTextField f : fields) {
+            f.setEditable(editing);
+            f.setBackground(editing ? Color.WHITE : new Color(245, 245, 245));
+        }
+        passwordField.setEditable(editing);
+        passwordField.getParent().setBackground(editing ? Color.WHITE : new Color(245, 245, 245));
+
+        buttonCardLayout.show(buttonContainer, editing ? "EDIT" : "VIEW");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == editBtn) {
-            displayNameField.setEditable(true);
-            passwordField.setEditable(true);
-            saveBtn.setEnabled(true);
+            setEditMode(true);
+        } else if (e.getSource() == cancelBtn) {
+            setEditMode(false);
+            // Revert fields to original student data
+            nameField.setText(student.fullName);
+            passwordField.setText(student.getPassword());
+            // ... add others as needed
         } else if (e.getSource() == saveBtn) {
-            student.setDisplayName(displayNameField.getText());
-            student.setPassword(new String(passwordField.getPassword()));
+            // Update Student object
+            student.fullName = nameField.getText().trim();
+            student.email = emailField.getText().trim();
+            student.gender = genderField.getText().trim();
+            student.dob = dobField.getText().trim();
+            student.username = usernameField.getText().trim();
+            student.setPassword(new String(passwordField.getPassword()).trim());
+            student.course = courseField.getText().trim();
+
             AccountFileHandler.updateStudent(student);
-
-            JOptionPane.showMessageDialog(this, "Profile updated successfully!");
-
-            passwordField.setEditable(false);
-            saveBtn.setEnabled(false);
+            JOptionPane.showMessageDialog(this, "Profile Updated Successfully!");
+            setEditMode(false);
         } else if (e.getSource() == backBtn) {
             new studentDashboard();
             dispose();
         }
     }
 
-    // ===== Rounded Background Panel =====
-    class RoundedBackgroundPanel extends JPanel {
+    // --- UI Helper Methods ---
 
-        private Color bgColor;
-        private int radius;
+    private JPanel createCardPanel(String title) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                BorderFactory.createEmptyBorder(20, 20, 20, 20)
+        ));
 
-        RoundedBackgroundPanel(Color bgColor, int radius) {
-            this.bgColor = bgColor;
-            this.radius = radius;
-            setOpaque(false);
-        }
+        JLabel header = new JLabel(title);
+        header.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        header.setForeground(new Color(40, 167, 69));
 
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(bgColor);
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
-        }
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0; gbc.gridy = -1; gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 15, 0);
+        panel.add(header, gbc);
+        return panel;
     }
 
-    // ===== Rounded Border for Fields =====
-    class RoundedBorder implements javax.swing.border.Border {
+    private void addProfileRow(JPanel panel, String labelText, JComponent comp, int row) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        private int radius;
-        private Color color;
+        gbc.gridy = row + 1;
+        gbc.gridx = 0; gbc.weightx = 0.3;
+        panel.add(new JLabel(labelText + ":"), gbc);
 
-        RoundedBorder(int radius, Color color) {
-            this.radius = radius;
-            this.color = color;
-        }
-
-        @Override
-        public Insets getBorderInsets(Component c) {
-            return new Insets(this.radius + 1, this.radius + 1, this.radius + 1, this.radius + 1);
-        }
-
-        @Override
-        public boolean isBorderOpaque() {
-            return false;
-        }
-
-        @Override
-        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(color);
-            g2.setStroke(new BasicStroke(2));
-            g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
-        }
+        gbc.gridx = 1; gbc.weightx = 0.7;
+        panel.add(comp, gbc);
     }
 
-    // ===== Avatar Panel with Initial =====
-    class AvatarPanel extends JPanel {
-
-        private String initial;
-
-        AvatarPanel(String username) {
-            this.initial = username.substring(0, 1).toUpperCase();
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            // Background Circle
-            g2.setColor(new Color(120, 160, 140));
-            g2.fillOval(0, 0, getWidth(), getHeight());
-
-            // Initial Letter
-            g2.setColor(Color.BLACK);
-            int fontSize = Math.min(getWidth(), getHeight()) / 2;
-            g2.setFont(new Font("Arial", Font.BOLD, fontSize));
-
-            FontMetrics fm = g2.getFontMetrics();
-            int x = (getWidth() - fm.stringWidth(initial)) / 2;
-            int y = (getHeight() + fm.getAscent()) / 2 - 5;
-
-            g2.drawString(initial, x, y);
-        }
+    private JTextField createStyledTextField(String text) {
+        JTextField tf = new JTextField(text);
+        tf.setPreferredSize(new Dimension(300, 35));
+        tf.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(210, 210, 210)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        return tf;
     }
 
-    // ===== Main Method for Testing =====
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(studentEditProfile::new);
+    private JPanel createPasswordWrapper(JPasswordField pf) {
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBorder(BorderFactory.createLineBorder(new Color(210, 210, 210)));
+        wrapper.setBackground(new Color(245, 245, 245));
+
+        JButton eye = new JButton("👁");
+        eye.setBorderPainted(false);
+        eye.setContentAreaFilled(false);
+        eye.addActionListener(e -> {
+            if (pf.getEchoChar() == (char)0) pf.setEchoChar('•');
+            else pf.setEchoChar((char)0);
+        });
+
+        wrapper.add(pf, BorderLayout.CENTER);
+        wrapper.add(eye, BorderLayout.EAST);
+        return wrapper;
+    }
+
+    private JButton createActionButton(String text, Color bg) {
+        JButton btn = new JButton(text);
+        btn.setBackground(bg);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setPreferredSize(new Dimension(150, 40));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        return btn;
     }
 }
