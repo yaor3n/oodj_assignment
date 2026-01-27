@@ -171,7 +171,7 @@ public class login extends JFrame implements ActionListener{
 
             if (userData != null) {
                 userSession.loggedInUserId = userData[0].trim();
-                new academicLeaderDashboard();
+                //new academicLeaderDashboard();
                 String role = userData[9].trim();
 
                 switch (role) {
