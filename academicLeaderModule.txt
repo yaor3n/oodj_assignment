@@ -1,4 +1,3 @@
-moduleID,moduleName,levelOfEdu,lecturerID,lecturerName,month,year,description,modulePicture,course
 M01,Code Optimization,PhD,lec1,Lecturer One,March,2026,Intro to SE,ModulePic1.png,Software Engineering
 M02,Book Keeping Strategies,Bachelor,lec2,Lecturer Two,April,2026,Basics of Accounting,ModulePic2.png,Accounting
 M03,Human Behavioural Studies,Bachelor,lec1,Lecturer One,May,2026,Understanding Human Behavior,ModulePic3.png,Psychology
