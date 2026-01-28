@@ -140,22 +140,50 @@ public class lecturerDashboard extends JFrame {
     mainContainer.setBorder(new EmptyBorder(40, 60, 40, 60));
 
     JLabel label = new JLabel("Select a Course", SwingConstants.CENTER);
-    label.setFont(new Font("Arial", Font.BOLD, 28));
+    label.setFont(new Font("Segoe UI", Font.BOLD, 28));
     label.setBorder(new EmptyBorder(0, 0, 20, 0));
     mainContainer.add(label, BorderLayout.NORTH);
 
-    JPanel gridPanel = new JPanel(new GridLayout(0, 3, 25, 25));
-    gridPanel.setBackground(colorBackground);
+    JPanel gridWrapper = new JPanel();
+    gridWrapper.setBackground(colorBackground);
 
-    for (String courseName : loadCoursesForLecturer()) {
-      gridPanel.add(createCourseCard(courseName));
+    List<String> courses = loadCoursesForLecturer();
+
+    if (courses.isEmpty()) {
+      gridWrapper.setLayout(new GridBagLayout());
+
+      JPanel emptyBox = new JPanel();
+      emptyBox.setLayout(new BoxLayout(emptyBox, BoxLayout.Y_AXIS));
+      emptyBox.setOpaque(false);
+
+      JLabel noResultIconLabel = new JLabel("🔍", SwingConstants.CENTER);
+      noResultIconLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 30));
+      noResultIconLabel.setForeground(new Color(203, 213, 225));
+      noResultIconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+      noResultIconLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
+      JLabel noResultLabel = new JLabel("No courses assigned to you.", SwingConstants.CENTER);
+      noResultLabel.setFont(new Font("Segoe UI", Font.ITALIC, 18));
+      noResultLabel.setForeground(Color.GRAY);
+      noResultLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+      emptyBox.add(noResultIconLabel);
+      emptyBox.add(Box.createVerticalStrut(10));
+      emptyBox.add(noResultLabel);
+
+      gridWrapper.add(emptyBox, new GridBagConstraints());
+    } else {
+      gridWrapper.setLayout(new BorderLayout());
+      JPanel centerPanel = new JPanel(new GridLayout(0, 3, 25, 25));
+      centerPanel.setBackground(colorBackground);
+      gridWrapper.add(centerPanel, BorderLayout.NORTH);
+
+      for (String courseName : courses) {
+        centerPanel.add(createCourseCard(courseName));
+      }
     }
 
-    JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-    wrapper.setBackground(colorBackground);
-    wrapper.add(gridPanel);
-
-    JScrollPane scrollPane = new JScrollPane(wrapper);
+    JScrollPane scrollPane = new JScrollPane(gridWrapper);
     scrollPane.setBorder(null);
     scrollPane.getVerticalScrollBar().setUnitIncrement(16);
     scrollPane.getViewport().setBackground(colorBackground);
@@ -164,6 +192,81 @@ public class lecturerDashboard extends JFrame {
     contentPanel.add(mainContainer, BorderLayout.CENTER);
 
     refresh();
+  }
+
+  private JPanel createCourseCard(String courseName) {
+    JPanel courseCard = new JPanel(new BorderLayout());
+    courseCard.setPreferredSize(new Dimension(260, 287));
+    courseCard.setBackground(Color.WHITE);
+    courseCard.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
+        BorderFactory.createEmptyBorder(0, 0, 10, 0)));
+
+    JLabel cardImg = new JLabel("Course Image", SwingConstants.CENTER);
+    cardImg.setPreferredSize(new Dimension(260, 160));
+    cardImg.setOpaque(true);
+    cardImg.setBackground(new Color(241, 245, 249));
+    cardImg.setForeground(new Color(148, 163, 184));
+    cardImg.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+
+    JPanel contentArea = new JPanel(new BorderLayout());
+    contentArea.setOpaque(false);
+    contentArea.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 15));
+
+    JPanel titleRow = new JPanel(new BorderLayout());
+    titleRow.setOpaque(false);
+
+    JLabel nameLabel = new JLabel(courseName);
+    nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+
+    titleRow.add(nameLabel, BorderLayout.CENTER);
+
+    JPanel subInfo = new JPanel();
+    subInfo.setLayout(new BoxLayout(subInfo, BoxLayout.Y_AXIS));
+    subInfo.setOpaque(false);
+
+    JLabel typeLabel = new JLabel("Academic Course");
+    typeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+    typeLabel.setForeground(new Color(110, 120, 130));
+    typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+    JLabel activeLabel = new JLabel(" ACTIVE ");
+    activeLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
+    activeLabel.setOpaque(true);
+    activeLabel.setBackground(new Color(240, 253, 244));
+    activeLabel.setForeground(new Color(22, 163, 74));
+    activeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+    subInfo.add(typeLabel);
+    subInfo.add(Box.createVerticalStrut(8));
+    subInfo.add(activeLabel);
+
+    contentArea.add(titleRow, BorderLayout.NORTH);
+    contentArea.add(subInfo, BorderLayout.CENTER);
+
+    courseCard.add(cardImg, BorderLayout.NORTH);
+    courseCard.add(contentArea, BorderLayout.CENTER);
+
+    courseCard.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseEntered(java.awt.event.MouseEvent e) {
+        courseCard.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(googleBlue, 1, true),
+            BorderFactory.createEmptyBorder(0, 0, 10, 0)));
+      }
+
+      public void mouseExited(java.awt.event.MouseEvent e) {
+        courseCard.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
+            BorderFactory.createEmptyBorder(0, 0, 10, 0)));
+      }
+
+      public void mousePressed(java.awt.event.MouseEvent e) {
+        selectedCourse = courseName;
+        showModuleSidebar();
+      }
+    });
+
+    return courseCard;
   }
 
   private void setupNavigationOnlySidebar() {
@@ -201,44 +304,6 @@ public class lecturerDashboard extends JFrame {
 
     sidebar.revalidate();
     sidebar.repaint();
-  }
-
-  private JPanel createCourseCard(String courseName) {
-    JPanel card = new JPanel(new GridBagLayout());
-    card.setPreferredSize(new Dimension(250, 250));
-    card.setMinimumSize(new Dimension(250, 250));
-    card.setMaximumSize(new Dimension(250, 250));
-    card.setBackground(Color.WHITE);
-    card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
-    card.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-    JLabel nameLabel = new JLabel(
-        "<html><body style='width: 150px; text-align: center;'>" + courseName + "</body></html>");
-    nameLabel.setFont(new Font("Arial", Font.BOLD, 22));
-    nameLabel.setForeground(new Color(50, 50, 50));
-    card.add(nameLabel);
-
-    card.addMouseListener(new java.awt.event.MouseAdapter() {
-      @Override
-      public void mouseEntered(java.awt.event.MouseEvent e) {
-        card.setBackground(new Color(250, 250, 250));
-        card.setBorder(BorderFactory.createLineBorder(googleBlue, 2));
-      }
-
-      @Override
-      public void mouseExited(java.awt.event.MouseEvent e) {
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
-      }
-
-      @Override
-      public void mousePressed(java.awt.event.MouseEvent e) {
-        selectedCourse = courseName;
-        showModuleSidebar();
-      }
-    });
-
-    return card;
   }
 
   private void showModuleSidebar() {
