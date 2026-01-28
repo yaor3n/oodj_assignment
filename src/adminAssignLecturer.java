@@ -56,19 +56,29 @@ public class adminAssignLecturer extends JFrame {
         leaderDropdown.setBounds(400, 130, 300, 25);
         mainPanel.add(leaderDropdown);
 
-        JButton assignBtn = new JButton("Assign");
-        assignBtn.setBackground(new Color(40, 167, 69));
-        assignBtn.setForeground(Color.WHITE);
-        assignBtn.setBounds(400, 180, 140, 35);
-        assignBtn.addActionListener(e -> adminAssignLecturer());
-        mainPanel.add(assignBtn);
-
         JButton refreshBtn = new JButton("Refresh");
         refreshBtn.setBackground(new Color(30, 41, 59));
         refreshBtn.setForeground(Color.WHITE);
-        refreshBtn.setBounds(560, 180, 140, 35);
+        refreshBtn.setBounds(300, 180, 140, 35);
         refreshBtn.addActionListener(e -> loadAssignments());
         mainPanel.add(refreshBtn);
+
+        JButton assignBtn = new JButton("Assign");
+        assignBtn.setBackground(new Color(40, 167, 69));
+        assignBtn.setForeground(Color.WHITE);
+        assignBtn.setBounds(450, 180, 140, 35);
+        assignBtn.addActionListener(e -> adminAssignLecturer());
+        mainPanel.add(assignBtn);
+
+        JButton backBtn = new JButton("Back");
+        backBtn.setBackground(new Color(30, 41, 59));
+        backBtn.setForeground(Color.WHITE);
+        backBtn.setBounds(600, 180, 140, 35);
+        backBtn.addActionListener(e -> {
+            new adminDashboard();
+            dispose();
+        });
+        mainPanel.add(backBtn);
 
         // ========= TABLE =========
         tableModel = new DefaultTableModel(new String[]{
@@ -81,17 +91,6 @@ public class adminAssignLecturer extends JFrame {
         JScrollPane tableScroll = new JScrollPane(table);
         tableScroll.setBounds(100, 250, 880, 280);
         mainPanel.add(tableScroll);
-
-        // ========= BACK BUTTON =========
-        JButton backBtn = new JButton("Back");
-        backBtn.setBackground(new Color(30, 41, 59));
-        backBtn.setForeground(Color.WHITE);
-        backBtn.setBounds(420, 560, 180, 40);
-        backBtn.addActionListener(e -> {
-            new adminDashboard();
-            dispose();
-        });
-        mainPanel.add(backBtn);
 
         // ========= SCROLL =========
         JScrollPane scrollPane = new JScrollPane(mainPanel);
@@ -199,7 +198,4 @@ public class adminAssignLecturer extends JFrame {
         loadAssignments();
     }
 
-    public static void main(String[] args) {
-        new adminAssignLecturer();
-    }
 }

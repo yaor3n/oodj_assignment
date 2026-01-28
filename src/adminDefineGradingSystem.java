@@ -24,7 +24,7 @@ public class adminDefineGradingSystem extends JFrame implements ActionListener {
         heroBar.setBounds(0, 0, getWidth(), 80);
         add(heroBar);
 
-        JLabel titleLabel = new JLabel("Admin Dashboard", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Admin Dashboard - Define Grading System", SwingConstants.CENTER);
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         titleLabel.setBounds(0, 20, getWidth(), 40);
@@ -248,7 +248,4 @@ public class adminDefineGradingSystem extends JFrame implements ActionListener {
         }
     }
 
-    public static void main(String[] args) {
-        new adminDefineGradingSystem();
-    }
 }

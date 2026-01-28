@@ -276,7 +276,4 @@ public class adminCrudUsers extends JFrame {
         return "U" + String.format("%03d", allUsers.size() + 1);
     }
 
-    public static void main(String[] args) {
-        new adminCrudUsers();
-    }
 }

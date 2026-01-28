@@ -34,7 +34,7 @@ public class adminCreateClasses extends JFrame {
         heroBar.setBackground(new Color(30, 41, 59));
         heroBar.setPreferredSize(new Dimension(0, 80));
 
-        JLabel titleLabel = new JLabel("Admin - User Management", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Admin - Create Classes", SwingConstants.CENTER);
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
 
@@ -316,7 +316,4 @@ public class adminCreateClasses extends JFrame {
         } catch (IOException ignored) {}
     }
 
-    public static void main(String[] args) {
-        new adminCreateClasses();
-    }
 }

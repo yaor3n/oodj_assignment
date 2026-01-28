@@ -14,8 +14,17 @@ public class adminDashboard extends JFrame {
 
     public adminDashboard() {
 
+        String username = Session.currentUsername;
+
         setLayout(null);
         reusable.windowSetup(this);
+
+
+        JLabel welcomeLabel = new JLabel("Welcome, " + username);
+        welcomeLabel.setBounds(800, 20, 500, 40);
+        welcomeLabel.setForeground(new Color(0xFFFFFF));
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        add(welcomeLabel);
 
         // ===== SIDEBAR TOGGLE =====
         JButton toggleSidebarBtn = new JButton("\u2630"); // Unicode hamburger
@@ -41,7 +50,7 @@ public class adminDashboard extends JFrame {
         editProfileBtn.setBackground(new Color(30, 41, 59));
         editProfileBtn.setForeground(Color.WHITE);
         editProfileBtn.addActionListener(e -> {
-            new adminEditProfile();
+            new adminEditProfile(username);
             dispose();
         });
 
