@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 
-public class defineGradingSystem extends JFrame implements ActionListener {
+public class adminDefineGradingSystem extends JFrame implements ActionListener {
 
     private JTable table;
     private DefaultTableModel model;
@@ -15,7 +15,7 @@ public class defineGradingSystem extends JFrame implements ActionListener {
     private JButton addBtn, deleteBtn, refreshBtn, exportBtn, backBtn;
     private final String FILE_NAME = "GradingSystem.txt";
 
-    public defineGradingSystem() {
+    public adminDefineGradingSystem() {
 
         reusable.windowSetup(this);
 
@@ -249,6 +249,6 @@ public class defineGradingSystem extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new defineGradingSystem();
+        new adminDefineGradingSystem();
     }
 }

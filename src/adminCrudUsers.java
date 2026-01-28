@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class crudUsers extends JFrame {
+public class adminCrudUsers extends JFrame {
 
     private final String FILE_NAME = "accounts.txt";
 
@@ -13,7 +13,7 @@ public class crudUsers extends JFrame {
     private JTable table;
     private JTextField searchField;
 
-    public crudUsers() {
+    public adminCrudUsers() {
 
         reusable.windowSetup(this);
         setLayout(new BorderLayout());
@@ -277,6 +277,6 @@ public class crudUsers extends JFrame {
     }
 
     public static void main(String[] args) {
-        new crudUsers();
+        new adminCrudUsers();
     }
 }

@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class createClasses extends JFrame {
+public class adminCreateClasses extends JFrame {
 
     private final String MODULE_FILE = "academicLeaderModule.txt";
     private final String CLASS_FILE = "Classes.txt";
@@ -20,7 +20,7 @@ public class createClasses extends JFrame {
 
     private final ArrayList<String[]> modules = new ArrayList<>();
 
-    public createClasses() {
+    public adminCreateClasses() {
 
         reusable.windowSetup(this);
 
@@ -317,6 +317,6 @@ public class createClasses extends JFrame {
     }
 
     public static void main(String[] args) {
-        new createClasses();
+        new adminCreateClasses();
     }
 }

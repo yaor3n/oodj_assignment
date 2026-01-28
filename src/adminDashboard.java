@@ -82,22 +82,22 @@ public class adminDashboard extends JFrame {
                 mainButton(
                         "CRUD Users",
                         "images/crudUsers.png",
-                        e -> { new crudUsers(); dispose(); }
+                        e -> { new adminCrudUsers(); dispose(); }
                 ),
                 mainButton(
                         "Assign Lecturers",
                         "images/assignLecturers.png",
-                        e -> { new assignLecturer(); dispose(); }
+                        e -> { new adminAssignLecturer(); dispose(); }
                 ),
                 mainButton(
                         "Create Classes",
                         "images/createClasses.png",
-                        e -> { new createClasses(); dispose(); }
+                        e -> { new adminCreateClasses(); dispose(); }
                 ),
                 mainButton(
                         "Define Grading System",
                         "images/defineGradingSystem.png",
-                        e -> { new defineGradingSystem(); dispose(); }
+                        e -> { new adminDefineGradingSystem(); dispose(); }
                 )
         };
 

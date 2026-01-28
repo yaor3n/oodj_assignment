@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class assignLecturer extends JFrame {
+public class adminAssignLecturer extends JFrame {
 
     private final String ACCOUNTS_FILE = "accounts.txt";
     private final String ASSIGNED_FILE = "lecturersAssignedToAcademicLeaders.txt";
@@ -18,7 +18,7 @@ public class assignLecturer extends JFrame {
     private ArrayList<String[]> lecturers = new ArrayList<>();
     private ArrayList<String[]> leaders = new ArrayList<>();
 
-    public assignLecturer() {
+    public adminAssignLecturer() {
 
         reusable.windowSetup(this);
         setLayout(new BorderLayout());
@@ -60,7 +60,7 @@ public class assignLecturer extends JFrame {
         assignBtn.setBackground(new Color(40, 167, 69));
         assignBtn.setForeground(Color.WHITE);
         assignBtn.setBounds(400, 180, 140, 35);
-        assignBtn.addActionListener(e -> assignLecturer());
+        assignBtn.addActionListener(e -> adminAssignLecturer());
         mainPanel.add(assignBtn);
 
         JButton refreshBtn = new JButton("Refresh");
@@ -179,7 +179,7 @@ public class assignLecturer extends JFrame {
     }
 
     // ================= ASSIGN =================
-    private void assignLecturer() {
+    private void adminAssignLecturer() {
         if (lecturerDropdown.getSelectedIndex() == -1 || leaderDropdown.getSelectedIndex() == -1) {
             JOptionPane.showMessageDialog(this, "Select both Lecturer and Academic Leader");
             return;
@@ -200,6 +200,6 @@ public class assignLecturer extends JFrame {
     }
 
     public static void main(String[] args) {
-        new assignLecturer();
+        new adminAssignLecturer();
     }
 }
