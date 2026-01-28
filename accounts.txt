@@ -1,9 +1,9 @@
-test,123,Lecturer
-lec1,123,Lecturer
-stud1,123,Student
-stud2,321,Student
-staff1,123,AcademicStaff
-admin,123,Admin
-student,123,Student
-raul,321,Student
-yaoren,123,Lecturer
+U001,Jane Doe,janedoe@gmail.com,female,1 January 2005,01234567,12,Jane,123,Student,Computer Science
+U002,John Lee,johnlee@gmail.com,male,1 December 2000,1234567,22,Johnathan,321,Lecturer,Data Structure
+U003,Vishwanth,vishy@gmail.com,male,6 July 2007,2345678,23,Vish,V1sh@pass,Student,Digital Marketing
+U004,Ong Szi Kai,ozk@gmail.com,male,1 January 2005,12121212,34,SkyOng,Sky#123,AcademicLeader,School of Technology
+U006,Siew Weng Tim,swt@gmail.com,male,1 October 2005,45645654,45,wengtimmm,Tim@123,Student,
+U007,Testing,test@gmail.com,female,1 February 2005,242424242,23,test,Test#123,Student,Humanities
+U005,Raul User,raul@gmail.com,male,5 January 2006,45454545,14,raul,m,Student,Cybersecurity
+U007,Lecturer 1,lecturer1@gmail.com,male,1 February 2005,242424242,21,lecturer1,m,Lecturer
+U007,Admin,admin@gmail.com,male,1 February 2005,242424242,21,admin,admin,Admin,

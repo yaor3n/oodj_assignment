@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 public class userSelect extends JFrame implements ActionListener {
 
     private JLabel selectRole;
-    private JButton loginButton, createAccountButton;
+    private JButton loginButton, createAccountButton, exitButton;
 
     userSelect() {
         selectRole = new JLabel("Welcome! Please select your login method:");
@@ -33,6 +33,14 @@ public class userSelect extends JFrame implements ActionListener {
         createAccountButton.setBackground(new Color(0xffffff));
         this.add(createAccountButton);
 
+        exitButton = new JButton("Exit");
+        exitButton.setFont(new Font("Arial", Font.BOLD, 25));
+        exitButton.addActionListener(this);
+        exitButton.setBounds(400,425,300,75);
+        exitButton.setForeground(new Color(0x000000));
+        exitButton.setBackground(new Color(0xffffff));
+        this.add(exitButton);
+
         this.setVisible(true);
     }
 
@@ -44,6 +52,8 @@ public class userSelect extends JFrame implements ActionListener {
         } else if (e.getSource() == createAccountButton) {
             new accountCreation();
             this.dispose();
+        } else if (e.getSource() == exitButton) {
+            System.exit(0);
         }
     }
 }

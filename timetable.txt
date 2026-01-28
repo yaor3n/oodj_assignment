@@ -1,0 +1,5 @@
+moduleID,moduleName,levelOfEdu,lecturerID,lecturerName,month,year,description,modulePicture,course,classID,className,classRoom,date,startTime,endTime,studentID,studentName
+M01,Software Engineering,PhD,lec1,Lecturer One,March,2026,Intro to SE,ModulePic1.png,Software Engineering,C01,SE101,Room A,15/03/2026,09:00,12:00,stud1,Student One
+M02,Accounting,Bachelor,lec2,Lecturer Two,April,2026,Basics of Accounting,ModulePic2.png,Accounting,C02,AC101,Room B,20/04/2026,13:00,16:00,stud2,Student Two
+M03,Psychology,Bachelor,lec1,Lecturer One,May,2026,Understanding Human Behavior,ModulePic3.png,Psychology,C03,Psy101,Room C,25/05/2026,10:00,13:00,stud3,Student Three
+M04,CyberSecurity,PhD,lec2,Lecturer Two,June,2026,Network Security Fundamentals,ModulePic4.png,CyberSecurity,C04,CS101,Room D,30/06/2026,14:00,17:00,stud4,Student Four

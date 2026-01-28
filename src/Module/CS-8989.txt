@@ -1,0 +1,2 @@
+# Module Code, Module Name, Qualification, Lecturer, Description, Image Path
+CS-8989,Cyber Sec,yes,Weng Tim,nfioawndoawndoiawndoiwndiowan,/Users/wengtim/Downloads/OIP-3874236129.CYTXcjs2MW35VwYAa8yfoAHaEK
