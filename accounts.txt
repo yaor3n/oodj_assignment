@@ -5,5 +5,4 @@ U004,Ong Szi Kai,ozk@gmail.com,male,1 January 2005,12121212,34,SkyOng,Sky#123,Ac
 U006,Siew Weng Tim,swt@gmail.com,male,1 October 2005,45645654,45,wengtimmm,Tim@123,Student,
 U007,Testing,test@gmail.com,female,1 February 2005,242424242,23,test,Test#123,Student,Humanities
 U005,Raul User,raul@gmail.com,male,5 January 2006,45454545,14,raul,m,Student,Cybersecurity
-U008,Lecturer 1,lecturer1@gmail.com,male,1 February 2005,242424242,21,lecturer1,m,Lecturer
-U009,Loke Yao Ren,yr@gmail.com,male,8 November 2005,0167676767,21,yaoren,yr#123,Admin
+U008,Joshua,itsjushua@gmail.com,Female,6 July 2007,011-1233456,67,joshy,j,AcademicLeader,Data Science

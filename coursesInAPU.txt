@@ -5,5 +5,10 @@ CyberSecurity
 Data Science
 Business Analytics
 Data Science
-Eletrical Engineering
+Electrical Engineering
 Mechanical Engineering
+Fintech
+Visual Effects
+Digital Marketing
+Architecture
+Computer Games Development
