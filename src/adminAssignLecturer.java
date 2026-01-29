@@ -114,12 +114,12 @@ public class adminAssignLecturer extends JFrame {
         try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNTS_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] p = line.split(",");
-                if (p.length < 8) continue;
+                String[] p = line.split(",", -1); // Keep empty fields
+                if (p.length < 11) continue; // full row
 
                 String id = p[0].trim();
                 String name = p[1].trim();
-                String role = p[7].trim();
+                String role = p[9].trim(); // role is at index 9
 
                 if (role.equalsIgnoreCase("Lecturer")) {
                     lecturers.add(new String[]{id, name});
@@ -138,6 +138,7 @@ public class adminAssignLecturer extends JFrame {
             JOptionPane.showMessageDialog(this, "Failed to read accounts.txt");
         }
     }
+
 
     // ================= LOAD ASSIGNMENTS =================
     private void loadAssignments() {

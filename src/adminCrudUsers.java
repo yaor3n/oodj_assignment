@@ -44,11 +44,15 @@ public class adminCrudUsers extends JFrame {
         mainPanel.add(searchField);
 
         JButton searchBtn = new JButton("Search");
+        searchBtn.setBackground(new Color(30,41,59));
+        searchBtn.setForeground(new Color(0xFFFFFF));
         searchBtn.setBounds(440, 80, 100, 25);
         searchBtn.addActionListener(e -> refreshTable(searchField.getText().trim()));
         mainPanel.add(searchBtn);
 
         JButton resetBtn = new JButton("Reset");
+        resetBtn.setBackground(new Color(30,41,59));
+        resetBtn.setForeground(new Color(0xFFFFFF));
         resetBtn.setBounds(560, 80, 100, 25);
         resetBtn.addActionListener(e -> {
             searchField.setText("");
@@ -75,16 +79,22 @@ public class adminCrudUsers extends JFrame {
 
         // ================= ACTION BUTTONS =================
         JButton updateBtn = new JButton("Update Selected");
+        updateBtn.setBackground(new Color(40, 167, 69));
+        updateBtn.setForeground(new Color(0xFFFFFF));
         updateBtn.setBounds(250, 430, 160, 40);
         updateBtn.addActionListener(e -> updateUsers());
         mainPanel.add(updateBtn);
 
         JButton deleteBtn = new JButton("Delete Selected");
+        deleteBtn.setBackground(new Color(220,53,69));
+        deleteBtn.setForeground(new Color(0xFFFFFF));
         deleteBtn.setBounds(430, 430, 160, 40);
         deleteBtn.addActionListener(e -> deleteUser());
         mainPanel.add(deleteBtn);
 
         JButton backBtn = new JButton("Back");
+        backBtn.setBackground(new Color(30,41,59));
+        backBtn.setForeground(new Color(0xFFFFFF));
         backBtn.setBounds(610, 430, 160, 40);
         backBtn.addActionListener(e -> {
             new adminDashboard();
@@ -125,8 +135,29 @@ public class adminCrudUsers extends JFrame {
         courseBox.setBounds(fx, y, 300, 25);
         mainPanel.add(courseBox);
 
+        JButton clearBtn = new JButton("Clear");
+        clearBtn.setBackground(new Color(30,41,59));
+        clearBtn.setForeground(Color.WHITE);
+        clearBtn.setBounds(300, y + 50, 180, 40);
+        clearBtn.addActionListener(e -> {
+            fullName.setText("");
+            email.setText("");
+            dob.setText("");
+            phone.setText("");
+            age.setText("");
+            username.setText("");
+            password.setText("");
+            genderBox.setSelectedIndex(0);
+            roleBox.setSelectedIndex(0);
+            courseBox.setSelectedIndex(0);
+        });
+        mainPanel.add(clearBtn);
+
+
         JButton createBtn = new JButton("Create User");
-        createBtn.setBounds(420, y + 50, 180, 40);
+        createBtn.setBackground(new Color(40, 167, 69));
+        createBtn.setForeground(new Color(0xFFFFFF));
+        createBtn.setBounds(520, y + 50, 180, 40);
         createBtn.addActionListener(e -> {
 
             if (fullName.getText().isEmpty()
@@ -164,6 +195,7 @@ public class adminCrudUsers extends JFrame {
         mainPanel.add(createBtn);
 
         JScrollPane scroll = new JScrollPane(mainPanel);
+        scroll.getVerticalScrollBar().setUnitIncrement(20); // scroll faster
         add(scroll);
 
         loadUsers();
