@@ -33,24 +33,45 @@ public class academicLeaderDashboard extends JFrame {
         JPanel mainHeader = new JPanel(new BorderLayout());
 
         // Header Bar (☰ + Title)
-        JPanel header = new JPanel(new BorderLayout());
+        // Header Bar (Using GridBagLayout for absolute centering)
+        JPanel header = new JPanel(null); // Use null layout for manual overlapping layering
         header.setBackground(Color.WHITE);
         header.setPreferredSize(new Dimension(0, 50));
         header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 230, 230)));
 
+        // 1. LEFT PANEL (Hamburger)
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        leftPanel.setOpaque(false);
         JButton hamburgerButton = new JButton("☰");
         hamburgerButton.setFocusPainted(false);
         hamburgerButton.setBorderPainted(false);
         hamburgerButton.setContentAreaFilled(false);
         hamburgerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         hamburgerButton.addActionListener(e -> toggleSidebar());
-        header.add(hamburgerButton, BorderLayout.WEST);
+        leftPanel.add(hamburgerButton);
+        leftPanel.setBounds(0, 0, 200, 50); // Fixed width for left side
+        header.add(leftPanel);
 
+        // 2. CENTER PANEL (Title) - THE IMPORTANT PART
         JLabel headerTitle = new JLabel("Academic Leader Dashboard", SwingConstants.CENTER);
         headerTitle.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        header.add(headerTitle, BorderLayout.CENTER);
-        mainHeader.add(header, BorderLayout.NORTH);
+        // We will set its bounds in the component listener to keep it centered
 
+        // 3. RIGHT PANEL (Full Name)
+        String fullName = academicLeaderFileManager.userFullName();
+        JLabel nameLabel = new JLabel(fullName + " 👤");
+        nameLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13));
+        nameLabel.setForeground(new Color(50, 50, 50));
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
+        rightPanel.setOpaque(false);
+        rightPanel.add(nameLabel);
+        // We will set its bounds in the component listener
+        
+        header.add(headerTitle);
+        header.add(rightPanel);
+
+        mainHeader.add(header, BorderLayout.NORTH);
+        
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
@@ -213,10 +234,21 @@ public class academicLeaderDashboard extends JFrame {
         layeredPane.add(glassPane, JLayeredPane.PALETTE_LAYER);
 
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
-            @Override public void componentResized(java.awt.event.ComponentEvent e) {
-                mainHeader.setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
-                glassPane.setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
-                sidebar.setBounds(0, 0, 240, layeredPane.getHeight());
+            @Override 
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                int w = layeredPane.getWidth();
+                int h = layeredPane.getHeight();
+
+                mainHeader.setBounds(0, 0, w, h);
+                glassPane.setBounds(0, 0, w, h);
+                sidebar.setBounds(0, 0, 240, h);
+                
+                // MANUALLY CENTER THE HEADER COMPONENTS
+                headerTitle.setBounds(0, 0, w, 50); // Title fills full width and uses SwingConstants.CENTER
+                rightPanel.setBounds(w - 300, 0, 300, 50); // Right panel stays at the edge
+                
+                mainHeader.revalidate();
+                mainHeader.repaint();
             }
         });
 

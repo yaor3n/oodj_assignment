@@ -26,6 +26,22 @@ public class academicLeaderFileManager {
         return null; 
     }
     
+    public static String userFullName() {
+        String currentID = userSession.loggedInUserId;
+        try (BufferedReader br = new BufferedReader(new FileReader("accounts.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length > 1 && parts[0].trim().equals(currentID)) {
+                    return parts[1].trim(); 
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "User"; 
+    }
+    
     public static void saveModule(academicLeaderModule module) {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("academicLeaderModule.txt", true)))) {
             out.println(module.toString()); 
