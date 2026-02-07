@@ -76,7 +76,7 @@ public class academicLeaderDashboard extends JFrame {
         dashboardPage.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
         JPanel controlsPanel = new JPanel();
-        controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS)); // Stack rows vertically
+        controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS)); 
         controlsPanel.setOpaque(false);
         controlsPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
@@ -425,14 +425,13 @@ public class academicLeaderDashboard extends JFrame {
         JPanel imageContainer = new JPanel(new BorderLayout(0, 15));
         imageContainer.setBackground(Color.WHITE);
         imageContainer.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(230, 230, 230), 1, true),
+            BorderFactory.createLineBorder(new Color(40, 167, 69), 1, true),
             BorderFactory.createEmptyBorder(20, 20, 20, 20)
         ));
         
         JLabel imageHeader = new JLabel("🖼️ Module Profile Picture", SwingConstants.LEFT);
         imageHeader.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
-        imageHeader.setForeground(new Color(40, 167, 69)); // Success Green
-
+        imageHeader.setForeground(new Color(40, 167, 69)); 
         JLabel imagePlaceholder = new JLabel("", SwingConstants.CENTER);
         imagePlaceholder.setPreferredSize(new Dimension(240, 160));
         imagePlaceholder.setBackground(new Color(245, 245, 245));
@@ -489,7 +488,7 @@ public class academicLeaderDashboard extends JFrame {
         JPanel detailsContainer = new JPanel(new GridBagLayout());
         detailsContainer.setBackground(Color.WHITE);
         detailsContainer.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(230, 230, 230), 1, true),
+            BorderFactory.createLineBorder(new Color(40, 167, 69), 1, true),//
             BorderFactory.createEmptyBorder(20, 20, 20, 20)
         ));
 
@@ -499,7 +498,7 @@ public class academicLeaderDashboard extends JFrame {
 
         JLabel detailsHeader = new JLabel("📚 Module Details", SwingConstants.LEFT);
         detailsHeader.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
-        detailsHeader.setForeground(new Color(40, 167, 69)); // Success Green
+        detailsHeader.setForeground(new Color(40, 167, 69)); 
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         detailsContainer.add(detailsHeader, gbc);
