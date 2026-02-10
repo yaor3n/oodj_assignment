@@ -300,20 +300,18 @@ public class adminCreateClasses extends JFrame {
         }
     }
 
-    // ---------------- LOAD CLASSES ----------------
     private void loadClasses() {
-        model.setRowCount(0);
-        try (BufferedReader br = new BufferedReader(new FileReader(CLASS_FILE))) {
-            String line;
-            boolean firstLine = true;
-            while ((line = br.readLine()) != null) {
-                if (firstLine) { firstLine = false; continue; } // skip header
-                String[] p = line.split(",");
-                if (p.length >= 16) {
-                    model.addRow(p);
-                }
+    model.setRowCount(0);
+    try (BufferedReader br = new BufferedReader(new FileReader(CLASS_FILE))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] p = line.split(",");
+            if (p.length >= 16) {
+                model.addRow(p);
             }
-        } catch (IOException ignored) {}
-    }
+        }
+    } catch (IOException ignored) {}
+}
+
 
 }
