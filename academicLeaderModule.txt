@@ -1,9 +1,6 @@
-M01,Code Optimization,PhD,lec1,Lecturer One,March,2026,Intro to SE,ModulePic1.png,Software Engineering
-M02,Book Keeping Strategies,Bachelor,lec2,Lecturer Two,April,2026,Basics of Accounting,ModulePic2.png,Accounting
-M03,Human Behavioural Studies,Bachelor,lec1,Lecturer One,May,2026,Understanding Human Behavior,ModulePic3.png,Psychology
-M04,Pentesting,PhD,lec2,Lecturer Two,June,2026,Network Security Fundamentals,ModulePic4.png,CyberSecurity
-M05,Intro to OOP,Bachelor,lec4,Lecturer Four,June,2026,OOP with JAVA,ModulePic5.png,Computer Science
-M06,Introduction to OOP,Bachelor,lecturer1,Lecturer 1,June,2026,OOP with JAVA,ModulePic5.png,Cybersecurity
-M07,Introduction to AI,Bachelor,lecturer1,Lecturer 1,June,2026,Artificial Intelligence,ModulePic5.png,Cybersecurity
-M08,Introduction to JS,Bachelor,lecturer1,Lecturer 1,June,2026,Learn about JS,ModulePic5.png,Cybersecurity
-M09,Capture The Flag,Bachelor,lecturer1,Lecturer 1,June,2026,CTF learning,ModulePic5.png,Psychology
+M001,Book Keeping 101,Foundation,U013,Ms. Nurul,March,2026,Essential practices of book keeping,images/ModuleDefaultPic.png,Accounting
+M002,OOP,Diploma,U011,Dr. Usman,February,2026,object oriented programming concepts,images/ModuleDefaultPic2.png,Software Engineering
+M003-PSY-101,Human Behaviourial studies,Bachelor's Degree,U012,Mr. Johnny Thing,May,2026,Research on Human Behaviour,images/ModuleDefaultPic3.png,Psychology
+M004-ETHCK,Ethical Hacking,Master's Degree,U006,Siew Weng Tim,May,2026,Fundemental skills of ethical hacking,images/ModuleDefaultPic.png,CyberSecurity
+M005-DPR,Data Processing with R,PhD,U015,Dr. Kumar,March,2027,using R to process and extract data from datasets,images/ModuleDefaultPic3.png,Data Science
+M006-CO,Code Optimization,Bachelor's Degree,U006,Siew Weng Tim,March,2027,code optimization techniques,images/ModuleDefaultPic.png,Software Engineering

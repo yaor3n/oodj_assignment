@@ -174,6 +174,9 @@ public class login extends JFrame implements ActionListener{
             if (userData != null) {
                 String role = userData[9].trim();
                 Session.currentUsername = userData[7].trim();
+                
+                // this line needs to be here to help with academicLeaderDashboard userFullName
+                userSession.loggedInUserId = userData[0].trim(); 
 
                 switch (role) {
                     case "Admin": new adminDashboard(); break;

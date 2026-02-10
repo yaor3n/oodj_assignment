@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class createClasses extends JFrame {
+public class adminCreateClasses extends JFrame {
 
     private final String MODULE_FILE = "academicLeaderModule.txt";
     private final String CLASS_FILE = "Classes.txt";
@@ -20,7 +20,7 @@ public class createClasses extends JFrame {
 
     private final ArrayList<String[]> modules = new ArrayList<>();
 
-    public createClasses() {
+    public adminCreateClasses() {
 
         reusable.windowSetup(this);
 
@@ -34,7 +34,7 @@ public class createClasses extends JFrame {
         heroBar.setBackground(new Color(30, 41, 59));
         heroBar.setPreferredSize(new Dimension(0, 80));
 
-        JLabel titleLabel = new JLabel("Admin - User Management", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Admin - Create Classes", SwingConstants.CENTER);
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
 
@@ -300,23 +300,18 @@ public class createClasses extends JFrame {
         }
     }
 
-    // ---------------- LOAD CLASSES ----------------
     private void loadClasses() {
-        model.setRowCount(0);
-        try (BufferedReader br = new BufferedReader(new FileReader(CLASS_FILE))) {
-            String line;
-            boolean firstLine = true;
-            while ((line = br.readLine()) != null) {
-                if (firstLine) { firstLine = false; continue; } // skip header
-                String[] p = line.split(",");
-                if (p.length >= 16) {
-                    model.addRow(p);
-                }
+    model.setRowCount(0);
+    try (BufferedReader br = new BufferedReader(new FileReader(CLASS_FILE))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] p = line.split(",");
+            if (p.length >= 16) {
+                model.addRow(p);
             }
-        } catch (IOException ignored) {}
-    }
+        }
+    } catch (IOException ignored) {}
+}
 
-    public static void main(String[] args) {
-        new createClasses();
-    }
+
 }

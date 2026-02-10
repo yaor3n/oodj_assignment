@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class crudUsers extends JFrame {
+public class adminCrudUsers extends JFrame {
 
     private final String FILE_NAME = "accounts.txt";
 
@@ -13,11 +13,12 @@ public class crudUsers extends JFrame {
     private JTable table;
     private JTextField searchField;
 
-    public crudUsers() {
+    public adminCrudUsers() {
 
         reusable.windowSetup(this);
         setLayout(new BorderLayout());
 
+        // ================= HERO BAR =================
         JPanel heroBar = new JPanel(new BorderLayout());
         heroBar.setBackground(new Color(30, 41, 59));
         heroBar.setPreferredSize(new Dimension(0, 80));
@@ -25,19 +26,15 @@ public class crudUsers extends JFrame {
         JLabel titleLabel = new JLabel("Admin - User Management", SwingConstants.CENTER);
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-
         heroBar.add(titleLabel, BorderLayout.CENTER);
 
-        // stays on top permanently
         add(heroBar, BorderLayout.NORTH);
 
+        // ================= MAIN PANEL =================
+        JPanel mainPanel = new JPanel(null);
+        mainPanel.setPreferredSize(new Dimension(1100, 1100));
 
-        // ========= MAIN SCROLLABLE PANEL =========
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(null);
-        mainPanel.setPreferredSize(new Dimension(1000, 1000)); // taller than frame
-
-        // ========= SEARCH =========
+        // ================= SEARCH =================
         JLabel searchLabel = new JLabel("Search:");
         searchLabel.setBounds(100, 80, 80, 25);
         mainPanel.add(searchLabel);
@@ -50,9 +47,7 @@ public class crudUsers extends JFrame {
         searchBtn.setBackground(new Color(30,41,59));
         searchBtn.setForeground(new Color(0xFFFFFF));
         searchBtn.setBounds(440, 80, 100, 25);
-        searchBtn.addActionListener(e ->
-                refreshTable(searchField.getText().trim())
-        );
+        searchBtn.addActionListener(e -> refreshTable(searchField.getText().trim()));
         mainPanel.add(searchBtn);
 
         JButton resetBtn = new JButton("Reset");
@@ -65,14 +60,13 @@ public class crudUsers extends JFrame {
         });
         mainPanel.add(resetBtn);
 
-        // ========= TABLE =========
+        // ================= TABLE =================
         model = new DefaultTableModel(new String[]{
                 "ID", "Full Name", "Email", "Gender", "DOB",
-                "Username", "Password", "Role", "Course"
+                "Phone", "Age", "Username", "Password", "Role", "Course"
         }, 0) {
-            @Override
             public boolean isCellEditable(int row, int col) {
-                return col != 0; // ID locked
+                return col != 0;
             }
         };
 
@@ -80,10 +74,10 @@ public class crudUsers extends JFrame {
         table.setRowHeight(22);
 
         JScrollPane tableScroll = new JScrollPane(table);
-        tableScroll.setBounds(50, 130, 980, 280);
+        tableScroll.setBounds(50, 130, 1000, 280);
         mainPanel.add(tableScroll);
 
-        // ========= UPDATE / DELETE =========
+        // ================= ACTION BUTTONS =================
         JButton updateBtn = new JButton("Update Selected");
         updateBtn.setBackground(new Color(40, 167, 69));
         updateBtn.setForeground(new Color(0xFFFFFF));
@@ -104,59 +98,93 @@ public class crudUsers extends JFrame {
         backBtn.setBounds(610, 430, 160, 40);
         backBtn.addActionListener(e -> {
             new adminDashboard();
-            this.dispose();
+            dispose();
         });
         mainPanel.add(backBtn);
 
-
-        // ========= CREATE USER SECTION =========
+        // ================= CREATE USER =================
         JLabel createTitle = new JLabel("Create New User");
         createTitle.setFont(new Font("Arial", Font.BOLD, 18));
         createTitle.setBounds(420, 490, 250, 30);
         mainPanel.add(createTitle);
 
-        int labelX = 200;
-        int fieldX = 360;
-        int y = 540;
-        int gap = 35;
+        int lx = 200, fx = 360, y = 540, gap = 35;
 
-        JTextField fullName = addField(mainPanel, "Full Name", labelX, fieldX, y);
-        y += gap;
-        JTextField email = addField(mainPanel, "Email", labelX, fieldX, y);
-        y += gap;
-        JTextField gender = addField(mainPanel, "Gender", labelX, fieldX, y);
-        y += gap;
-        JTextField dob = addField(mainPanel, "DOB", labelX, fieldX, y);
-        y += gap;
-        JTextField phoneNo = addField(mainPanel, "DOB", labelX, fieldX, y);
-        y += gap;
-        JTextField age = addField(mainPanel, "DOB", labelX, fieldX, y);
-        y += gap;
-        JTextField username = addField(mainPanel, "Username", labelX, fieldX, y);
-        y += gap;
-        JTextField password = addField(mainPanel, "Password", labelX, fieldX, y);
-        y += gap;
-        JTextField role = addField(mainPanel, "Role", labelX, fieldX, y);
-        y += gap;
-        JTextField course = addField(mainPanel, "Course (- if none)", labelX, fieldX, y);
+        JTextField fullName = addField(mainPanel, "Full Name", lx, fx, y); y += gap;
+        JTextField email = addField(mainPanel, "Email", lx, fx, y); y += gap;
+
+        JComboBox<String> genderBox = addCombo(mainPanel, "Gender",
+                new String[]{"Male", "Female"}, lx, fx, y); y += gap;
+
+        JTextField dob = addField(mainPanel, "DOB", lx, fx, y); y += gap;
+        JTextField phone = addField(mainPanel, "Phone No", lx, fx, y); y += gap;
+        JTextField age = addField(mainPanel, "Age", lx, fx, y); y += gap;
+        JTextField username = addField(mainPanel, "Username", lx, fx, y); y += gap;
+        JTextField password = addField(mainPanel, "Password", lx, fx, y); y += gap;
+
+        JComboBox<String> roleBox = addCombo(mainPanel, "Role",
+                new String[]{"Admin", "Lecturer", "Student", "AcademicLeader"}, lx, fx, y); y += gap;
+
+        JComboBox<String> courseBox = new JComboBox<>();
+        courseBox.addItem("-");
+        loadCourses(courseBox);
+
+        JLabel courseLbl = new JLabel("Course");
+        courseLbl.setBounds(lx, y, 150, 25);
+        mainPanel.add(courseLbl);
+        courseBox.setBounds(fx, y, 300, 25);
+        mainPanel.add(courseBox);
+
+        JButton clearBtn = new JButton("Clear");
+        clearBtn.setBackground(new Color(30,41,59));
+        clearBtn.setForeground(Color.WHITE);
+        clearBtn.setBounds(300, y + 50, 180, 40);
+        clearBtn.addActionListener(e -> {
+            fullName.setText("");
+            email.setText("");
+            dob.setText("");
+            phone.setText("");
+            age.setText("");
+            username.setText("");
+            password.setText("");
+            genderBox.setSelectedIndex(0);
+            roleBox.setSelectedIndex(0);
+            courseBox.setSelectedIndex(0);
+        });
+        mainPanel.add(clearBtn);
+
 
         JButton createBtn = new JButton("Create User");
         createBtn.setBackground(new Color(40, 167, 69));
         createBtn.setForeground(new Color(0xFFFFFF));
-        createBtn.setBounds(420, y + 50, 180, 40);
+        createBtn.setBounds(520, y + 50, 180, 40);
         createBtn.addActionListener(e -> {
+
+            if (fullName.getText().isEmpty()
+                    || email.getText().isEmpty()
+                    || dob.getText().isEmpty()
+                    || phone.getText().isEmpty()
+                    || age.getText().isEmpty()
+                    || username.getText().isEmpty()
+                    || password.getText().isEmpty()) {
+
+                JOptionPane.showMessageDialog(this,
+                        "All fields except Course are required.");
+                return;
+            }
+
             User u = new User(
                     generateNextID(),
                     fullName.getText().trim(),
                     email.getText().trim(),
-                    gender.getText().trim(),
+                    genderBox.getSelectedItem().toString(),
                     dob.getText().trim(),
-                    phoneNo.getText().trim(),
+                    phone.getText().trim(),
                     age.getText().trim(),
                     username.getText().trim(),
                     password.getText().trim(),
-                    role.getText().trim(),
-                    course.getText().trim().isEmpty() ? "-" : course.getText().trim()
+                    roleBox.getSelectedItem().toString(),
+                    courseBox.getSelectedItem().toString()
             );
 
             allUsers.add(u);
@@ -166,32 +194,49 @@ public class crudUsers extends JFrame {
         });
         mainPanel.add(createBtn);
 
-        JScrollPane scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setBounds(0, 0, 1080, 600);
-        add(scrollPane);
-
-        scrollPane.getVerticalScrollBar().setPreferredSize(
-                new Dimension(15, Integer.MAX_VALUE)
-        );
-
-        // faster scroll
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        JScrollPane scroll = new JScrollPane(mainPanel);
+        scroll.getVerticalScrollBar().setUnitIncrement(20); // scroll faster
+        add(scroll);
 
         loadUsers();
         refreshTable("");
         setVisible(true);
     }
 
-    // ================= HELPER =================
-    private JTextField addField(JPanel panel, String label, int lx, int fx, int y) {
+    // ================= HELPERS =================
+    private JTextField addField(JPanel p, String label, int lx, int fx, int y) {
         JLabel l = new JLabel(label);
         l.setBounds(lx, y, 150, 25);
-        panel.add(l);
+        p.add(l);
 
         JTextField f = new JTextField();
         f.setBounds(fx, y, 300, 25);
-        panel.add(f);
+        p.add(f);
         return f;
+    }
+
+    private JComboBox<String> addCombo(JPanel p, String label, String[] items,
+                                       int lx, int fx, int y) {
+        JLabel l = new JLabel(label);
+        l.setBounds(lx, y, 150, 25);
+        p.add(l);
+
+        JComboBox<String> box = new JComboBox<>(items);
+        box.setBounds(fx, y, 300, 25);
+        p.add(box);
+        return box;
+    }
+
+    private void loadCourses(JComboBox<String> box) {
+        try (BufferedReader br = new BufferedReader(
+                new FileReader("coursesInAPU.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null)
+                box.addItem(line.trim());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Failed to load coursesInAPU.txt");
+        }
     }
 
     // ================= FILE =================
@@ -200,13 +245,12 @@ public class crudUsers extends JFrame {
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] p = line.split(",");
-                if (p.length == 11) {
+                String[] p = line.split(",", -1); //This tells Java to Keep empty fields, even at the end
+                if (p.length == 11)
                     allUsers.add(new User(
                             p[0], p[1], p[2], p[3], p[4],
                             p[5], p[6], p[7], p[8], p[9], p[10]
                     ));
-                }
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error loading accounts.txt");
@@ -223,17 +267,17 @@ public class crudUsers extends JFrame {
     }
 
     // ================= LOGIC =================
-    private void refreshTable(String keyword) {
+    private void refreshTable(String key) {
         model.setRowCount(0);
         for (User u : allUsers) {
-            if (keyword.isEmpty()
-                    || u.fullName.toLowerCase().contains(keyword.toLowerCase())
-                    || u.username.toLowerCase().contains(keyword.toLowerCase())
-                    || u.role.toLowerCase().contains(keyword.toLowerCase())) {
+            if (key.isEmpty()
+                    || u.fullName.toLowerCase().contains(key.toLowerCase())
+                    || u.username.toLowerCase().contains(key.toLowerCase())
+                    || u.role.toLowerCase().contains(key.toLowerCase())) {
 
                 model.addRow(new Object[]{
                         u.id, u.fullName, u.email, u.gender, u.dob,
-                        u.username, u.password, u.role, u.course
+                        u.phoneNo, u.age, u.username, u.password, u.role, u.course
                 });
             }
         }
@@ -251,10 +295,12 @@ public class crudUsers extends JFrame {
                     u.email = model.getValueAt(i, 2).toString();
                     u.gender = model.getValueAt(i, 3).toString();
                     u.dob = model.getValueAt(i, 4).toString();
-                    u.username = model.getValueAt(i, 5).toString();
-                    u.password = model.getValueAt(i, 6).toString();
-                    u.role = model.getValueAt(i, 7).toString();
-                    u.course = model.getValueAt(i, 8).toString();
+                    u.phoneNo = model.getValueAt(i, 5).toString();
+                    u.age = model.getValueAt(i, 6).toString();
+                    u.username = model.getValueAt(i, 7).toString();
+                    u.password = model.getValueAt(i, 8).toString();
+                    u.role = model.getValueAt(i, 9).toString();
+                    u.course = model.getValueAt(i, 10).toString();
                 }
             }
         }
@@ -274,9 +320,5 @@ public class crudUsers extends JFrame {
 
     private String generateNextID() {
         return "U" + String.format("%03d", allUsers.size() + 1);
-    }
-
-    public static void main(String[] args) {
-        new crudUsers();
     }
 }

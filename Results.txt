@@ -1,15 +1,16 @@
 U011,Siew Weng Tim,U007,Lecturer 1,OODJ,Assignment 1,50
-U012,Raul User,U007,Lecturer 1,OODJ,Assignment 1,100
+U005,Raul User,U007,Lecturer 1,OODJ,Assignment 1,100
 U013,Yao Ren,U007,Lecturer 1,OODJ,Assignment 1,100
 U011,Siew Weng Tim,U007,Lecturer 1,OODJ,Exam 1,100
-U012,Raul User,U007,Lecturer 1,OODJ,Exam 1,100
+U005,Raul User,U007,Lecturer 1,OODJ,Exam 1,100
 U013,Yao Ren,U007,Lecturer 1,OODJ,Exam 1,100
 U011,Siew Weng Tim,U007,Lecturer 1,OODJ,Quiz 2,50
-U012,Raul User,U007,Lecturer 1,OODJ,Quiz 2,100
+U005,Raul User,U007,Lecturer 1,OODJ,Quiz 2,100
 U013,Yao Ren,U007,Lecturer 1,OODJ,Quiz 2,100
 U011,Siew Weng Tim,U007,Lecturer 1,OODJ,Exam 2,100
-U012,Raul User,U007,Lecturer 1,OODJ,Exam 2,100
+U005,Raul User,U007,Lecturer 1,OODJ,Exam 2,100
 U013,Yao Ren,U007,Lecturer 1,OODJ,Exam 2,100
 U011,Siew Weng Tim,U007,Lecturer 1,OODJ,Quiz 1,50
-U012,Raul User,U007,Lecturer 1,OODJ,Quiz 1,100
+U005,Raul User,U007,Lecturer 1,OODJ,Quiz 1,100
 U013,Yao Ren,U007,Lecturer 1,OODJ,Quiz 1,100
+ 

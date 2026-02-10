@@ -1,0 +1,13 @@
+2026-02-10 22:32:07,U008,BOB,Create,12,12
+2026-02-10 22:32:47,U008,BOB,Edit,12,POkemon
+2026-02-10 22:32:59,U008,BOB,Delete,12,POkemon
+2026-02-10 22:46:58,U004,Ong Szi Kai,Create,45,Etika
+2026-02-10 22:47:17,U004,Ong Szi Kai,Edit,45,Etikas
+2026-02-10 22:47:30,U004,Ong Szi Kai,Delete,45,Etikas
+2026-02-11 02:49:30,U004,Ong Szi Kai,Create,M001,Book Keeping 101
+2026-02-11 02:50:44,U004,Ong Szi Kai,Create,M002,M002-OOP
+2026-02-11 02:52:04,U004,Ong Szi Kai,Create,M003-PSY-101,Human Behaviourial studies
+2026-02-11 02:53:00,U004,Ong Szi Kai,Create,M004-ETHCK,Ethical Hacking
+2026-02-11 02:54:15,U004,Ong Szi Kai,Create,M005-DPR,Data Processing with R
+2026-02-11 02:54:34,U004,Ong Szi Kai,Edit,M002,OOP
+2026-02-11 03:28:43,U004,Ong Szi Kai,Create,M006-CO,Code Optimization

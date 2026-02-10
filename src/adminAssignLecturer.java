@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class assignLecturer extends JFrame {
+public class adminAssignLecturer extends JFrame {
 
     private final String ACCOUNTS_FILE = "accounts.txt";
     private final String ASSIGNED_FILE = "lecturersAssignedToAcademicLeaders.txt";
@@ -18,7 +18,7 @@ public class assignLecturer extends JFrame {
     private ArrayList<String[]> lecturers = new ArrayList<>();
     private ArrayList<String[]> leaders = new ArrayList<>();
 
-    public assignLecturer() {
+    public adminAssignLecturer() {
 
         reusable.windowSetup(this);
         setLayout(new BorderLayout());
@@ -56,19 +56,29 @@ public class assignLecturer extends JFrame {
         leaderDropdown.setBounds(400, 130, 300, 25);
         mainPanel.add(leaderDropdown);
 
-        JButton assignBtn = new JButton("Assign");
-        assignBtn.setBackground(new Color(40, 167, 69));
-        assignBtn.setForeground(Color.WHITE);
-        assignBtn.setBounds(400, 180, 140, 35);
-        assignBtn.addActionListener(e -> assignLecturer());
-        mainPanel.add(assignBtn);
-
         JButton refreshBtn = new JButton("Refresh");
         refreshBtn.setBackground(new Color(30, 41, 59));
         refreshBtn.setForeground(Color.WHITE);
-        refreshBtn.setBounds(560, 180, 140, 35);
+        refreshBtn.setBounds(300, 180, 140, 35);
         refreshBtn.addActionListener(e -> loadAssignments());
         mainPanel.add(refreshBtn);
+
+        JButton assignBtn = new JButton("Assign");
+        assignBtn.setBackground(new Color(40, 167, 69));
+        assignBtn.setForeground(Color.WHITE);
+        assignBtn.setBounds(450, 180, 140, 35);
+        assignBtn.addActionListener(e -> adminAssignLecturer());
+        mainPanel.add(assignBtn);
+
+        JButton backBtn = new JButton("Back");
+        backBtn.setBackground(new Color(30, 41, 59));
+        backBtn.setForeground(Color.WHITE);
+        backBtn.setBounds(600, 180, 140, 35);
+        backBtn.addActionListener(e -> {
+            new adminDashboard();
+            dispose();
+        });
+        mainPanel.add(backBtn);
 
         // ========= TABLE =========
         tableModel = new DefaultTableModel(new String[]{
@@ -81,17 +91,6 @@ public class assignLecturer extends JFrame {
         JScrollPane tableScroll = new JScrollPane(table);
         tableScroll.setBounds(100, 250, 880, 280);
         mainPanel.add(tableScroll);
-
-        // ========= BACK BUTTON =========
-        JButton backBtn = new JButton("Back");
-        backBtn.setBackground(new Color(30, 41, 59));
-        backBtn.setForeground(Color.WHITE);
-        backBtn.setBounds(420, 560, 180, 40);
-        backBtn.addActionListener(e -> {
-            new adminDashboard();
-            dispose();
-        });
-        mainPanel.add(backBtn);
 
         // ========= SCROLL =========
         JScrollPane scrollPane = new JScrollPane(mainPanel);
@@ -115,12 +114,12 @@ public class assignLecturer extends JFrame {
         try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNTS_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] p = line.split(",");
-                if (p.length < 8) continue;
+                String[] p = line.split(",", -1); // Keep empty fields
+                if (p.length < 11) continue; // full row
 
                 String id = p[0].trim();
                 String name = p[1].trim();
-                String role = p[7].trim();
+                String role = p[9].trim(); // role is at index 9
 
                 if (role.equalsIgnoreCase("Lecturer")) {
                     lecturers.add(new String[]{id, name});
@@ -139,6 +138,7 @@ public class assignLecturer extends JFrame {
             JOptionPane.showMessageDialog(this, "Failed to read accounts.txt");
         }
     }
+
 
     // ================= LOAD ASSIGNMENTS =================
     private void loadAssignments() {
@@ -179,7 +179,7 @@ public class assignLecturer extends JFrame {
     }
 
     // ================= ASSIGN =================
-    private void assignLecturer() {
+    private void adminAssignLecturer() {
         if (lecturerDropdown.getSelectedIndex() == -1 || leaderDropdown.getSelectedIndex() == -1) {
             JOptionPane.showMessageDialog(this, "Select both Lecturer and Academic Leader");
             return;
@@ -199,7 +199,4 @@ public class assignLecturer extends JFrame {
         loadAssignments();
     }
 
-    public static void main(String[] args) {
-        new assignLecturer();
-    }
 }

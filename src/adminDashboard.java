@@ -14,8 +14,17 @@ public class adminDashboard extends JFrame {
 
     public adminDashboard() {
 
+        String username = Session.currentUsername;
+
         setLayout(null);
         reusable.windowSetup(this);
+
+
+        JLabel welcomeLabel = new JLabel("Welcome, " + username);
+        welcomeLabel.setBounds(800, 20, 500, 40);
+        welcomeLabel.setForeground(new Color(0xFFFFFF));
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        add(welcomeLabel);
 
         // ===== SIDEBAR TOGGLE =====
         JButton toggleSidebarBtn = new JButton("\u2630"); // Unicode hamburger
@@ -41,7 +50,7 @@ public class adminDashboard extends JFrame {
         editProfileBtn.setBackground(new Color(30, 41, 59));
         editProfileBtn.setForeground(Color.WHITE);
         editProfileBtn.addActionListener(e -> {
-            new adminEditProfile();
+            new adminEditProfile(username);
             dispose();
         });
 
@@ -52,6 +61,15 @@ public class adminDashboard extends JFrame {
             new manageFeedback();
             dispose();
         });
+
+        JButton announcementBtn = sidebarButton("Make Announcement", 270);
+        announcementBtn.setBackground(new Color(30, 41, 59));
+        announcementBtn.setForeground(Color.WHITE);
+        announcementBtn.addActionListener(e -> {
+            new adminAnnoucements();
+            dispose();
+        });
+        
 
         JButton logoutBtn = sidebarButton("Logout", 560);
         logoutBtn.setBackground(new Color(220, 53, 69));
@@ -64,6 +82,7 @@ public class adminDashboard extends JFrame {
         sidebar.add(editProfileBtn);
         sidebar.add(manageFeedbackBtn);
         sidebar.add(logoutBtn);
+        sidebar.add(announcementBtn);
 
         // ===== HERO BAR =====
         JPanel heroBar = new JPanel(null);
@@ -82,22 +101,22 @@ public class adminDashboard extends JFrame {
                 mainButton(
                         "CRUD Users",
                         "images/crudUsers.png",
-                        e -> { new crudUsers(); dispose(); }
+                        e -> { new adminCrudUsers(); dispose(); }
                 ),
                 mainButton(
                         "Assign Lecturers",
                         "images/assignLecturers.png",
-                        e -> { new assignLecturer(); dispose(); }
+                        e -> { new adminAssignLecturer(); dispose(); }
                 ),
                 mainButton(
                         "Create Classes",
                         "images/createClasses.png",
-                        e -> { new createClasses(); dispose(); }
+                        e -> { new adminCreateClasses(); dispose(); }
                 ),
                 mainButton(
                         "Define Grading System",
                         "images/defineGradingSystem.png",
-                        e -> { new defineGradingSystem(); dispose(); }
+                        e -> { new adminDefineGradingSystem(); dispose(); }
                 )
         };
 
