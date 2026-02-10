@@ -1,4 +1,4 @@
-M01,Python,Bachelor's Degree,U002,John Lee,April,2026,This is python programming language,ModuleDefaultPic.png,CyberSecurity
-M02,Java,Diploma,U002,John Lee,May,2026,Basic Java for beginner,ModuleDefaultPic.png,Business Analytics
-M03,C+,Foundation,U006,Siew Weng Tim,March,2026,C+ programming language for beginner,ModuleDefaultPic2.png,Business Analytics
-M04,Capture The Flag (CTF),Bachelor's Degree,U002,John Lee,February,2026,Max difficulty level for beginner,ModuleDefaultPic3.png,CyberSecurity
+M01,Java,Foundation,U002,John Lee,February,2026,This is Java,images/ModuleDefaultPic2.png,Data Science
+M02,CTF,Diploma,U006,Siew Weng Tim,March,2026,This is CTF,images/ModuleDefaultPic3.png,CyberSecurity
+M03,RWDD,Bachelor's Degree,U006,Siew Weng Tim,February,2026,This is HTML course,images/ModuleDefaultPic.png,Psychology
+11,11,Diploma,U006,Siew Weng Tim,April,2026,qq,images/ModuleDefaultPic.png,Software Engineering

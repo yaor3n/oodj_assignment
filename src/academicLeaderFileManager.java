@@ -131,6 +131,16 @@ public class academicLeaderFileManager {
         return count;
     }
     
-    
+    public static void saveLog(String action, String moduleCode, String moduleName) {
+        String timestamp = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(java.time.LocalDateTime.now());
+        String userId = userSession.loggedInUserId; 
+        String userName = userFullName(); 
+
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("academicLeaderLog.txt", true)))) {
+            out.println(timestamp + "," + userId + "," + userName + "," + action + "," + moduleCode + "," + moduleName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     
 }

@@ -6,6 +6,7 @@ public class academicLeaderDashboardSidebar extends JPanel {
     private JButton reportBtn;
     private JButton profileBtn;
     private JButton logoutBtn;
+    private JButton logBtn;
     private Runnable toggleAction;
     
     public academicLeaderDashboardSidebar(Runnable toggleAction){
@@ -21,7 +22,7 @@ public class academicLeaderDashboardSidebar extends JPanel {
     private void sidebarTopSection(){
         JPanel sidebarTop = new JPanel(new BorderLayout());
         sidebarTop.setOpaque(false);
-        sidebarTop.setPreferredSize(new Dimension(160, 50)); // Match Header Heig
+        sidebarTop.setPreferredSize(new Dimension(160, 50)); 
         
         JButton sidebarCloseBtn = new JButton("☰");      
         sidebarCloseBtn.setForeground(Color.BLACK);
@@ -29,7 +30,7 @@ public class academicLeaderDashboardSidebar extends JPanel {
         sidebarCloseBtn.setContentAreaFilled(false);
         sidebarCloseBtn.setFocusPainted(false);
         sidebarCloseBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        sidebarCloseBtn.addActionListener(e -> toggleAction.run()); // Hamburger Toggle
+        sidebarCloseBtn.addActionListener(e -> toggleAction.run()); 
         sidebarTop.add(sidebarCloseBtn, BorderLayout.WEST);
         
         JLabel logoLabel = new JLabel();
@@ -39,8 +40,7 @@ public class academicLeaderDashboardSidebar extends JPanel {
             logoLabel.setIcon(new ImageIcon(img));
         }
         
-        logoLabel.setHorizontalAlignment(SwingConstants.LEFT); // Keep it close to the hamburger
-        //pushes the image right a bit
+        logoLabel.setHorizontalAlignment(SwingConstants.LEFT); 
         logoLabel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 0));
         
         sidebarTop.add(logoLabel, BorderLayout.CENTER);
@@ -51,14 +51,17 @@ public class academicLeaderDashboardSidebar extends JPanel {
         JPanel navPanel = new JPanel();
         navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
         navPanel.setOpaque(false);
-        navPanel.add(Box.createVerticalStrut(20)); // Gap from top
+        navPanel.add(Box.createVerticalStrut(20)); 
         
         dashboardBtn = new JButton("Dashboard");
         reportBtn = new JButton("Report");
+        logBtn = new JButton("Audit Log");
 
         styleSidebarButton(dashboardBtn, navPanel); 
         navPanel.add(Box.createVerticalStrut(10));
         styleSidebarButton(reportBtn, navPanel);
+        navPanel.add(Box.createVerticalStrut(10));
+        styleSidebarButton(logBtn, navPanel);
         this.add(navPanel, BorderLayout.CENTER);
     }
     
@@ -110,6 +113,7 @@ public class academicLeaderDashboardSidebar extends JPanel {
     
     public JButton getDashboardBtn() { return dashboardBtn; }
     public JButton getReportBtn() { return reportBtn; }
+    public JButton getLogBtn() { return logBtn; }
     public JButton getProfileBtn() { return profileBtn; }
     public JButton getLogoutBtn() { return logoutBtn; }
 }

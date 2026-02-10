@@ -196,9 +196,11 @@ public class academicLeaderDashboard extends JFrame {
         // Pages Integration
         academicLeaderReport reportPage = new academicLeaderReport();
         academicLeaderUserProfile userProfilePage = new academicLeaderUserProfile();
+        academicLeaderAuditLog auditLogPage = new academicLeaderAuditLog();
         cardPanel.add(dashboardPage, "DASHBOARD");
         cardPanel.add(reportPage, "REPORT");
         cardPanel.add(userProfilePage, "PROFILE");
+        cardPanel.add(auditLogPage, "LOGS");
         mainHeader.add(cardPanel, BorderLayout.CENTER);
         layeredPane.add(mainHeader, JLayeredPane.DEFAULT_LAYER);
 
@@ -210,6 +212,7 @@ public class academicLeaderDashboard extends JFrame {
         sidebarPanel.getDashboardBtn().addActionListener(e -> showPage("DASHBOARD"));
         sidebarPanel.getReportBtn().addActionListener(e -> {reportPage.refreshData(); showPage("REPORT");});
         sidebarPanel.getProfileBtn().addActionListener(e -> showPage("PROFILE"));
+        sidebarPanel.getLogBtn().addActionListener(e -> {auditLogPage.refreshLogs(); showPage("LOGS");});
         sidebarPanel.getLogoutBtn().addActionListener(e -> {
             int confirmation = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout Confirmation", JOptionPane.YES_NO_OPTION);
             if (confirmation ==JOptionPane.YES_OPTION){
@@ -316,8 +319,12 @@ public class academicLeaderDashboard extends JFrame {
 
                 JLabel cardImg = new JLabel("", SwingConstants.CENTER);
                 String path = m.getImageFilePath();
-                ImageIcon icon = (path == null || path.equals("default") || path.equals("ModuleDefaultPic.png")) 
-                                 ? new ImageIcon("ModuleDefaultPic.png") : new ImageIcon(path);
+                ImageIcon icon;
+                if (path == null || path.equals("default") || path.equals("ModuleDefaultPic.png") || path.equals("images/ModuleDefaultPic.png")) {
+                    icon = new ImageIcon("images/ModuleDefaultPic.png"); 
+                } else {
+                    icon = new ImageIcon(path);
+                }
                 if (icon.getImage() != null) {
                     Image scaled = icon.getImage().getScaledInstance(260, 160, Image.SCALE_SMOOTH);
                     cardImg.setIcon(new ImageIcon(scaled));
@@ -395,6 +402,7 @@ public class academicLeaderDashboard extends JFrame {
                 "Are you sure you want to delete " + m.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 academicLeaderFileManager.deleteModule(m.getCode());
+                academicLeaderFileManager.saveLog("Delete", m.getCode(), m.getName()); 
                 refreshDashboard();
             }
         });
@@ -417,7 +425,7 @@ public class academicLeaderDashboard extends JFrame {
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
         // Data tracking
-        final String[] defaultPics = {"ModuleDefaultPic.png", "ModuleDefaultPic2.png", "ModuleDefaultPic3.png"};
+        final String[] defaultPics = {"images/ModuleDefaultPic.png", "images/ModuleDefaultPic2.png", "images/ModuleDefaultPic3.png"};
         final int[] currentIndex = {0};
         final String[] selectedPath = {isEdit ? editModule.getImageFilePath() : defaultPics[0]};
 
@@ -432,11 +440,12 @@ public class academicLeaderDashboard extends JFrame {
         JLabel imageHeader = new JLabel("🖼️ Module Profile Picture", SwingConstants.LEFT);
         imageHeader.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
         imageHeader.setForeground(new Color(40, 167, 69)); 
-        JLabel imagePlaceholder = new JLabel("", SwingConstants.CENTER);
-        imagePlaceholder.setPreferredSize(new Dimension(240, 160));
-        imagePlaceholder.setBackground(new Color(245, 245, 245));
-        imagePlaceholder.setOpaque(true);
-        updateImagePreview(imagePlaceholder, selectedPath[0]);
+        JLabel imagePlaceHolder = new JLabel("", SwingConstants.CENTER);
+        imagePlaceHolder.setPreferredSize(new Dimension(240, 160));
+        imagePlaceHolder.setBackground(new Color(245, 245, 245));
+        imagePlaceHolder.setOpaque(true);
+        imagePlaceHolder.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
+        updateImagePreview(imagePlaceHolder, selectedPath[0]);
 
         JPanel imagePickerRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         imagePickerRow.setOpaque(false);
@@ -454,35 +463,26 @@ public class academicLeaderDashboard extends JFrame {
         leftArrow.addActionListener(e -> {
             currentIndex[0] = (currentIndex[0] - 1 + defaultPics.length) % defaultPics.length;
             selectedPath[0] = defaultPics[currentIndex[0]];
-            updateImagePreview(imagePlaceholder, selectedPath[0]);
+            updateImagePreview(imagePlaceHolder, selectedPath[0]);
         });
         rightArrow.addActionListener(e -> {
             currentIndex[0] = (currentIndex[0] + 1) % defaultPics.length;
             selectedPath[0] = defaultPics[currentIndex[0]];
-            updateImagePreview(imagePlaceholder, selectedPath[0]);
+            updateImagePreview(imagePlaceHolder, selectedPath[0]);
         });
         
         imagePickerRow.add(leftArrow);
-        imagePickerRow.add(imagePlaceholder);
+        imagePickerRow.add(imagePlaceHolder);
         imagePickerRow.add(rightArrow);
         
-        JPanel uploadCustomButton = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        uploadCustomButton.setOpaque(false);
-        JButton uploadButton = new JButton("Upload Custom Image");
-        uploadButton.setPreferredSize(new Dimension(165, 30));
-        styleDialogButton(uploadButton);
-        uploadButton.addActionListener(e -> {
-            JFileChooser fc = new JFileChooser();
-            if (fc.showOpenDialog(dialog) == JFileChooser.APPROVE_OPTION) {
-                selectedPath[0] = fc.getSelectedFile().getAbsolutePath();
-                updateImagePreview(imagePlaceholder, selectedPath[0]);
-            }
-        });
-        uploadCustomButton.add(uploadButton);
+        JLabel imageInstruction = new JLabel("Please select an image for the module cover");
+        imageInstruction.setFont(new Font("Segoe UI", Font.ITALIC, 14));
+        imageInstruction.setForeground(Color.GRAY);
+        imageInstruction.setHorizontalAlignment(SwingConstants.CENTER);
 
         imageContainer.add(imageHeader, BorderLayout.NORTH);
         imageContainer.add(imagePickerRow, BorderLayout.CENTER);
-        imageContainer.add(uploadCustomButton, BorderLayout.SOUTH);
+        imageContainer.add(imageInstruction, BorderLayout.SOUTH);
 
         // DETAILS BORDER 
         JPanel detailsContainer = new JPanel(new GridBagLayout());
@@ -617,9 +617,11 @@ public class academicLeaderDashboard extends JFrame {
             
             if (isEdit) {
                 academicLeaderFileManager.updateModule(newModule);
+                academicLeaderFileManager.saveLog("Edit", code, name); 
                 JOptionPane.showMessageDialog(dialog, "Successfully edited module!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 academicLeaderFileManager.saveModule(newModule);
+                academicLeaderFileManager.saveLog("Create", code, name);
                 JOptionPane.showMessageDialog(dialog, "Successfully created new module!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
             
@@ -681,6 +683,7 @@ public class academicLeaderDashboard extends JFrame {
             sidebarPanel.getDashboardBtn().setBackground(defaultColor);
             sidebarPanel.getReportBtn().setBackground(defaultColor);
             sidebarPanel.getProfileBtn().setBackground(defaultColor);
+            sidebarPanel.getLogBtn().setBackground(defaultColor);
         }
         if (sidebarVisible) toggleSidebar();
     }
