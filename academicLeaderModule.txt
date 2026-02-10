@@ -1,6 +1,4 @@
-M001,Introcution to Accounting,Foundation,U013,Ms. Nurul,March,2026,An introductory course to Accouting Undergrad,images/ModuleDefaultPic.png,Accounting
-M002,OOP Concepts,Diploma,U002,John Lee,February,2026,Object Oriented Programming Concepts in Java,images/ModuleDefaultPic2.png,Software Engineering
-M003,R Programming,Bachelor's Degree,U011,Dr. Usman,May,2027,Data Cleaning with R,images/ModuleDefaultPic3.png,Data Science
-M004,Advanced Business Management,Master's Degree,U012,Mr. Johnny Thing,June,2027,Business Management skills,images/ModuleDefaultPic.png,Business Analytics
-M005,Human Behaviourial Research,PhD,U011,Dr. Usman,April,2026,Research on Human Behaviour,images/ModuleDefaultPic2.png,Psychology
-M006,Introduction to Circuits,Foundation,U015,Dr. Kumar,April,2028,Basic knowledge of circuits,images/ModuleDefaultPic2.png,Computer Engineering
+M01,Java,Foundation,U002,John Lee,February,2026,This is Java,images/ModuleDefaultPic2.png,Data Science
+M02,CTF,Diploma,U006,Siew Weng Tim,March,2026,This is CTF,images/ModuleDefaultPic3.png,CyberSecurity
+M03,RWDD,Bachelor's Degree,U006,Siew Weng Tim,February,2026,This is HTML course,images/ModuleDefaultPic.png,Psychology
+11,11,Diploma,U006,Siew Weng Tim,April,2026,qq,images/ModuleDefaultPic.png,Software Engineering

@@ -196,9 +196,11 @@ public class academicLeaderDashboard extends JFrame {
         // Pages Integration
         academicLeaderReport reportPage = new academicLeaderReport();
         academicLeaderUserProfile userProfilePage = new academicLeaderUserProfile();
+        academicLeaderAuditLog auditLogPage = new academicLeaderAuditLog();
         cardPanel.add(dashboardPage, "DASHBOARD");
         cardPanel.add(reportPage, "REPORT");
         cardPanel.add(userProfilePage, "PROFILE");
+        cardPanel.add(auditLogPage, "LOGS");
         mainHeader.add(cardPanel, BorderLayout.CENTER);
         layeredPane.add(mainHeader, JLayeredPane.DEFAULT_LAYER);
 
@@ -210,6 +212,7 @@ public class academicLeaderDashboard extends JFrame {
         sidebarPanel.getDashboardBtn().addActionListener(e -> showPage("DASHBOARD"));
         sidebarPanel.getReportBtn().addActionListener(e -> {reportPage.refreshData(); showPage("REPORT");});
         sidebarPanel.getProfileBtn().addActionListener(e -> showPage("PROFILE"));
+        sidebarPanel.getLogBtn().addActionListener(e -> {auditLogPage.refreshLogs(); showPage("LOGS");});
         sidebarPanel.getLogoutBtn().addActionListener(e -> {
             int confirmation = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout Confirmation", JOptionPane.YES_NO_OPTION);
             if (confirmation ==JOptionPane.YES_OPTION){
@@ -399,6 +402,7 @@ public class academicLeaderDashboard extends JFrame {
                 "Are you sure you want to delete " + m.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 academicLeaderFileManager.deleteModule(m.getCode());
+                academicLeaderFileManager.saveLog("Delete", m.getCode(), m.getName()); 
                 refreshDashboard();
             }
         });
@@ -613,9 +617,11 @@ public class academicLeaderDashboard extends JFrame {
             
             if (isEdit) {
                 academicLeaderFileManager.updateModule(newModule);
+                academicLeaderFileManager.saveLog("Edit", code, name); 
                 JOptionPane.showMessageDialog(dialog, "Successfully edited module!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 academicLeaderFileManager.saveModule(newModule);
+                academicLeaderFileManager.saveLog("Create", code, name);
                 JOptionPane.showMessageDialog(dialog, "Successfully created new module!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
             
@@ -677,6 +683,7 @@ public class academicLeaderDashboard extends JFrame {
             sidebarPanel.getDashboardBtn().setBackground(defaultColor);
             sidebarPanel.getReportBtn().setBackground(defaultColor);
             sidebarPanel.getProfileBtn().setBackground(defaultColor);
+            sidebarPanel.getLogBtn().setBackground(defaultColor);
         }
         if (sidebarVisible) toggleSidebar();
     }
