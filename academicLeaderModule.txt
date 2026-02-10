@@ -7,3 +7,4 @@ M06,Introduction to OOP,Bachelor,lecturer1,Lecturer 1,June,2026,OOP with JAVA,Mo
 M07,Introduction to AI,Bachelor,lecturer1,Lecturer 1,June,2026,Artificial Intelligence,ModulePic5.png,Cybersecurity
 M08,Introduction to JS,Bachelor,lecturer1,Lecturer 1,June,2026,Learn about JS,ModulePic5.png,Cybersecurity
 M09,Capture The Flag,Bachelor,lecturer1,Lecturer 1,June,2026,CTF learning,ModulePic5.png,Psychology
+HHH001,HEHEHEHA,Foundation,U011,Dr. Usman,March,2026,this course is so funny!,C:\Users\yaor3n\Downloads\eb0li4limute1.jpeg,Business Analytics

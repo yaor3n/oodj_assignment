@@ -583,5 +583,3 @@ public class academicLeaderReport extends JPanel {
         }
     }
 }
-
-///
