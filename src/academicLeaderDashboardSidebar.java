@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+
 public class academicLeaderDashboardSidebar extends JPanel {
     private JButton dashboardBtn;
     private JButton reportBtn;
@@ -8,6 +9,7 @@ public class academicLeaderDashboardSidebar extends JPanel {
     private JButton logoutBtn;
     private JButton logBtn;
     private Runnable toggleAction;
+    private JButton announcementsBtn;
     
     public academicLeaderDashboardSidebar(Runnable toggleAction){
         this.toggleAction = toggleAction;

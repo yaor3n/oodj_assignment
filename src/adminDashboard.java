@@ -62,6 +62,15 @@ public class adminDashboard extends JFrame {
             dispose();
         });
 
+        JButton announcementBtn = sidebarButton("Make Announcement", 270);
+        announcementBtn.setBackground(new Color(30, 41, 59));
+        announcementBtn.setForeground(Color.WHITE);
+        announcementBtn.addActionListener(e -> {
+            new adminAnnoucements();
+            dispose();
+        });
+        
+
         JButton logoutBtn = sidebarButton("Logout", 560);
         logoutBtn.setBackground(new Color(220, 53, 69));
         logoutBtn.setForeground(Color.WHITE);
@@ -73,6 +82,7 @@ public class adminDashboard extends JFrame {
         sidebar.add(editProfileBtn);
         sidebar.add(manageFeedbackBtn);
         sidebar.add(logoutBtn);
+        sidebar.add(announcementBtn);
 
         // ===== HERO BAR =====
         JPanel heroBar = new JPanel(null);

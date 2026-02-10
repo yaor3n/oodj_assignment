@@ -1,4 +1,6 @@
-M01,Java,Foundation,U002,John Lee,February,2026,This is Java,images/ModuleDefaultPic2.png,Data Science
-M02,CTF,Diploma,U006,Siew Weng Tim,March,2026,This is CTF,images/ModuleDefaultPic3.png,CyberSecurity
-M03,RWDD,Bachelor's Degree,U006,Siew Weng Tim,February,2026,This is HTML course,images/ModuleDefaultPic.png,Psychology
-11,11,Diploma,U006,Siew Weng Tim,April,2026,qq,images/ModuleDefaultPic.png,Software Engineering
+M001,Book Keeping 101,Foundation,U013,Ms. Nurul,March,2026,Essential practices of book keeping,images/ModuleDefaultPic.png,Accounting
+M002,OOP,Diploma,U011,Dr. Usman,February,2026,object oriented programming concepts,images/ModuleDefaultPic2.png,Software Engineering
+M003-PSY-101,Human Behaviourial studies,Bachelor's Degree,U012,Mr. Johnny Thing,May,2026,Research on Human Behaviour,images/ModuleDefaultPic3.png,Psychology
+M004-ETHCK,Ethical Hacking,Master's Degree,U006,Siew Weng Tim,May,2026,Fundemental skills of ethical hacking,images/ModuleDefaultPic.png,CyberSecurity
+M005-DPR,Data Processing with R,PhD,U015,Dr. Kumar,March,2027,using R to process and extract data from datasets,images/ModuleDefaultPic3.png,Data Science
+M006-CO,Code Optimization,Bachelor's Degree,U006,Siew Weng Tim,March,2027,code optimization techniques,images/ModuleDefaultPic.png,Software Engineering

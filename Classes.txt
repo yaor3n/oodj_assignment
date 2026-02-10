@@ -1,6 +1,8 @@
+ModuleID,ModuleName,LevelOfEdu,LecturerID,LecturerName,Month,Year,Description,ModulePic,Course,ClassID,ClassName,Room,Date,StartTime,EndTime
 M001,Introcution to Accounting,Foundation,U013,Ms. Nurul,March,2026,An introductory course to Accouting Undergrad,ModuleDefaultPic.png,Accounting,C001,Lecture,B-04-01,3 March 2026,08:00,10:00
 M003,R Programming,Bachelor's Degree,U011,Dr. Usman,May,2027,Data Cleaning with R,ModuleDefaultPic.png,Data Science,C002,Tutorial,Tech Lab-06-08,7 March 2026,14:00,16:00
 M004,Advanced Business Management,Master's Degree,U012,Mr. Johnny Thing,June,2027,Business Management skills,ModuleDefaultPic.png,Business Analytics,C003,Lecture,(online),2 April 2026,09:00,11:00
 M002,OOP Concepts,Diploma,U002,John Lee,February,2026,Object Oriented Programming Concepts in Java,ModuleDefaultPic.png,Software Engineering,C004,Tutorial,D-07-01,4 March 2026,11:00,12:00
 M005,Human Behaviourial Research,PhD,U011,Dr. Usman,April,2026,Research on Human Behaviour,ModuleDefaultPic.png,Psychology,C005,Workshop,S-08-01,5 April 2026,12:00,14:00
 M006,Introduction to Circuits,Foundation,U015,Dr. Kumar,April,2028,Basic knowledge of circuits,ModuleDefaultPic.png,Computer Engineering,C006,Tutorial,E-08-11,6 March 2026,16:00,18:00
+M004-ETHCK,Ethical Hacking,Master's Degree,U006,Siew Weng Tim,May,2026,Fundemental skills of ethical hacking,images/ModuleDefaultPic.png,CyberSecurity,C007,Tutorial,Tech Lab-06-12,7 March 2026,11:00,13:00

@@ -142,7 +142,7 @@ public class academicLeaderDashboard extends JFrame {
         // Create Button Row
         JPanel actionRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         actionRow.setOpaque(false);
-        actionRow.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 43));
+        actionRow.setBorder(BorderFactory.createEmptyBorder(0,43, 0, 43));
         JButton createButton = new JButton("➕ Create New Module");
         createButton.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
         createButton.setBackground(new Color(40, 167, 69));
@@ -154,7 +154,7 @@ public class academicLeaderDashboard extends JFrame {
         createButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         createButton.addActionListener(e -> showModuleDialog(null));
         actionRow.add(createButton);
-        
+
         controlsPanel.add(searchBar);
         controlsPanel.add(Box.createVerticalStrut(15)); 
         controlsPanel.add(actionRow);
@@ -694,5 +694,9 @@ public class academicLeaderDashboard extends JFrame {
         if (selectedYear < now.getYear()) return true;
         if (selectedYear == now.getYear()) return selectedMonthInt < now.getMonthValue();
         return false;
+    }
+
+    public static void main(String[] args) {
+        new academicLeaderDashboard();
     }
 }
