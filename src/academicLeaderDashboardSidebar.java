@@ -1,12 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
+<<<<<<< HEAD
 public class academicLeaderDashboardSidebar extends JPanel {
+=======
+
+public class academicLeaderDashboardSidebar extends JPanel implements ActionListener{
+>>>>>>> da36c8c (last update)
     private JButton dashboardBtn;
     private JButton reportBtn;
     private JButton profileBtn;
     private JButton logoutBtn;
     private JButton logBtn;
+    private JButton notificationBtn;
     private Runnable toggleAction;
     
     public academicLeaderDashboardSidebar(Runnable toggleAction){
@@ -56,12 +64,16 @@ public class academicLeaderDashboardSidebar extends JPanel {
         dashboardBtn = new JButton("Dashboard");
         reportBtn = new JButton("Report");
         logBtn = new JButton("Audit Log");
+        notificationBtn = new JButton("Notification");
 
         styleSidebarButton(dashboardBtn, navPanel); 
         navPanel.add(Box.createVerticalStrut(10));
         styleSidebarButton(reportBtn, navPanel);
         navPanel.add(Box.createVerticalStrut(10));
         styleSidebarButton(logBtn, navPanel);
+        navPanel.add(Box.createVerticalStrut(10));
+        styleSidebarButton(notificationBtn, navPanel);
+        notificationBtn.addActionListener(this);
         this.add(navPanel, BorderLayout.CENTER);
     }
     
@@ -116,4 +128,16 @@ public class academicLeaderDashboardSidebar extends JPanel {
     public JButton getLogBtn() { return logBtn; }
     public JButton getProfileBtn() { return profileBtn; }
     public JButton getLogoutBtn() { return logoutBtn; }
+<<<<<<< HEAD
 }
+=======
+    
+    @Override
+    public void actionPerformed(ActionEvent e) { 
+        if (e.getSource() == notificationBtn) {
+            new academicLeaderInbox("AcademicLeader", "All");
+            if (toggleAction != null) toggleAction.run(); 
+        }
+    }
+}
+>>>>>>> da36c8c (last update)

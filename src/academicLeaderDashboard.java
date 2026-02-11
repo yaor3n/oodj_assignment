@@ -695,4 +695,13 @@ public class academicLeaderDashboard extends JFrame {
         if (selectedYear == now.getYear()) return selectedMonthInt < now.getMonthValue();
         return false;
     }
+<<<<<<< HEAD
+=======
+
+    public static void main(String[] args) {
+        new academicLeaderDashboard();
+    }
+    
+    
+>>>>>>> da36c8c (last update)
 }
