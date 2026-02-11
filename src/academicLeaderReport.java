@@ -1068,7 +1068,7 @@ public class academicLeaderReport extends JPanel {
             double totalStars = 0;
             int feedbackCount = 0;
 
-            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("feedback.txt"))) {
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("student_feedback.txt"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) continue;
