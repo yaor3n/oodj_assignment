@@ -9,7 +9,7 @@ public class studentFeedbackClass extends JFrame implements ActionListener {
     private JLabel lecturerLbl;
     private JTextArea commentArea;
     private JButton submitBtn, backBtn;
-    private List<Module> availableModules;
+    private List<Course> availableModules;
     private Student currentStudent;
     private JRadioButton[] ratingButtons;
     private ButtonGroup ratingGroup;
@@ -28,7 +28,7 @@ public class studentFeedbackClass extends JFrame implements ActionListener {
             return;
         }
 
-        availableModules = ClassFileHandler.getModulesForStudent(currentStudent.getCourse());
+        availableModules = CourseFileHandler.getRegisteredCoursesForStudent(Session.currentUsername);
 
         setTitle("Give Feedback");
         setSize(600, 750);
@@ -69,7 +69,7 @@ public class studentFeedbackClass extends JFrame implements ActionListener {
         moduleCombo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         moduleCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
         moduleCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        for (Module m : availableModules) moduleCombo.addItem(m.getName());
+        for (Course m : availableModules) moduleCombo.addItem(m.getName());
         moduleCombo.addActionListener(this);
         formPanel.add(moduleCombo);
         formPanel.add(Box.createVerticalStrut(20));
@@ -170,7 +170,7 @@ public class studentFeedbackClass extends JFrame implements ActionListener {
             int idx = moduleCombo.getSelectedIndex();
             String comment = commentArea.getText().trim();
             if (idx != -1 && !comment.isEmpty()) {
-                Module m = availableModules.get(idx);
+                Course m = availableModules.get(idx);
                 Feedback fb = new Feedback(Session.currentUsername, m.getName(), m.getLecturer(), comment, getSelectedRating(), "");
                 CourseFileHandler.saveFeedback(fb);
                 JOptionPane.showMessageDialog(this, "Thank you! Your feedback has been recorded.");

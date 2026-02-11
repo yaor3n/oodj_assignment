@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 U011,Raul User,CTF Strategies
 U011,Raul User,Ethical Hacking
 U011,Raul User,Computer Forensics
@@ -5,3 +6,15 @@ U011,Raul User,Computer Forensics
 U011,Raul User,Computer Forensics
 U011,Raul User,Ethical Hacking
 U011,Raul Mahendran,CTF Strategies-LAB62
+=======
+raul|CP001
+raul|S01
+raul|CS202
+raul|B02
+raul|M-01
+raul|CS202
+raul|S01
+raul|M004-ETHCK
+raul|M001
+raul|M005-DPR
+>>>>>>> 472cec9 (shd be done)
