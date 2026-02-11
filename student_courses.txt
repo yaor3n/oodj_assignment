@@ -4,7 +4,4 @@ U005,Raul User,Introduction to Javascript
 U005,Raul User,CTF Strategies
 U005,Raul User,Ethical Hacking
 U005,Raul User,Computer Forensics
-U005,Raul User,Computer Forensics
-U005,Raul User,Computer Forensics
-U005,Raul User,Ethical Hacking
 U005,Raul Mahendran,CTF Strategies-LAB62

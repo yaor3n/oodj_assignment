@@ -2,3 +2,4 @@ U005,Raul User,U007,Siew Weng Tim,OODJ,Exam 1,100
 U005,Raul User,U007,Siew Weng Tim,OODJ,Quiz 2,100
 U005,Raul User,U007,Siew Weng Tim,OODJ,Exam 2,100
 U005,Raul User,U007,Siew Weng Tim,OODJ,Quiz 1,100
+U005,Raul User,U006,null,Ethical Hacking,Assignment 1,100

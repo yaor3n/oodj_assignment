@@ -13,11 +13,11 @@ public class lecturerEditProfile extends JFrame implements ActionListener {
     private JPanel buttonContainer;
     private CardLayout buttonCardLayout;
 
-    private String username;
-    private String currentID, currentFullName, currentEmail, currentGender, currentDob, currentPassword;
+    private String lecturerID;
+    private String currentID, currentFullName, currentEmail, currentGender, currentDob, currentUsername, currentPassword;
 
-    public lecturerEditProfile(String username) {
-        this.username = username;
+    public lecturerEditProfile(String lecturerID) {
+        this.lecturerID = lecturerID;
         loadLecturerData();
 
         setTitle("Lecturer Profile Management");
@@ -50,7 +50,7 @@ public class lecturerEditProfile extends JFrame implements ActionListener {
         addProfileRow(personalCard, "Date of Birth", dobField, 4);
 
         JPanel accountCard = createCardPanel("🔐 Account Security");
-        usernameField = createStyledTextField(username);
+        usernameField = createStyledTextField(currentUsername);
         usernameField.setEditable(false);
         roleField = createStyledTextField("Lecturer");
         roleField.setEditable(false);
@@ -141,12 +141,13 @@ public class lecturerEditProfile extends JFrame implements ActionListener {
             String line;
             while ((line = r.readLine()) != null) {
                 String[] p = line.split(",");
-                if (p.length >= 9 && p[7].equals(username)) {
+                if (p.length >= 9 && p[0].equals(lecturerID)) {
                     currentID = p[0];
                     currentFullName = p[1];
                     currentEmail = p[2];
                     currentGender = p[3];
                     currentDob = p[4];
+                    currentUsername = p[7];
                     currentPassword = p[8];
                     return;
                 }
@@ -162,7 +163,7 @@ public class lecturerEditProfile extends JFrame implements ActionListener {
             String line;
             while ((line = r.readLine()) != null) {
                 String[] p = line.split(",");
-                if (p.length >= 9 && p[7].equals(username)) {
+                if (p.length >= 9 && p[0].equals(lecturerID)) {
                     p[1] = nameField.getText().trim();
                     p[2] = emailField.getText().trim();
                     p[3] = genderField.getText().trim();

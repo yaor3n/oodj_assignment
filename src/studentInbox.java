@@ -12,7 +12,7 @@ public class studentInbox extends JFrame {
     private static final String FILE_NAME = "announcements.txt";
 
     public studentInbox(String roleFilter1, String roleFilter2) {
-        this.roleFilter1 = roleFilter1; // e.g., "Lecturer"
+        this.roleFilter1 = roleFilter1;
         this.roleFilter2 = roleFilter2; // e.g., "All"
 
         reusable.windowSetup(this);
