@@ -1068,26 +1068,27 @@ public class academicLeaderReport extends JPanel {
             double totalStars = 0;
             int feedbackCount = 0;
 
-            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("feedback.txt"))) {
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("student_feedback.txt"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) continue;
                     
-                    String[] parts = line.split("\\|"); 
+                    String[] parts = line.split(","); 
 
-                    if (parts.length >= 5) {
+                    if (parts.length >= 4) {
                         String student = parts[0].trim();
                         String module = parts[1].trim();
                         String lecturer = parts[2].trim();
                         String rating = parts[3].trim();
-                        String comment = parts[4].trim();
+                        String comment = (parts.length > 4) ? parts[4].trim() : "";
 
-                        feedbackTableModel.addRow(new Object[]{student, module, lecturer, rating , comment});
+                        feedbackTableModel.addRow(new Object[]{student, module, lecturer, rating, comment});
 
                         try {
                             totalStars += Double.parseDouble(rating);
                             feedbackCount++;
-                        } catch (NumberFormatException e) {}
+                        } catch (NumberFormatException e) {
+                        }
                     }
                 }
 

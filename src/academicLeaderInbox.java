@@ -36,7 +36,6 @@ public class academicLeaderInbox extends JFrame {
         backBtn.setForeground(Color.WHITE);
         backBtn.setBounds(450, 500, 140, 35);
         backBtn.addActionListener(e -> {
-            new academicLeaderDashboard();
             dispose(); 
         });
         this.add(backBtn);
@@ -106,8 +105,4 @@ public class academicLeaderInbox extends JFrame {
         return card;
     }
 
-    public static void main(String[] args) {
-        new academicLeaderInbox("AcademicLeader", "All");
-
-    }
 }
