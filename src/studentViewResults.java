@@ -113,26 +113,22 @@ public class studentViewResults extends JFrame {
     }
 
     private void loadStudentGrades() {
-        Student currentStudent = AccountFileHandler.getStudent(Session.currentUsername);
-        if (currentStudent == null) {
-            JOptionPane.showMessageDialog(null, "Student record not found for username: " + Session.currentUsername);
-        return;
-        }
+        String targetID = Session.currentUsername.trim(); // Match the ID used in Grades.txt
 
-    String targetID = currentStudent.id.trim();
-
-    try (BufferedReader br = new BufferedReader(new FileReader("Grades.txt"))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] p = line.split(",");
-            if (p.length >= 6) {
-                if (p[0].trim().equalsIgnoreCase(targetID)) {
-                    model.addRow(new Object[]{ p[3], p[2], p[4], p[5] });
+        try (BufferedReader br = new BufferedReader(new FileReader("Grades.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] p = line.split(",");
+                if (p.length >= 6) {
+                    if (p[0].trim().equalsIgnoreCase(targetID)) {
+                        // Correct Mapping:
+                        // Module Name is p[3], Lecturer is p[2], Score is p[4], Grade is p[5]
+                        model.addRow(new Object[]{ p[3], p[2], p[4], p[5] });
+                    }
                 }
             }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error reading Grades.txt");
         }
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(null, "Error reading Grades.txt: " + e.getMessage());
     }
-}
 }
