@@ -17,6 +17,8 @@ public class lecturerDashboard extends JFrame {
   private JButton backBtn;
   private int sidebarWidth = 250;
   private JButton editProfileBtn;
+  private JButton annoucementButton;
+
 
   private boolean modulesVisible = true;
   private String username;
@@ -290,6 +292,11 @@ public class lecturerDashboard extends JFrame {
     editProfileBtn.addActionListener(e -> new lecturerEditProfile(username));
     sidebar.add(editProfileBtn);
 
+    NicerButton annoucementButton = new NicerButton("View Annoucements", darkNavy, hoverNavy, 15);
+    annoucementButton.setBounds(25, 200, 200, 45);
+    annoucementButton.addActionListener(e -> new lecturerInbox("Lecturer", "All"));
+    sidebar.add(annoucementButton);
+
     NicerButton logoutBtn = new NicerButton("Logout", new Color(220, 53, 69), new Color(180, 40, 50), 15);
     logoutBtn.setBounds(25, 610, 200, 45);
     logoutBtn.addActionListener(e -> {
@@ -479,9 +486,5 @@ public class lecturerDashboard extends JFrame {
   private void refresh() {
     revalidate();
     repaint();
-  }
-
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(() -> new lecturerDashboard("lecturer1"));
   }
 }

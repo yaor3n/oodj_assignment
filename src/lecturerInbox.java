@@ -12,8 +12,8 @@ public class lecturerInbox extends JFrame {
     private static final String FILE_NAME = "announcements.txt";
 
     public lecturerInbox(String roleFilter1, String roleFilter2) {
-        this.roleFilter1 = roleFilter1; // e.g., "Lecturer"
-        this.roleFilter2 = roleFilter2; // e.g., "All"
+        this.roleFilter1 = roleFilter1; 
+        this.roleFilter2 = roleFilter2; 
 
         reusable.windowSetup(this);
 
@@ -36,7 +36,6 @@ public class lecturerInbox extends JFrame {
         backBtn.setForeground(Color.WHITE);
         backBtn.setBounds(450, 500, 140, 35);
         backBtn.addActionListener(e -> {
-            new lecturerDashboard(this.roleFilter1); // temporary fix
             this.dispose(); 
         });
         this.add(backBtn);
