@@ -235,6 +235,7 @@ public class lecturerAssessment extends JPanel {
       JTextField type = new JTextField(a[8], 20);
       JTextArea desc = new JTextArea(a[9], 4, 20);
       desc.setLineWrap(true);
+    
       desc.setWrapStyleWord(true);
 
       gbc.gridy = 0;

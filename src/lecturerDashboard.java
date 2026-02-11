@@ -17,11 +17,12 @@ public class lecturerDashboard extends JFrame {
   private JButton backBtn;
   private int sidebarWidth = 250;
   private JButton editProfileBtn;
+  private JButton annoucementButton;
 
   private boolean modulesVisible = true;
+  private String lecturerFullName;
   private String username;
-  private String lecturerID;
-  private String lecturerName;
+  String lecturerID;
   private String selectedCourse;
   private String lecturerModule;
 
@@ -33,9 +34,11 @@ public class lecturerDashboard extends JFrame {
   Color darkNavy = new Color(30, 41, 59);
   Color hoverNavy = new Color(51, 65, 85);
 
-  public lecturerDashboard(String username) {
-    this.username = username;
-    loadLecturerData(username);
+  public lecturerDashboard(String lecturerID) {
+    this.lecturerID = lecturerID;
+    this.username = Session.currentUsername;
+
+    loadLecturerData(lecturerID);
 
     setTitle("Lecturer Dashboard");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,14 +87,13 @@ public class lecturerDashboard extends JFrame {
     return btn;
   }
 
-  private void loadLecturerData(String username) {
+  private void loadLecturerData(String lecturerID) {
     try (BufferedReader r = new BufferedReader(new FileReader("accounts.txt"))) {
       String line;
       while ((line = r.readLine()) != null) {
         String[] p = line.split(",", 9);
-        if (p.length == 9 && p[5].equals(username) && p[7].equals("Lecturer")) {
-          lecturerID = p[0];
-          lecturerName = p[1];
+        if (p.length == 11 && p[0].equals(lecturerID) && p[9].equals("Lecturer")) {
+          lecturerFullName = p[1];
           return;
         }
       }
@@ -101,13 +103,16 @@ public class lecturerDashboard extends JFrame {
 
   private List<String> loadCoursesForLecturer() {
     List<String> list = new ArrayList<>();
-    try (BufferedReader r = new BufferedReader(new FileReader("lecturerCourse.txt"))) {
+    try (BufferedReader r = new BufferedReader(new FileReader("academicLeaderModule.txt"))) {
       String line;
       while ((line = r.readLine()) != null) {
-        String[] p = line.split(",", 4);
-        if (p.length == 4 && p[2].equals(username) && p[3] != null) {
-          if (!list.contains(p[3]))
-            list.add(p[3]);
+        String[] p = line.split(",", -1);
+        if (p.length == 10 && p[3].equals(lecturerID)) {
+          String courses = p[9];
+          System.out.println("Hello World");
+          System.out.println("Found course: " + courses);
+          if (!list.contains(courses))
+            list.add(courses);
         }
       }
     } catch (IOException e) {
@@ -121,7 +126,7 @@ public class lecturerDashboard extends JFrame {
       String line;
       while ((line = r.readLine()) != null) {
         String[] p = line.split(",", -1);
-        if (p.length >= 10 && p[3].equals(username) && p[9].equals(course))
+        if (p.length == 10 && p[3].equals(lecturerID) && p[9].equals(course))
           list.add(p);
       }
     } catch (IOException e) {
@@ -287,8 +292,13 @@ public class lecturerDashboard extends JFrame {
 
     NicerButton editProfileBtn = new NicerButton("Profile", darkNavy, hoverNavy, 15);
     editProfileBtn.setBounds(25, 140, 200, 45);
-    editProfileBtn.addActionListener(e -> new lecturerEditProfile(username));
+    editProfileBtn.addActionListener(e -> new lecturerEditProfile(lecturerID));
     sidebar.add(editProfileBtn);
+
+    NicerButton annoucementButton = new NicerButton("View Annoucements", darkNavy, hoverNavy, 15);
+    annoucementButton.setBounds(25, 200, 200, 45);
+    annoucementButton.addActionListener(e -> new lecturerInbox("Lecturer", "All"));
+    sidebar.add(annoucementButton);
 
     NicerButton logoutBtn = new NicerButton("Logout", new Color(220, 53, 69), new Color(180, 40, 50), 15);
     logoutBtn.setBounds(25, 610, 200, 45);
@@ -332,7 +342,7 @@ public class lecturerDashboard extends JFrame {
 
     NicerButton editBtn = new NicerButton("Edit Profile", darkNavy, hoverNavy, 15);
     editBtn.setBounds(25, 140, 200, 45);
-    editBtn.addActionListener(e -> new lecturerEditProfile(username));
+    editBtn.addActionListener(e -> new lecturerEditProfile(lecturerID));
     sidebar.add(editBtn);
 
     String arrow = modulesVisible ? "▼ " : "▶ ";
@@ -420,7 +430,7 @@ public class lecturerDashboard extends JFrame {
     cardContentArea.setBackground(Color.WHITE);
     cardContentArea.setBorder(BorderFactory.createLineBorder(colorBorder));
 
-    lecturerAssessment assessmentView = new lecturerAssessment(selectedCourse, lecturerModule, lecturerID, lecturerName,
+    lecturerAssessment assessmentView = new lecturerAssessment(selectedCourse, lecturerModule, lecturerID, lecturerFullName,
         username);
     lecturerStudentFeedback feedbackView = new lecturerStudentFeedback(lecturerModule);
 
@@ -479,9 +489,5 @@ public class lecturerDashboard extends JFrame {
   private void refresh() {
     revalidate();
     repaint();
-  }
-
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(() -> new lecturerDashboard("lecturer1"));
   }
 }

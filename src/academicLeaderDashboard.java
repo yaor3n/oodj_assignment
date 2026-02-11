@@ -699,4 +699,6 @@ public class academicLeaderDashboard extends JFrame {
     public static void main(String[] args) {
         new academicLeaderDashboard();
     }
+    
+    
 }

@@ -207,7 +207,7 @@ public class studentDashboard extends JFrame implements ActionListener {
         try (BufferedReader br = new BufferedReader(new FileReader("student_courses.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split("\\|");
+                String[] parts = line.split(",");
                 if (parts.length >= 2) {
                     String userInFile = parts[0].trim();
                     String courseCode = parts[1].trim();
