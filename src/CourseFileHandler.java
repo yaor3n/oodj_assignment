@@ -5,18 +5,23 @@ public class CourseFileHandler {
 
     private static final String COURSE_FILE = "courses.txt";
     private static final String REGISTRATION_FILE = "student_courses.txt";
-    private static final String FEEDBACK_FILE = "feedback.txt"; // New file for feedback
+    private static final String FEEDBACK_FILE = "feedback.txt";
 
     public static List<Course> getAllCourses() {
         List<Course> courses = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(COURSE_FILE))) {
             String line;
+            
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
-                courses.add(Course.fromFileString(line));
+                try {
+                    courses.add(Course.fromFileString(line));
+                } catch (Exception ex) {
+                    System.err.println("Skipping invalid line: " + line);
+                }
             }
         } catch (IOException e) {
-            System.out.println("Course file not found.");
+            System.out.println("Course file not found: " + COURSE_FILE);
         }
         return courses;
     }

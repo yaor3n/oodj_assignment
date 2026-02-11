@@ -5,4 +5,5 @@ B12,RWDD,Certificate,yaoren,December,2025,NEW MODULE,ModuleDefaultPic3.png
 CS202,OOP Design,Degree,Dr Tan,July,2025,Object-oriented principles,images/oop.png
 S01,Sejarahh,Master's Degree,sky,February,2026,new course,ModuleDefaultPic2.png
 E3,sky,Bachelor's Degree,ali,May,2025,popo,default
-M-01,JAVA,Diploma,sky ong,January,2025,This is the module,default
+M-01,sussy,Diploma,sky ong,January,2025,This is the module,default
+raul|B02

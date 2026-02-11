@@ -180,7 +180,7 @@ public class login extends JFrame implements ActionListener{
 
                 switch (role) {
                     case "Admin": new adminDashboard(); break;
-                    case "Lecturer": new lecturerDashboard(username); break;
+                    case "Lecturer": new lecturerDashboard(userSession.loggedInUserId); break;
                     case "Student": new studentDashboard(); break;
                     case "AcademicLeader": new academicLeaderDashboard(); break;
                     default:
