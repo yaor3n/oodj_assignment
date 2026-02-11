@@ -235,7 +235,7 @@ public class lecturerAssessment extends JPanel {
       JTextField type = new JTextField(a[8], 20);
       JTextArea desc = new JTextArea(a[9], 4, 20);
       desc.setLineWrap(true);
-    
+
       desc.setWrapStyleWord(true);
 
       gbc.gridy = 0;
@@ -259,19 +259,23 @@ public class lecturerAssessment extends JPanel {
     mainPanel.add(detailsPanel, BorderLayout.NORTH);
 
     if (!editable) {
-      String[] cols = { "Student ID", "Student Name", "Mark" };
+      String[] cols = { "Student ID", "Student Name", "Mark", "Grade" };
       DefaultTableModel model = new DefaultTableModel(cols, 0);
-      List<String[]> results = getExistingResults(lecturerModule, a[5]);
+      List<String[]> results = getExistingResults(a[5]);
       List<String[]> students = getEnrolledStudents(lecturerModule);
       for (String[] s : students) {
         String mark = "0";
+        String grade = "-";
+
         for (String[] res : results) {
           if (res[0].trim().equals(s[0].trim())) {
-            mark = res[6].trim();
+            mark = res[4].trim();
+            grade = res[5].trim();
             break;
           }
         }
-        model.addRow(new Object[] { s[0], s[1], mark });
+
+        model.addRow(new Object[] { s[0], s[1], mark, grade });
       }
       JTable table = new JTable(model);
       mainPanel.add(new JScrollPane(table), BorderLayout.CENTER);
@@ -308,16 +312,17 @@ public class lecturerAssessment extends JPanel {
     return students;
   }
 
-  private List<String[]> getExistingResults(String moduleName, String assessmentTitle) {
+  private List<String[]> getExistingResults(String assessmentTitle) {
     List<String[]> results = new ArrayList<>();
-    File file = new File("Results.txt");
+    File file = new File("Grades.txt");
+
     if (file.exists()) {
       try (BufferedReader r = new BufferedReader(new FileReader(file))) {
         String line;
         while ((line = r.readLine()) != null) {
           String[] p = line.split(",");
-          if (p.length >= 7 && p[4].trim().equalsIgnoreCase(moduleName.trim())
-              && p[5].trim().equalsIgnoreCase(assessmentTitle.trim())) {
+          if (p.length >= 6 &&
+              p[3].trim().equalsIgnoreCase(assessmentTitle.trim())) {
             results.add(p);
           }
         }
@@ -379,7 +384,7 @@ public class lecturerAssessment extends JPanel {
       return;
     }
     String assessmentTitle = assessment[5].trim();
-    List<String[]> existingResults = getExistingResults(moduleName, assessmentTitle);
+    List<String[]> existingResults = getExistingResults(assessmentTitle);
     JPanel marksPanel = new JPanel(new GridLayout(0, 2, 10, 5));
     JTextField[] markFields = new JTextField[students.size()];
 
@@ -388,7 +393,7 @@ public class lecturerAssessment extends JPanel {
       String currentMark = "";
       for (String[] res : existingResults) {
         if (res[0].trim().equals(students.get(i)[0].trim())) {
-          currentMark = res[6].trim();
+          currentMark = res[4].trim();
           break;
         }
       }
@@ -418,9 +423,12 @@ public class lecturerAssessment extends JPanel {
     }
   }
 
-  private void saveMarks(List<String[]> students, JTextField[] markFields, String assessmentTitle, String moduleName) {
+  private void saveMarks(List<String[]> students, JTextField[] markFields,
+      String assessmentTitle, String moduleName) {
+
     List<String[]> allData = new ArrayList<>();
-    File file = new File("Results.txt");
+    File file = new File("Grades.txt");
+
     if (file.exists()) {
       try (BufferedReader r = new BufferedReader(new FileReader(file))) {
         String line;
@@ -429,33 +437,47 @@ public class lecturerAssessment extends JPanel {
       } catch (IOException e) {
       }
     }
+
     for (int i = 0; i < students.size(); i++) {
       String markVal = markFields[i].getText().trim();
-      if (markVal.isEmpty()) {
+      if (markVal.isEmpty())
         markVal = "0";
-      } else {
-        int score = Integer.parseInt(markVal);
-        if (score < 0 || score > 100) {
-          JOptionPane.showMessageDialog(this, "Mark for " + students.get(i)[1] + " must be between 0 and 100.");
-          return;
-        }
+
+      int score = Integer.parseInt(markVal);
+      if (score < 0 || score > 100) {
+        JOptionPane.showMessageDialog(this,
+            "Mark for " + students.get(i)[1] + " must be between 0 and 100.");
+        return;
       }
 
+      String grade = GradeCalculationHandler.calculateGrade(score);
+
       boolean updated = false;
+
       for (String[] row : allData) {
-        if (row.length >= 7 && row[0].trim().equals(students.get(i)[0].trim()) &&
-            row[4].trim().equalsIgnoreCase(moduleName) &&
-            row[5].trim().equalsIgnoreCase(assessmentTitle)) {
-          row[6] = markVal;
+        if (row.length >= 6 &&
+            row[0].trim().equals(students.get(i)[0].trim()) &&
+            row[3].trim().equalsIgnoreCase(assessmentTitle)) {
+
+          row[4] = markVal;
+          row[5] = grade;
           updated = true;
           break;
         }
       }
+
       if (!updated) {
-        allData.add(new String[] { students.get(i)[0].trim(), students.get(i)[1].trim(), lecturerID, lecturerName,
-            moduleName, assessmentTitle, markVal });
+        allData.add(new String[] {
+            students.get(i)[0].trim(),
+            students.get(i)[1].trim(),
+            lecturerName,
+            assessmentTitle,
+            markVal,
+            grade
+        });
       }
     }
+
     try (BufferedWriter w = new BufferedWriter(new FileWriter(file))) {
       for (String[] row : allData) {
         w.write(String.join(",", row));
