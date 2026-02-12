@@ -447,7 +447,11 @@ public class academicLeaderReport extends JPanel {
         resultsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                component.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 230, 230)), 
+                    BorderFactory.createEmptyBorder(0, 10, 0, 0) 
+                ));
 
                 try {
                     int passed = Integer.parseInt(table.getValueAt(row, 2).toString());
