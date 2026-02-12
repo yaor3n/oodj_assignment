@@ -40,22 +40,24 @@ public class Course {
     }
 
     public static Course fromFileString(String line) {
+        // Split by comma
+        String[] parts = line.split(",");
 
-        String[] parts = line.split("\\,");
-
-        if (parts.length != 8) {
+        // The new file format has 10 parts:
+        // 0:Code, 1:Name, 2:Level, 3:LecID, 4:LecName, 5:Month, 6:Year, 7:Desc, 8:Image, 9:Field
+        if (parts.length < 10) {
             throw new IllegalArgumentException("Invalid course line: " + line);
         }
 
         return new Course(
-                parts[0].trim(),                 // code
-                parts[1].trim(),                 // name
-                parts[2].trim(),                 // qualification
-                parts[3].trim(),                 // lecturer
-                parts[4].trim(),                 // intake month
-                Integer.parseInt(parts[5].trim()), // year
-                parts[6].trim(),                 // description
-                parts[7].trim()                  // image path
+                parts[0].trim(),                   // code (M001)
+                parts[1].trim(),                   // name (Book Keeping 101)
+                parts[2].trim(),                   // qualification (Foundation)
+                parts[4].trim(),                   // lecturer (Ms. Nurul - Index 4, not 3!)
+                parts[5].trim(),                   // intake month (March)
+                Integer.parseInt(parts[6].trim()), // year (2026)
+                parts[7].trim(),                   // description
+                parts[8].trim()                    // image path
         );
     }
 

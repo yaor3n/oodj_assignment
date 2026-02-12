@@ -3,22 +3,22 @@ import java.util.*;
 
 public class CourseFileHandler {
 
-    private static final String COURSE_FILE = "courses.txt";
+    private static final String COURSE_FILE = "academicLeaderModule.txt";
     private static final String REGISTRATION_FILE = "student_courses.txt";
-    private static final String FEEDBACK_FILE = "feedback.txt";
+    private static final String FEEDBACK_FILE = "student_feedback.txt";
 
+    /**
+     * Reads all courses from the master file (academicLeaderModule.txt).
+     * Uses comma-separated values (10 columns).
+     */
     public static List<Course> getAllCourses() {
         List<Course> courses = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(COURSE_FILE))) {
             String line;
-            
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
-                try {
-                    courses.add(Course.fromFileString(line));
-                } catch (Exception ex) {
-                    System.err.println("Skipping invalid line: " + line);
-                }
+                // Course.fromFileString is now updated to handle the 10-column format
+                courses.add(Course.fromFileString(line));
             }
         } catch (IOException e) {
             System.out.println("Course file not found: " + COURSE_FILE);
@@ -26,70 +26,79 @@ public class CourseFileHandler {
         return courses;
     }
 
-    public static void registerStudent(String username, Course course) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(REGISTRATION_FILE, true))) {
-            pw.println(username + "|" + course.getCode());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // get courses registered for student
+    /**
+     * Finds courses specifically registered to a student.
+     * Checks student_courses.txt (raul|CP001 format) and matches against master list.
+     */
     public static List<Course> getRegisteredCoursesForStudent(String username) {
         List<String> registeredCodes = new ArrayList<>();
-
 
         try (BufferedReader br = new BufferedReader(new FileReader(REGISTRATION_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                if (parts.length >= 2 && parts[0].equals(username)) {
-                    registeredCodes.add(parts[1]);
+                // student_courses.txt uses the pipe | delimiter
+                String[] parts = line.split(",");
+                if (parts.length >= 2 && parts[0].trim().equalsIgnoreCase(username)) {
+                    registeredCodes.add(parts[1].trim());
                 }
             }
         } catch (IOException e) {
             System.out.println("No registration file found yet.");
         }
 
+        // Cross-reference with the master list to get full Course objects
         List<Course> allCourses = getAllCourses();
         List<Course> filteredCourses = new ArrayList<>();
         for (Course c : allCourses) {
-            if (registeredCodes.contains(c.getCode())) {
+            if (registeredCodes.contains(c.getCode().trim())) {
                 filteredCourses.add(c);
             }
         }
         return filteredCourses;
     }
 
-    // get feedback to display
+    /**
+     * Reads feedback for a specific student, including lecturer replies.
+     * Uses the new comma-separated format.
+     */
     public static List<Feedback> getFeedbackForStudent(String targetStudentId) {
         List<Feedback> feedbackList = new ArrayList<>();
-        File file = new File("feedback.txt");
+        File file = new File(FEEDBACK_FILE);
 
         if (!file.exists()) return feedbackList;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // \\| is required because | is a special regex character
-                String[] parts = line.split("\\|");
+                // Now splitting by comma to match the new feedback file
+                String[] parts = line.split(",");
 
-                if (parts.length >= 5) {
+                if (parts.length >= 4) {
                     String studentId = parts[0].trim();
 
                     if (studentId.equalsIgnoreCase(targetStudentId)) {
                         try {
-                            String module = parts[1].trim();
+                            String moduleName = parts[1].trim();
                             String lecturer = parts[2].trim();
-                            int rating = Integer.parseInt(parts[3].trim());
-                            String comment = parts[4].trim();
 
+                            // Handling varied feedback column lengths
+                            int rating = 0;
+                            String comment = "";
+                            String reply = "";
 
-                            String reply = (parts.length >= 6) ? parts[5].trim() : "";
+                            if (parts.length >= 4 && parts[3].trim().matches("\\d+")) {
+                                rating = Integer.parseInt(parts[3].trim());
+                                comment = (parts.length >= 5) ? parts[4].trim() : "";
+                                reply = (parts.length >= 6) ? parts[5].trim() : "";
+                            } else {
+                                // Fallback for lines without a numeric rating
+                                comment = parts[3].trim();
+                                reply = (parts.length >= 5) ? parts[4].trim() : "";
+                            }
 
-                            feedbackList.add(new Feedback(studentId, module, lecturer, comment, rating, reply));
-                        } catch (NumberFormatException e) {
-                            System.err.println("Skipping line with invalid rating format: " + line);
+                            feedbackList.add(new Feedback(studentId, moduleName, lecturer, comment, rating, reply));
+                        } catch (Exception e) {
+                            System.err.println("Error parsing feedback line: " + line);
                         }
                     }
                 }
@@ -100,10 +109,18 @@ public class CourseFileHandler {
         return feedbackList;
     }
 
-    // save feedback
+    public static void registerStudent(String username, Course course) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(REGISTRATION_FILE, true))) {
+            // Maintains the pipe format for consistency with your existing file
+            pw.println(username.trim() + "," + course.getCode().trim() + "," + course.getName().trim());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void saveFeedback(Feedback fb) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(FEEDBACK_FILE, true))) {
-            // Uses the Feedback object's own method to format the string (Encapsulation)
+            // Important: ensure Feedback.toFileString() uses COMMAS
             pw.println(fb.toFileString());
         } catch (IOException e) {
             e.printStackTrace();

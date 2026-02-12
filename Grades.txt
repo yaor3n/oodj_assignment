@@ -1,4 +1,1 @@
-U005,Raul User,Siew Weng Tim,Exam 1,100,A+
-U005,Raul User,Siew Weng Tim,Quiz 2,100,A+
-U005,Raul User,Siew Weng Tim,Exam 2,100,A+
-U005,Raul User,Siew Weng Tim,Quiz 1,100,A+
+raul,M004-ETHCK,Siew Weng Tim,Hello,98,A+

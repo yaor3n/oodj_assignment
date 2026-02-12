@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashSet;
 
 public class studentDashboard extends JFrame implements ActionListener {
 
@@ -19,8 +19,13 @@ public class studentDashboard extends JFrame implements ActionListener {
     private final int EXPANDED_WIDTH = 250;
     private final int COLLAPSED_WIDTH = 65;
 
-    private JButton editProfileBtn, registerClassBtn, viewResultsBtn, commentLecturerBtn, viewCommentBtn, logoutButton, toggleBtn;
+    private JButton editProfileBtn, registerClassBtn, viewResultsBtn, commentLecturerBtn, viewCommentBtn, logoutButton, toggleBtn, notificationBtn;
     private String studentFullName;
+
+    private JTextArea feedbackDisplay;
+    private Timer feedbackTimer;
+    private int currentFeedbackIndex = 0;
+    private ArrayList<String> lecturerReplies;
 
     public studentDashboard() {
         Student currentStudent = AccountFileHandler.getStudent(Session.currentUsername);
@@ -53,7 +58,7 @@ public class studentDashboard extends JFrame implements ActionListener {
         centerPanel.setBorder(new EmptyBorder(30, 0, 0, 0));
 
         centerPanel.add(createDisplayBox("My Classes", getStudentClasses()));
-        centerPanel.add(createDisplayBox("Top Comment", getRandomFeedback()));
+        centerPanel.add(createDisplayBox("Lecturer Replies", getFeedbackSlider()));
 
         mainWrapper.add(centerPanel, BorderLayout.CENTER);
         add(mainWrapper, BorderLayout.CENTER);
@@ -94,15 +99,18 @@ public class studentDashboard extends JFrame implements ActionListener {
             navPanel.add(logo);
             navPanel.add(Box.createVerticalStrut(30));
         } catch (Exception e) {
-            System.out.println("Logo not found at images/APUlogo.png");
+            System.out.println("Logo not found.");
         }
+
 
         registerClassBtn = new JButton("Class Registration");
         viewResultsBtn = new JButton("Check Results");
         commentLecturerBtn = new JButton("Give Feedback");
         viewCommentBtn = new JButton("View Feedback");
+        notificationBtn = new JButton("Notifications");
 
-        JButton[] navButtons = {registerClassBtn, viewResultsBtn, commentLecturerBtn, viewCommentBtn};
+        // Added notificationBtn to the array so it gets styled and added to sidebar
+        JButton[] navButtons = {registerClassBtn, viewResultsBtn, commentLecturerBtn, viewCommentBtn, notificationBtn};
         for (JButton btn : navButtons) {
             styleSidebarButton(btn, navPanel);
             navPanel.add(Box.createVerticalStrut(10));
@@ -152,7 +160,7 @@ public class studentDashboard extends JFrame implements ActionListener {
         btn.setAlignmentX(Component.CENTER_ALIGNMENT);
         btn.addActionListener(this);
 
-        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+        btn.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) { btn.setBackground(new Color(51, 65, 85)); }
             public void mouseExited(MouseEvent e) { btn.setBackground(NAV_BTN_COLOR); }
         });
@@ -177,14 +185,14 @@ public class studentDashboard extends JFrame implements ActionListener {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 40));
         header.add(titleLabel, BorderLayout.WEST);
 
-        JPanel profileSpace = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 0));
+        JPanel profileSpace = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         profileSpace.setOpaque(false);
 
         JLabel userLabel = new JLabel(studentFullName);
         userLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         JLabel profileIcon = new JLabel("👤");
-        profileIcon.setFont(new Font("Arial", Font.PLAIN, 50));
+        profileIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 45));
 
         profileSpace.add(userLabel);
         profileSpace.add(profileIcon);
@@ -194,96 +202,137 @@ public class studentDashboard extends JFrame implements ActionListener {
 
     private JScrollPane getStudentClasses() {
         DefaultListModel<String> listModel = new DefaultListModel<>();
-        java.util.HashSet<String> uniqueModules = new java.util.HashSet<>();
-
-        // Retrieve the student's ID (e.g., U011)
-        Student currentStudent = AccountFileHandler.getStudent(Session.currentUsername);
-        String studentId = (currentStudent != null) ? currentStudent.id.trim() : Session.currentUsername;
+        HashSet<String> uniqueModules = new HashSet<>();
+        String username = Session.currentUsername;
 
         try (BufferedReader br = new BufferedReader(new FileReader("student_courses.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length >= 3) {
-                    // parts[0] is the ID (U011) based on your file structure
-                    String idInFile = parts[0].trim();
+                    String userInFile = parts[0].trim();
+                    String courseName = parts[1].trim();
                     String moduleName = parts[2].trim();
 
-                    if (idInFile.equalsIgnoreCase(studentId)) {
-                        if (uniqueModules.add(moduleName)) {
-                            listModel.addElement("  • " + moduleName);
+                    if (userInFile.equalsIgnoreCase(username)) {
+                        if (uniqueModules.add(courseName)) {
+                            listModel.addElement("  • " + courseName + " - " + moduleName);
                         }
                     }
                 }
             }
         } catch (IOException e) {
-            listModel.addElement("  Error loading file.");
+            listModel.addElement("  • Error loading classes.");
         }
 
-        if (listModel.isEmpty()) {
-            listModel.addElement("  No classes found for ID: " + studentId);
-        }
+        if (listModel.isEmpty()) listModel.addElement("  No classes registered.");
 
         JList<String> list = new JList<>(listModel);
         list.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         list.setFixedCellHeight(40);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+        list.setBackground(Color.WHITE);
         JScrollPane scroll = new JScrollPane(list);
         scroll.setBorder(null);
         scroll.getViewport().setBackground(Color.WHITE);
         return scroll;
     }
 
-    private JTextArea getRandomFeedback() {
-        ArrayList<String> feedbacks = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("feedback.txt"))) {
+    private JPanel getFeedbackSlider() {
+        lecturerReplies = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("student_feedback.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 4) {
-                    feedbacks.add("\"" + parts[3].trim() + "\"\n- Feedback for " + parts[1]);
+                if (parts.length >= 6 && !parts[5].trim().isEmpty()) {
+                    String module = parts[1].trim();
+                    String lecturer = parts[2].trim();
+                    String reply = parts[5].trim();
+                    lecturerReplies.add("\"" + reply + "\"\n\n— " + lecturer + "\n" + module);
                 }
             }
-        } catch (IOException e) { feedbacks.add("Could not load feedback."); }
+        } catch (IOException e) {
+            lecturerReplies.add("No lecturer replies found yet.");
+        }
 
-        String displayTxt = feedbacks.isEmpty() ? "No feedback available." :
-                feedbacks.get(new Random().nextInt(feedbacks.size()));
+        if (lecturerReplies.isEmpty()) lecturerReplies.add("Welcome to your dashboard!");
 
-        JTextArea area = new JTextArea(displayTxt);
-        area.setFont(new Font("Segoe UI", Font.ITALIC, 20));
-        area.setLineWrap(true);
-        area.setWrapStyleWord(true);
-        area.setEditable(false);
-        area.setOpaque(false);
-        return area;
+        JPanel card = new JPanel(new GridBagLayout());
+        card.setBackground(new Color(248, 250, 252));
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(203, 213, 225), 1),
+                new EmptyBorder(20, 20, 20, 20)
+        ));
+
+        feedbackDisplay = new JTextArea(lecturerReplies.get(0));
+        feedbackDisplay.setForeground(new Color(30, 41, 59));
+        feedbackDisplay.setFont(new Font("Arial", Font.BOLD, 26));
+        feedbackDisplay.setLineWrap(true);
+        feedbackDisplay.setWrapStyleWord(true);
+        feedbackDisplay.setEditable(false);
+        feedbackDisplay.setOpaque(false);
+        feedbackDisplay.setColumns(20);
+        feedbackDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        card.add(feedbackDisplay);
+
+        feedbackTimer = new Timer(3000, e -> {
+            currentFeedbackIndex = (currentFeedbackIndex + 1) % lecturerReplies.size();
+            feedbackDisplay.setText(lecturerReplies.get(currentFeedbackIndex));
+            card.repaint();
+        });
+        feedbackTimer.start();
+
+        return card;
     }
 
     private JPanel createDisplayBox(String title, JComponent content) {
         JPanel box = new JPanel(new BorderLayout());
         box.setBackground(Color.WHITE);
-        box.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+        box.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 2));
+
         JLabel label = new JLabel(title);
-        label.setFont(new Font("Arial", Font.BOLD, 30));
-        label.setBorder(new EmptyBorder(15, 25, 10, 0));
+        label.setFont(new Font("Arial", Font.BOLD, 26));
+        label.setForeground(new Color(15, 23, 42));
+        label.setBorder(new EmptyBorder(20, 25, 10, 0));
         box.add(label, BorderLayout.NORTH);
+
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
-        wrapper.setBorder(new EmptyBorder(0, 25, 20, 25));
+        wrapper.setBorder(new EmptyBorder(10, 25, 25, 25));
         wrapper.add(content);
+
         box.add(wrapper, BorderLayout.CENTER);
         return box;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (feedbackTimer != null) feedbackTimer.stop();
+
         Object s = e.getSource();
-        this.dispose();
-        if (s == logoutButton) new login();
-        else if (s == editProfileBtn) new studentEditProfile();
-        else if (s == registerClassBtn) new studentRegisterClass();
-        else if (s == viewResultsBtn) new studentViewResults();
-        else if (s == commentLecturerBtn) new studentFeedbackClass();
-        else if (s == viewCommentBtn) new studentViewFeedbackClass();
+
+        if (s == notificationBtn) {
+            this.dispose();
+            new studentInbox("Student", "All");
+        } else if (s == logoutButton) {
+            this.dispose();
+            new login();
+        } else if (s == editProfileBtn) {
+            this.dispose();
+            new studentEditProfile();
+        } else if (s == registerClassBtn) {
+            this.dispose();
+            new studentRegisterClass();
+        } else if (s == viewResultsBtn) {
+            this.dispose();
+            new studentViewResults();
+        } else if (s == commentLecturerBtn) {
+            this.dispose();
+            new studentFeedbackClass();
+        } else if (s == viewCommentBtn) {
+            this.dispose();
+            new studentViewFeedbackClass();
+        }
     }
 }

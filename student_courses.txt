@@ -1,7 +1,3 @@
-U005,Raul User,CTF
-U005,Raul User,OODJ
-U005,Raul User,Introduction to Javascript
-U005,Raul User,CTF Strategies
-U005,Raul User,Ethical Hacking
-U005,Raul User,Computer Forensics
-U005,Raul Mahendran,CTF Strategies-LAB62
+raul,M004-ETHCK,Ethical Hacking
+raul,M001,Book Keeping 101
+raul,M005-DPR,Data Processing with R

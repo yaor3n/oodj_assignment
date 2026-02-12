@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class manageFeedback extends JFrame {
 
-    private final String FILE_NAME = "feedback.txt";
+    private final String FILE_NAME = "student_feedback.txt";
 
     private JTable table;
     private DefaultTableModel model;
@@ -30,7 +30,8 @@ public class manageFeedback extends JFrame {
                         "Module Name",
                         "Lecturer Name",
                         "Rating",
-                        "Comment"
+                        "Student Comment",
+                        "Lecturer Comment"
                 }, 0
         ) {
             @Override
@@ -41,7 +42,7 @@ public class manageFeedback extends JFrame {
 
         table = new JTable(model);
         table.setRowHeight(24);
-        table.getColumnModel().getColumn(4).setPreferredWidth(350);
+        table.getColumnModel().getColumn(5).setPreferredWidth(350);
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(40, 90, 1000, 350);
@@ -71,7 +72,7 @@ public class manageFeedback extends JFrame {
         setVisible(true);
     }
 
-    // ================= LOAD =================
+    // load 
     private void loadFeedback() {
         feedbackList.clear();
         model.setRowCount(0);
@@ -84,12 +85,10 @@ public class manageFeedback extends JFrame {
 
             while ((line = br.readLine()) != null) {
 
-                // Split but do NOT discard malformed lines
-                String[] p = line.split("\\|", -1);
+                String[] p = line.split(",",-1);
 
-                // Ensure exactly 5 columns
-                String[] row = new String[5];
-                for (int i = 0; i < 5; i++) {
+                String[] row = new String[6];
+                for (int i = 0; i < 6; i++) {
                     row[i] = (i < p.length) ? p[i] : "";
                 }
 
@@ -126,11 +125,11 @@ public class manageFeedback extends JFrame {
         JOptionPane.showMessageDialog(this, "Feedback deleted successfully");
     }
 
-    // ================= SAVE =================
+    // ================= SAVE ================= 
     private void saveAll() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_NAME))) {
             for (String[] f : feedbackList) {
-                pw.println(String.join("|", f));
+                pw.println(String.join(",", f));
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Failed to save feedback");

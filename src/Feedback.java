@@ -23,6 +23,6 @@ public class Feedback {
 
     public String toFileString() {
         // Updated to include rating
-        return studentUsername + "|" + courseCode + "|" + lecturerName + "|" + rating + "|" + comment.replace("\n", " ") + "|" + reply;
+        return studentUsername + "," + courseCode + "," + lecturerName + "," + rating + "," + comment.replace("\n", " ") + "," + reply;
     }
 }
