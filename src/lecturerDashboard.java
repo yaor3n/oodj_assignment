@@ -26,6 +26,12 @@ public class lecturerDashboard extends JFrame {
   private String selectedCourse;
   private String lecturerModule;
 
+  private final String[] courseImages = {
+      "images/ModuleDefaultPic.png",
+      "images/ModuleDefaultPic2.png",
+      "images/ModuleDefaultPic3.png"
+  };
+
   Color colorSidebar = new Color(241, 245, 249);
   Color colorHeader = new Color(90, 90, 90);
   Color colorBackground = new Color(255, 255, 255);
@@ -200,6 +206,7 @@ public class lecturerDashboard extends JFrame {
   }
 
   private JPanel createCourseCard(String courseName) {
+    int imageIndex = 0;
     JPanel courseCard = new JPanel(new BorderLayout());
     courseCard.setPreferredSize(new Dimension(260, 287));
     courseCard.setBackground(Color.WHITE);
@@ -207,13 +214,13 @@ public class lecturerDashboard extends JFrame {
         BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
         BorderFactory.createEmptyBorder(0, 0, 10, 0)));
 
-    JLabel cardImg = new JLabel("Course Image", SwingConstants.CENTER);
+    String imagePath = courseImages[imageIndex];
+    imageIndex = (imageIndex + 1) % courseImages.length;
+    ImageIcon originalIcon = new ImageIcon(imagePath);
+    Image scaledImage = originalIcon.getImage()
+        .getScaledInstance(260, 160, Image.SCALE_SMOOTH);
+    JLabel cardImg = new JLabel(new ImageIcon(scaledImage));
     cardImg.setPreferredSize(new Dimension(260, 160));
-    cardImg.setOpaque(true);
-    cardImg.setBackground(new Color(241, 245, 249));
-    cardImg.setForeground(new Color(148, 163, 184));
-    cardImg.setFont(new Font("Segoe UI", Font.ITALIC, 12));
-
     JPanel contentArea = new JPanel(new BorderLayout());
     contentArea.setOpaque(false);
     contentArea.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 15));
@@ -430,7 +437,8 @@ public class lecturerDashboard extends JFrame {
     cardContentArea.setBackground(Color.WHITE);
     cardContentArea.setBorder(BorderFactory.createLineBorder(colorBorder));
 
-    lecturerAssessment assessmentView = new lecturerAssessment(selectedCourse, lecturerModule, lecturerID, lecturerFullName,
+    lecturerAssessment assessmentView = new lecturerAssessment(selectedCourse, lecturerModule, lecturerID,
+        lecturerFullName,
         username);
     lecturerStudentFeedback feedbackView = new lecturerStudentFeedback(lecturerModule);
 
