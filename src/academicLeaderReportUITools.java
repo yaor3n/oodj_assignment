@@ -49,12 +49,14 @@ public class academicLeaderReportUITools {
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable t, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component component = super.getTableCellRendererComponent(t, value, isSelected, hasFocus, row, column);
+                JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                component.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 230, 230)), // Bottom Line
+                    BorderFactory.createEmptyBorder(0, 10, 0, 0) // Left Padding
+                ));
+
                 if (!isSelected) {
-                    component.setBackground(row % 2 == 0 ? Color.WHITE : new Color(242, 242, 242));
-                }
-                if (component instanceof JComponent) {
-                    ((JComponent) component).setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+                    component.setBackground(row % 2 == 0 ? Color.WHITE : new Color(248, 250, 252));
                 }
                 return component;
             }
