@@ -1020,24 +1020,27 @@ public class academicLeaderReport extends JPanel {
             lecturerRatingTableModel.setRowCount(0);
             java.util.Map<String, double[]> ratingMap = new java.util.HashMap<>();
 
-            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("feedback.txt"))) {
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("student_feedback.txt"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) continue;
 
                     try {
-                        String[] parts = line.split("\\|");
+                        String[] parts = line.split(",", 5); 
+
                         if (parts.length >= 4) {
-                            String lecName = parts[2].trim();
-                            double score = Double.parseDouble(parts[3].trim());
+                            String lecName = parts[2].trim(); 
+                            String ratingRaw = parts[3].trim(); 
+
+                            double score = Double.parseDouble(ratingRaw);
 
                             ratingMap.putIfAbsent(lecName, new double[2]);
                             double[] stats = ratingMap.get(lecName);
                             stats[0] += score; 
-                            stats[1] += 1;     
+                            stats[1] += 1;   
                         }
                     } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
-                        System.err.println("Skipping malformed line: " + line);
+                        System.err.println("Skipping malformed line or invalid rating: " + line);
                     }
                 }
 
@@ -1047,22 +1050,28 @@ public class academicLeaderReport extends JPanel {
                 for (var entry : ratingMap.entrySet()) {
                     double[] stats = entry.getValue();
                     double average = stats[0] / stats[1];
+
                     String status = average >= 4.5 ? "Excellence" : (average >= 3.0 ? "Satisfactory" : "Needs Review!");
 
                     lecturerRatingTableModel.addRow(new Object[]{
-                        entry.getKey(), (int)stats[1], String.format("%.1f / 5.0", average), status
+                        entry.getKey(), 
+                        (int)stats[1], 
+                        String.format("%.1f / 5.0", average), 
+                        status
                     });
-                    
+
                     if (average > highestAverage) {
                         highestAverage = average;
                         bestLecturer = entry.getKey();
                     }
                 }
 
-                if (topLecturer != null) topLecturer.setText(bestLecturer);
-                
+                if (topLecturer != null) {
+                    topLecturer.setText(bestLecturer);
+                }
+
             } catch (java.io.IOException e) {
-                System.err.println("File Error: " + e.getMessage());
+                System.err.println("File Error: student_feedback.txt not found. " + e.getMessage());
             }
         }
         
@@ -1079,7 +1088,7 @@ public class academicLeaderReport extends JPanel {
                     
                     String[] parts = line.split(","); 
 
-                    if (parts.length >= 4) {
+                    if (parts.length >= 6) {
                         String student = parts[0].trim();
                         String module = parts[1].trim();
                         String lecturer = parts[2].trim();
