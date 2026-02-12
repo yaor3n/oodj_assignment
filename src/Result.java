@@ -2,14 +2,14 @@ public class Result {
     private String studentID, studentName, lecturerID, lecturerName, location, moduleName, grade;
     private int score;
 
-    public Result(String[] p) {
-        this.studentID = p[0];
-        this.studentName = p[1];
-        this.lecturerID = p[2];
-        this.lecturerName = p[3];
-        this.location = p[4];
-        this.moduleName = p[5];
-        this.score = Integer.parseInt(p[6].trim());
+    public Result(String[] parts) {
+        this.studentID = parts[0].trim();
+        this.studentName = parts[1].trim();
+        this.lecturerName = parts[2].trim();
+        this.moduleName = parts[3].trim();
+        this.score = Integer.parseInt(parts[4].trim());
+        // Only access index 5 if it exists, otherwise leave empty
+        this.grade = (parts.length > 5) ? parts[5].trim() : "";
     }
 
     // Getters

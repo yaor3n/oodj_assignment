@@ -19,10 +19,9 @@ public class studentDashboard extends JFrame implements ActionListener {
     private final int EXPANDED_WIDTH = 250;
     private final int COLLAPSED_WIDTH = 65;
 
-    private JButton editProfileBtn, registerClassBtn, viewResultsBtn, commentLecturerBtn, viewCommentBtn, logoutButton, toggleBtn;
+    private JButton editProfileBtn, registerClassBtn, viewResultsBtn, commentLecturerBtn, viewCommentBtn, logoutButton, toggleBtn, notificationBtn;
     private String studentFullName;
 
-    // Slide Format Variables
     private JTextArea feedbackDisplay;
     private Timer feedbackTimer;
     private int currentFeedbackIndex = 0;
@@ -58,7 +57,6 @@ public class studentDashboard extends JFrame implements ActionListener {
         centerPanel.setOpaque(false);
         centerPanel.setBorder(new EmptyBorder(30, 0, 0, 0));
 
-        // Display Boxes
         centerPanel.add(createDisplayBox("My Classes", getStudentClasses()));
         centerPanel.add(createDisplayBox("Lecturer Replies", getFeedbackSlider()));
 
@@ -104,12 +102,15 @@ public class studentDashboard extends JFrame implements ActionListener {
             System.out.println("Logo not found.");
         }
 
+
         registerClassBtn = new JButton("Class Registration");
         viewResultsBtn = new JButton("Check Results");
         commentLecturerBtn = new JButton("Give Feedback");
         viewCommentBtn = new JButton("View Feedback");
+        notificationBtn = new JButton("Notifications");
 
-        JButton[] navButtons = {registerClassBtn, viewResultsBtn, commentLecturerBtn, viewCommentBtn};
+        // Added notificationBtn to the array so it gets styled and added to sidebar
+        JButton[] navButtons = {registerClassBtn, viewResultsBtn, commentLecturerBtn, viewCommentBtn, notificationBtn};
         for (JButton btn : navButtons) {
             styleSidebarButton(btn, navPanel);
             navPanel.add(Box.createVerticalStrut(10));
@@ -184,14 +185,14 @@ public class studentDashboard extends JFrame implements ActionListener {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 40));
         header.add(titleLabel, BorderLayout.WEST);
 
-        JPanel profileSpace = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 0));
+        JPanel profileSpace = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         profileSpace.setOpaque(false);
 
         JLabel userLabel = new JLabel(studentFullName);
         userLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         JLabel profileIcon = new JLabel("👤");
-        profileIcon.setFont(new Font("Arial", Font.PLAIN, 50));
+        profileIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 45));
 
         profileSpace.add(userLabel);
         profileSpace.add(profileIcon);
@@ -208,19 +209,20 @@ public class studentDashboard extends JFrame implements ActionListener {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 2) {
+                if (parts.length >= 3) {
                     String userInFile = parts[0].trim();
-                    String courseCode = parts[1].trim();
+                    String courseName = parts[1].trim();
+                    String moduleName = parts[2].trim();
 
                     if (userInFile.equalsIgnoreCase(username)) {
-                        if (uniqueModules.add(courseCode)) {
-                            listModel.addElement("  • " + courseCode);
+                        if (uniqueModules.add(courseName)) {
+                            listModel.addElement("  • " + courseName + " - " + moduleName);
                         }
                     }
                 }
             }
         } catch (IOException e) {
-            listModel.addElement("  Error loading classes.");
+            listModel.addElement("  • Error loading classes.");
         }
 
         if (listModel.isEmpty()) listModel.addElement("  No classes registered.");
@@ -228,8 +230,10 @@ public class studentDashboard extends JFrame implements ActionListener {
         JList<String> list = new JList<>(listModel);
         list.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         list.setFixedCellHeight(40);
+        list.setBackground(Color.WHITE);
         JScrollPane scroll = new JScrollPane(list);
         scroll.setBorder(null);
+        scroll.getViewport().setBackground(Color.WHITE);
         return scroll;
     }
 
@@ -253,9 +257,8 @@ public class studentDashboard extends JFrame implements ActionListener {
 
         if (lecturerReplies.isEmpty()) lecturerReplies.add("Welcome to your dashboard!");
 
-        // Create the Card Panel
         JPanel card = new JPanel(new GridBagLayout());
-        card.setBackground(new Color(248, 250, 252)); // Light slate/white card color
+        card.setBackground(new Color(248, 250, 252));
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(203, 213, 225), 1),
                 new EmptyBorder(20, 20, 20, 20)
@@ -263,7 +266,7 @@ public class studentDashboard extends JFrame implements ActionListener {
 
         feedbackDisplay = new JTextArea(lecturerReplies.get(0));
         feedbackDisplay.setForeground(new Color(30, 41, 59));
-        feedbackDisplay.setFont(new Font("Arial", Font.BOLD, 26 ));
+        feedbackDisplay.setFont(new Font("Arial", Font.BOLD, 26));
         feedbackDisplay.setLineWrap(true);
         feedbackDisplay.setWrapStyleWord(true);
         feedbackDisplay.setEditable(false);
@@ -273,7 +276,6 @@ public class studentDashboard extends JFrame implements ActionListener {
 
         card.add(feedbackDisplay);
 
-        // Slide Timer
         feedbackTimer = new Timer(3000, e -> {
             currentFeedbackIndex = (currentFeedbackIndex + 1) % lecturerReplies.size();
             feedbackDisplay.setText(lecturerReplies.get(currentFeedbackIndex));
@@ -283,14 +285,14 @@ public class studentDashboard extends JFrame implements ActionListener {
 
         return card;
     }
+
     private JPanel createDisplayBox(String title, JComponent content) {
         JPanel box = new JPanel(new BorderLayout());
         box.setBackground(Color.WHITE);
-        // Changed to a thinner, more professional border
         box.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 2));
 
         JLabel label = new JLabel(title);
-        label.setFont(new Font("Arial", Font.BOLD, 40));
+        label.setFont(new Font("Arial", Font.BOLD, 26));
         label.setForeground(new Color(15, 23, 42));
         label.setBorder(new EmptyBorder(20, 25, 10, 0));
         box.add(label, BorderLayout.NORTH);
@@ -306,17 +308,31 @@ public class studentDashboard extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Stop timer before moving to another page to save resources
         if (feedbackTimer != null) feedbackTimer.stop();
 
         Object s = e.getSource();
-        this.dispose();
 
-        if (s == logoutButton) new login();
-        else if (s == editProfileBtn) new studentEditProfile();
-        else if (s == registerClassBtn) new studentRegisterClass();
-        else if (s == viewResultsBtn) new studentViewResults();
-        else if (s == commentLecturerBtn) new studentFeedbackClass();
-        else if (s == viewCommentBtn) new studentViewFeedbackClass();
+        if (s == notificationBtn) {
+            this.dispose();
+            new studentInbox("Student", "All");
+        } else if (s == logoutButton) {
+            this.dispose();
+            new login();
+        } else if (s == editProfileBtn) {
+            this.dispose();
+            new studentEditProfile();
+        } else if (s == registerClassBtn) {
+            this.dispose();
+            new studentRegisterClass();
+        } else if (s == viewResultsBtn) {
+            this.dispose();
+            new studentViewResults();
+        } else if (s == commentLecturerBtn) {
+            this.dispose();
+            new studentFeedbackClass();
+        } else if (s == viewCommentBtn) {
+            this.dispose();
+            new studentViewFeedbackClass();
+        }
     }
 }

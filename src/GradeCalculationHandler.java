@@ -21,7 +21,7 @@ public class GradeCalculationHandler {
     // Processes Results.txt and writes to Grades.txt
     public static void syncGrades() {
         List<Result> processedResults = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("Results.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("Grades.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 Result res = new Result(line.split(","));

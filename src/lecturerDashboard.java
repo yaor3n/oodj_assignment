@@ -91,7 +91,7 @@ public class lecturerDashboard extends JFrame {
     try (BufferedReader r = new BufferedReader(new FileReader("accounts.txt"))) {
       String line;
       while ((line = r.readLine()) != null) {
-        String[] p = line.split(",", 9);
+        String[] p = line.split(",");
         if (p.length == 11 && p[0].equals(lecturerID) && p[9].equals("Lecturer")) {
           lecturerFullName = p[1];
           return;
