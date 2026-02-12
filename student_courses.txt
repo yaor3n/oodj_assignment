@@ -1,13 +1,2 @@
-raul,CP001
-raul,S01
-raul,CS202
-raul,B02
-raul,M-01
-raul,CS202
-raul,S01
-raul,M004-ETHCK
-raul,M001
-raul,M005-DPR
-raul,M004-ETHCK
-raul,M002
+raul,M004-ETHCK,Ethical Hacking
 raul,M004-ETHCK,Ethical Hacking
