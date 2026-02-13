@@ -18,3 +18,6 @@ ASS015,null,lecturer1,Cybersecurity,Introduction to OOP,Assignment 4,lecturer1,2
 ASS016,null,lecturer1,Cybersecurity,Introduction to OOP,Assignment 6,lecturer1,2026-01-01,Assignment,
 ASS017,U006,wengtimmm,CyberSecurity,Ethical Hacking,Hello,wengtimmm,2026-01-01,Assignment,
 ASS018,U006,wengtimmm,CyberSecurity,Ethical Hacking,test,wengtimmm,2026-01-01,Assignment,
+ASS019,U006,wengtimmm,CyberSecurity,Ethical Hacking,Test,wengtimmm,2026-01-01,Group Assignment,
+ASS020,U006,wengtimmm,CyberSecurity,Ethical Hacking,Test,wengtimmm,2026-01-01,Group Assignment,
+ASS021,U006,wengtimmm,CyberSecurity,Ethical Hacking,test,wengtimmm,2026-02-13,Group Assignment,

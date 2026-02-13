@@ -31,26 +31,31 @@ public class CourseFileHandler {
      * Checks student_courses.txt (raul|CP001 format) and matches against master list.
      */
     public static List<Course> getRegisteredCoursesForStudent(String username) {
-        List<String> registeredCodes = new ArrayList<>();
+        List<String> registeredModuleNames = new ArrayList<>();
 
+        // 1. Read student_courses.txt
         try (BufferedReader br = new BufferedReader(new FileReader(REGISTRATION_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // student_courses.txt uses the pipe | delimiter
+                if (line.trim().isEmpty()) continue;
                 String[] parts = line.split(",");
-                if (parts.length >= 2 && parts[0].trim().equalsIgnoreCase(username)) {
-                    registeredCodes.add(parts[1].trim());
+
+                // parts[0] is raul, parts[2] is the Module Name
+                if (parts.length >= 3 && parts[0].trim().equalsIgnoreCase(username.trim())) {
+                    registeredModuleNames.add(parts[2].trim().toLowerCase());
                 }
             }
         } catch (IOException e) {
-            System.out.println("No registration file found yet.");
+            System.out.println("Registration file missing.");
         }
 
-        // Cross-reference with the master list to get full Course objects
+        // 2. Cross-reference with academicLeaderModule.txt
         List<Course> allCourses = getAllCourses();
         List<Course> filteredCourses = new ArrayList<>();
+
         for (Course c : allCourses) {
-            if (registeredCodes.contains(c.getCode().trim())) {
+            // Compare the Name from the master file to the names we found in registrations
+            if (registeredModuleNames.contains(c.getName().trim().toLowerCase())) {
                 filteredCourses.add(c);
             }
         }
