@@ -2,15 +2,12 @@ import javax.swing.border.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.DocumentFilter;
-import javax.swing.text.AttributeSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -195,17 +192,65 @@ public class lecturerAssessment extends JPanel {
 
   private void showCreateAssessmentDialog() {
     JTextField title = new JTextField();
-    JTextField date = new JTextField("2026-01-01");
     JTextArea desc = new JTextArea(5, 20);
     JComboBox<String> typeCombo = new JComboBox<>(types);
     typeCombo.setSelectedIndex(0);
-    Object[] form = { "Title", title, "Submission Date", date, "Type", typeCombo, "Description",
-        new JScrollPane(desc) };
 
-    int result = JOptionPane.showConfirmDialog(this, form, "New Assessment", JOptionPane.OK_CANCEL_OPTION);
-    if (result == JOptionPane.OK_OPTION) {
-      writeAssessment(title.getText(), date.getText(), typeCombo.getSelectedItem().toString(), desc.getText());
+    SpinnerDateModel dateModel = new SpinnerDateModel();
+    JSpinner dateSpinner = new JSpinner(dateModel);
+    JSpinner.DateEditor editor = new JSpinner.DateEditor(dateSpinner, "yyyy-MM-dd");
+    dateSpinner.setEditor(editor);
+
+    Object[] form = {
+        "Title", title,
+        "Submission Date (yyyy-MM-dd)", dateSpinner,
+        "Type", typeCombo,
+        "Description", new JScrollPane(desc)
+    };
+
+    while (true) {
+      int result = JOptionPane.showConfirmDialog(
+          this,
+          form,
+          "New Assessment",
+          JOptionPane.OK_CANCEL_OPTION);
+      if (result != JOptionPane.OK_OPTION) {
+        return;
+      }
+
+      if (title.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Title cannot be empty.");
+        continue;
+      }
+
+      LocalDate enteredDate = null;
+      try {
+        Date selectedDate = (Date) dateSpinner.getValue();
+        enteredDate = selectedDate
+            .toInstant()
+            .atZone(java.time.ZoneId.systemDefault())
+            .toLocalDate();
+        LocalDate today = LocalDate.now();
+        if (enteredDate.isBefore(today)) {
+          JOptionPane.showMessageDialog(this,
+              "Invalid Date");
+          continue;
+        }
+      } catch (DateTimeParseException e) {
+        JOptionPane.showMessageDialog(this,
+            "Invalid date format. Use yyyy-MM-dd.");
+        continue;
+      }
+
+      writeAssessment(
+          title.getText().trim(),
+          enteredDate.toString(),
+          typeCombo.getSelectedItem().toString(),
+          desc.getText().trim());
+
       refreshAssessmentList();
+      JOptionPane.showMessageDialog(this, "Assessment created successfully!");
+      break;
     }
   }
 
@@ -410,47 +455,71 @@ public class lecturerAssessment extends JPanel {
 
   private void showMarkDialog(String moduleName, String[] assessment) {
     List<String[]> students = getEnrolledStudents(moduleName);
+
     if (students.isEmpty()) {
       JOptionPane.showMessageDialog(this, "No students enrolled.");
       return;
     }
     String assessmentTitle = assessment[5].trim();
     List<String[]> existingResults = getExistingResults(assessmentTitle);
-    JPanel marksPanel = new JPanel(new GridLayout(0, 2, 10, 5));
-    JTextField[] markFields = new JTextField[students.size()];
 
-    for (int i = 0; i < students.size(); i++) {
-      marksPanel.add(new JLabel(students.get(i)[1] + " (" + students.get(i)[0] + ")"));
-      String currentMark = "";
-      for (String[] res : existingResults) {
-        if (res[0].trim().equals(students.get(i)[0].trim())) {
-          currentMark = res[4].trim();
+    while (true) {
+      JPanel marksPanel = new JPanel(new GridLayout(0, 2, 10, 5));
+      JTextField[] markFields = new JTextField[students.size()];
+      for (int i = 0; i < students.size(); i++) {
+        marksPanel.add(new JLabel(
+            students.get(i)[1] + " (" + students.get(i)[0] + ")"));
+        String currentMark = "";
+        for (String[] res : existingResults) {
+          if (res[0].trim().equals(students.get(i)[0].trim())) {
+            currentMark = res[4].trim();
+            break;
+          }
+        }
+
+        markFields[i] = new JTextField(currentMark);
+        marksPanel.add(markFields[i]);
+      }
+
+      int result = JOptionPane.showConfirmDialog(
+          this,
+          new JScrollPane(marksPanel),
+          "Enter Marks (0-100)",
+          JOptionPane.OK_CANCEL_OPTION);
+      if (result != JOptionPane.OK_OPTION) {
+        return;
+      }
+
+      boolean valid = true;
+
+      for (int i = 0; i < students.size(); i++) {
+        String markVal = markFields[i].getText().trim();
+        if (markVal.isEmpty())
+          markVal = "0";
+        try {
+          int score = Integer.parseInt(markVal);
+          if (score < 0 || score > 100) {
+            JOptionPane.showMessageDialog(this,
+                "Mark for " + students.get(i)[1]
+                    + " must be between 0 and 100.");
+            valid = false;
+            break;
+          }
+        } catch (NumberFormatException e) {
+          JOptionPane.showMessageDialog(this,
+              "Invalid number for "
+                  + students.get(i)[1]);
+          valid = false;
           break;
         }
       }
-      markFields[i] = new JTextField(currentMark);
-      ((AbstractDocument) markFields[i].getDocument()).setDocumentFilter(new DocumentFilter() {
-        @Override
-        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
-            throws BadLocationException {
-          if (string.matches("\\d*"))
-            super.insertString(fb, offset, string, attr);
-        }
 
-        @Override
-        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-            throws BadLocationException {
-          if (text.matches("\\d*"))
-            super.replace(fb, offset, length, text, attrs);
-        }
-      });
-      marksPanel.add(markFields[i]);
-    }
+      if (!valid) {
+        continue;
+      }
 
-    int result = JOptionPane.showConfirmDialog(this, new JScrollPane(marksPanel),
-        "Enter Marks (0-100)", JOptionPane.OK_CANCEL_OPTION);
-    if (result == JOptionPane.OK_OPTION) {
       saveMarks(students, markFields, assessmentTitle, moduleName);
+      break;
     }
   }
 

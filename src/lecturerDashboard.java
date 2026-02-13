@@ -15,6 +15,7 @@ public class lecturerDashboard extends JFrame {
   private JButton btnAss;
   private JButton btnFeed;
   private JButton backBtn;
+  private JButton btnPast;
   private int sidebarWidth = 250;
   private JButton editProfileBtn;
   private JButton annoucementButton;
@@ -425,11 +426,17 @@ public class lecturerDashboard extends JFrame {
 
     JPanel tabRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     tabRow.setOpaque(false);
+
     btnAss = createTabButton("Assessment", true);
+    btnPast = createTabButton("Past Assessment", false);
     btnFeed = createTabButton("Student Feedback", false);
+
     btnAss.addActionListener(e -> switchTab("ASSESSMENT"));
+    btnPast.addActionListener(e -> switchTab("PAST"));
     btnFeed.addActionListener(e -> switchTab("FEEDBACK"));
+
     tabRow.add(btnAss);
+    tabRow.add(btnPast);
     tabRow.add(btnFeed);
 
     cardLayout = new CardLayout();
@@ -440,9 +447,12 @@ public class lecturerDashboard extends JFrame {
     lecturerAssessment assessmentView = new lecturerAssessment(selectedCourse, lecturerModule, lecturerID,
         lecturerFullName,
         username);
+    lecturerViewPastAssessment pastView =
+        new lecturerViewPastAssessment(selectedCourse, lecturerModule);
     lecturerStudentFeedback feedbackView = new lecturerStudentFeedback(lecturerModule);
 
     cardContentArea.add(assessmentView, "ASSESSMENT");
+    cardContentArea.add(pastView, "PAST");
     cardContentArea.add(feedbackView, "FEEDBACK");
 
     JPanel mainContent = new JPanel(new BorderLayout());
@@ -483,6 +493,7 @@ public class lecturerDashboard extends JFrame {
   private void switchTab(String tabName) {
     cardLayout.show(cardContentArea, tabName);
     applyTabStyle(btnAss, tabName.equals("ASSESSMENT"));
+    applyTabStyle(btnPast, tabName.equals("PAST"));
     applyTabStyle(btnFeed, tabName.equals("FEEDBACK"));
   }
 
