@@ -11,6 +11,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.AttributeSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class lecturerAssessment extends JPanel {
   private JPanel listPanel;
@@ -20,6 +23,17 @@ public class lecturerAssessment extends JPanel {
   private String lecturerID;
   private String lecturerName;
   private String username;
+
+  String[] types = {
+      "Group Assignment",
+      "Exam",
+      "Mock Test",
+      "Individual Assignment"
+  };
+  JTextField titleField = null;
+  JTextField dateField = null;
+  JComboBox<String> typeCombo = null;
+  JTextArea descArea = null;
 
   public lecturerAssessment(String selectedCourse, String lecturerModule, String lecturerID, String lecturerName,
       String username) {
@@ -97,7 +111,19 @@ public class lecturerAssessment extends JPanel {
     List<String[]> assessments = readAssessments(selectedCourse, lecturerModule);
 
     boolean found = false;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    LocalDate today = LocalDate.now();
+
     for (String[] a : assessments) {
+      try {
+        LocalDate dueDate = LocalDate.parse(a[7].trim(), formatter);
+        if (dueDate.isBefore(today)) {
+          continue;
+        }
+      } catch (DateTimeParseException e) {
+        continue;
+      }
       if (!query.isEmpty() && !a[5].toLowerCase().contains(query)) {
         continue;
       }
@@ -170,13 +196,15 @@ public class lecturerAssessment extends JPanel {
   private void showCreateAssessmentDialog() {
     JTextField title = new JTextField();
     JTextField date = new JTextField("2026-01-01");
-    JTextField type = new JTextField("Assignment");
     JTextArea desc = new JTextArea(5, 20);
-    Object[] form = { "Title", title, "Submission Date", date, "Type", type, "Description", new JScrollPane(desc) };
+    JComboBox<String> typeCombo = new JComboBox<>(types);
+    typeCombo.setSelectedIndex(0);
+    Object[] form = { "Title", title, "Submission Date", date, "Type", typeCombo, "Description",
+        new JScrollPane(desc) };
 
     int result = JOptionPane.showConfirmDialog(this, form, "New Assessment", JOptionPane.OK_CANCEL_OPTION);
     if (result == JOptionPane.OK_OPTION) {
-      writeAssessment(title.getText(), date.getText(), type.getText(), desc.getText());
+      writeAssessment(title.getText(), date.getText(), typeCombo.getSelectedItem().toString(), desc.getText());
       refreshAssessmentList();
     }
   }
@@ -230,30 +258,33 @@ public class lecturerAssessment extends JPanel {
       gbc.gridy = 3;
       detailsPanel.add(new JLabel("Description: " + a[9]), gbc);
     } else {
-      JTextField title = new JTextField(a[5], 20);
-      JTextField date = new JTextField(a[7], 20);
-      JTextField type = new JTextField(a[8], 20);
-      JTextArea desc = new JTextArea(a[9], 4, 20);
-      desc.setLineWrap(true);
-
-      desc.setWrapStyleWord(true);
+      titleField = new JTextField(a[5], 20);
+      dateField = new JTextField(a[7], 20);
+      typeCombo = new JComboBox<>(types);
+      typeCombo.setSelectedItem(a[8]);
+      descArea = new JTextArea(a[9], 4, 20);
+      descArea.setLineWrap(true);
+      descArea.setWrapStyleWord(true);
 
       gbc.gridy = 0;
       detailsPanel.add(new JLabel("Title:"), gbc);
       gbc.gridy = 1;
-      detailsPanel.add(title, gbc);
+      detailsPanel.add(titleField, gbc);
+
       gbc.gridy = 2;
       detailsPanel.add(new JLabel("Submission Date:"), gbc);
       gbc.gridy = 3;
-      detailsPanel.add(date, gbc);
+      detailsPanel.add(dateField, gbc);
+
       gbc.gridy = 4;
       detailsPanel.add(new JLabel("Type:"), gbc);
       gbc.gridy = 5;
-      detailsPanel.add(type, gbc);
+      detailsPanel.add(typeCombo, gbc);
+
       gbc.gridy = 6;
       detailsPanel.add(new JLabel("Description:"), gbc);
       gbc.gridy = 7;
-      detailsPanel.add(new JScrollPane(desc), gbc);
+      detailsPanel.add(new JScrollPane(descArea), gbc);
     }
 
     mainPanel.add(detailsPanel, BorderLayout.NORTH);
@@ -288,11 +319,11 @@ public class lecturerAssessment extends JPanel {
         editable ? JOptionPane.OK_CANCEL_OPTION : JOptionPane.DEFAULT_OPTION);
 
     if (editable && result == JOptionPane.OK_OPTION) {
-      a[5] = ((JTextField) detailsPanel.getComponent(1)).getText();
-      a[7] = ((JTextField) detailsPanel.getComponent(3)).getText();
-      a[8] = ((JTextField) detailsPanel.getComponent(5)).getText();
-      JScrollPane sp = (JScrollPane) detailsPanel.getComponent(7);
-      a[9] = ((JTextArea) sp.getViewport().getView()).getText().replace(",", " ");
+      a[5] = titleField.getText();
+      a[7] = dateField.getText();
+      a[8] = typeCombo.getSelectedItem().toString();
+      a[9] = descArea.getText().replace(",", " ");
+
       updateAssessment(a);
       refreshAssessmentList();
     }
