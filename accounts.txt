@@ -13,4 +13,4 @@ U012,Mr. Johnny Thing,johnthing@gmail.com,Male,6 July 1986,019-1235346,40,johnjo
 U013,Ms. Nurul,nurul@gmail.com,Female,9 September 1987,019-1235346,41,nurr,123,Lecturer,Business Analytics
 U014,Dr. Issac Wong,issac@gmail.com,Male,3 March 1987,016-789012,41,isack is great,123,AcademicLeader,Digital Marketing
 U015,Dr. Kumar,kumar@gmail.com,Male,9 September 1980,014-67898765,46,Kumar,123,Lecturer,Computer Engineering
-U016,Dr. Duck,duck@gmail.com,Male,10 March 1990,016-43252345,36,Ducky,123,Lecturer,Data Science
+U016,Dr. Duck,duck@gmail.com,Male,1980,012-505345,46,Duckling,123,Admin,Data Science

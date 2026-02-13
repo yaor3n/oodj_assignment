@@ -1,5 +1,3 @@
 U002,John Lee,U004,Ong Szi Kai
 U006,Siew Weng Tim,U004,Ong Szi Kai
 U011,Dr. Usman,U008,Joshua
-U013,Ms. Nurul,U004,Ong Szi Kai
-U012,Mr. Johnny Thing,U010,Academic Leader One

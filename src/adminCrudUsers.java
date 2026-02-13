@@ -309,14 +309,44 @@ public class adminCrudUsers extends JFrame {
     }
 
     private void deleteUser() {
-        int row = table.getSelectedRow();
-        if (row == -1) return;
 
-        String id = model.getValueAt(row, 0).toString();
-        allUsers.removeIf(u -> u.id.equals(id));
-        model.removeRow(row);
-        saveAll();
+    int row = table.getSelectedRow();
+
+    if (row == -1) {
+        JOptionPane.showMessageDialog(this,
+                "Please select a user to delete.");
+        return;
     }
+
+    String id = model.getValueAt(row, 0).toString();
+    String name = model.getValueAt(row, 1).toString();
+    String role = model.getValueAt(row, 9).toString();
+
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to delete this user?\n\n" +
+            "Name: " + name + "\n" +
+            "Role: " + role + "\n" +
+            "ID: " + id,
+            "Confirm Delete",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    allUsers.removeIf(u -> u.id.equals(id));
+
+    model.removeRow(row);
+
+    saveAll();
+
+    JOptionPane.showMessageDialog(this,
+            "User deleted successfully.");
+}
+
 
     private String generateNextID() {
         return "U" + String.format("%03d", allUsers.size() + 1);
