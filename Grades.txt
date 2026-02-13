@@ -1,2 +1,7 @@
 raul,M004-ETHCK,Siew Weng Tim,Hello,98,A+
 raul,M004-ETHCK,Siew Weng Tim,test,0,F
+raul,M004-ETHCK,Siew Weng Tim,Group Assignment 1,80,A
+raul,M004-ETHCK,Siew Weng Tim,Group Assignment 2,100,A+
+raul,M004-ETHCK,Siew Weng Tim,Group Assignment 3,50,D
+raul,M004-ETHCK,Siew Weng Tim,Individual Assignment 1,67,C
+raul,M004-ETHCK,Siew Weng Tim,New Group Assignment,98,A+
