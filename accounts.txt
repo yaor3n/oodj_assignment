@@ -14,4 +14,25 @@ U013,Ms. Nurul,nurul@gmail.com,Female,9 September 1987,019-1235346,41,nurr,123,L
 U014,Dr. Issac Wong,issac@gmail.com,Male,3 March 1987,016-789012,41,isack is great,123,AcademicLeader,Digital Marketing
 U015,Dr. Kumar,kumar@gmail.com,Male,9 September 1980,014-67898765,46,Kumar,123,Lecturer,Computer Engineering
 U016,Dr. Duck,duck@gmail.com,Male,1980,012-505345,46,Duckling,123,Admin,Data Science
-U017,ADMIN USER,admin@gmail.com,Male,13 Feb 2005,012-312345,21,admin,123,Admin,-
+U017,Dr. Sarah Chen,sarahc@gmail.com,Female,12 May 1982,017-8899221,44,sarahc,123,Lecturer,Artificial Intelligence
+U018,Mr. Robert Fox,robertf@gmail.com,Male,22 July 1985,011-5544332,41,robertf,123,Lecturer,Cloud Computing
+U019,Ms. Elena Rodriguez,elenar@gmail.com,Female,15 March 1988,016-2233445,38,elenar,123,Lecturer,User Experience Design
+U020,Dr. Michael Tan,michtan@gmail.com,Male,30 November 1979,012-9988776,47,michtan,123,Lecturer,Mobile Development
+U021,Mr. Ahmed Hassan,ahmedh@gmail.com,Male,14 February 1984,019-7766554,42,ahmedh,123,Lecturer,Network Security
+U022,Ms. Sophie Muller,sophiem@gmail.com,Female,05 August 1990,014-1122334,36,sophiem,123,Lecturer,Game Engines
+U023,Dr. Kenji Sato,kenjis@gmail.com,Male,19 October 1981,013-4455667,45,kenjis,123,Lecturer,Robotics
+U024,Mr. Liam O'Connor,liamo@gmail.com,Male,25 December 1983,018-9900112,43,liamo,123,Lecturer,Database Management
+U025,Dr. Emily White,emilyw@gmail.com,Female,11 June 1986,011-2233998,40,emilyw,123,Lecturer,Software Quality
+U026,Prof. David Miller,davidm@gmail.com,Male,12 April 1975,012-3344556,51,davidm,123,AcademicLeader,School of Computing
+U027,Dr. Linda Wu,lindaw@gmail.com,Female,28 September 1978,016-5566778,48,lindaw,123,AcademicLeader,School of Media
+U028,Mr. Steven Jobs,stevenj@gmail.com,Male,24 February 1980,019-9900887,46,stevenj,123,AcademicLeader,School of Design
+U029,Alice Cooper,alicec@gmail.com,Female,10 January 2006,011-3344112,20,alicec,123,Student,Cybersecurity
+U030,Bob Barker,bobb@gmail.com,Male,15 May 2005,012-4455223,21,bobb,123,Student,Software Engineering
+U031,Charlie Sheen,charlies@gmail.com,Male,03 September 2007,014-5566334,19,charlies,123,Student,Computer Science
+U032,Diana Prince,dianap@gmail.com,Female,22 July 2006,016-6677445,20,dianap,123,Student,Data Science
+U033,Ethan Hunt,ethanh@gmail.com,Male,18 March 2005,017-7788556,21,ethanh,123,Student,Digital Marketing
+U034,Fiona Gallagher,fionag@gmail.com,Female,12 August 2007,019-8899667,19,fionag,123,Student,Humanities
+U035,George Costanza,georgec@gmail.com,Male,29 November 2006,011-9900778,20,georgec,123,Student,Psychology
+U036,Hannah Montana,hannahm@gmail.com,Female,23 November 2005,012-1122889,21,hannahm,123,Student,Game Development
+U037,Ian Wright,ianw@gmail.com,Male,01 October 2007,014-2233990,19,ianw,123,Student,Cloud Computing
+U038,Julia Roberts,juliar@gmail.com,Female,28 October 2006,016-3344001,20,juliar,123,Student,Artificial Intelligence

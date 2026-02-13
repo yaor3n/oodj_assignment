@@ -413,7 +413,7 @@ public class lecturerAssessment extends JPanel {
     try (BufferedReader r = new BufferedReader(new FileReader("assessment.txt"))) {
       String line;
       while ((line = r.readLine()) != null) {
-        if (line.startsWith(updated[0] + ","))
+        if (line.startsWith(updated[0] + ","))  
           lines.add(String.join(",", updated));
         else
           lines.add(line);

@@ -1,3 +1,12 @@
 U002,John Lee,U004,Ong Szi Kai
 U006,Siew Weng Tim,U004,Ong Szi Kai
 U011,Dr. Usman,U008,Joshua
+U017,Dr. Sarah Chen,U026,Prof. David Miller
+U018,Mr. Robert Fox,U026,Prof. David Miller
+U021,Mr. Ahmed Hassan,U026,Prof. David Miller
+U019,Ms. Elena Rodriguez,U027,Dr. Linda Wu
+U022,Ms. Sophie Muller,U027,Dr. Linda Wu
+U023,Dr. Kenji Sato,U027,Dr. Linda Wu
+U020,Dr. Michael Tan,U028,Mr. Steven Jobs
+U024,Mr. Liam O'Connor,U028,Mr. Steven Jobs
+U025,Dr. Emily White,U028,Mr. Steven Jobs
