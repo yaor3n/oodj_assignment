@@ -1,23 +1,9 @@
-# id,lecturerID,lecturerUsername,courseName,moduleName,title,createdBy,submissionDate,type,description
-
-ASS001,U007,lecturer1,Cybersecurity,Introduction to JS,Assignment 2,lecturer1,2026-01-01,Assignment,This is the description of this assignment for CTF
-ASS002,U007,lecturer1,Cybersecurity,Introduction to JS,Assignment 2,lecturer1,2026-01-01,Assignment,This is the description of this assignment for CTF
-ASS003,U007,lecturer1,Database Management,Introduction to JS,Assignment 1,lecturer1,2026-01-01,Assignment,This is the description of this assignment for Introduction to JS
-ASS004,U007,lecturer1,Cybersecurity,Introduction to JS,Quiz 1,lecturer1,2026-01-01,Quiz,this is the quiz to do. please finish
-ASS005,U007,lecturer1,Cybersecurity,Introduction to AI,Exam 1,lecturer1,2026-01-01,Exam,this is final exam. dont fail
-ASS006,U007,lecturer1,Software Engineer,Introduction to AI,Exam 1,lecturer1,2026-01-01,Exam,
-ASS007,U007,lecturer1,Cybersecurity,Introduction to AI,Quiz 2,lecturer1,2026-01-01,Quiz,
-ASS010,U007,lecturer1,Cybersecurity,Introduction to AI,Exam 2,lecturer1,2026-01-01,Exam,trial exam. Good Luck
-ASS011,U007,lecturer1,Psychology,Introduction to JS,Assignment 1,lecturer1,2026-01-01,Assignment,new assignment created
-ASS008,U007,lecturer1,Cybersecurity,Introduction to OOP,Quiz 3,lecturer1,2026-01-01,Quiz,
-ASS009,U007,lecturer1,Cybersecurity,Introduction to OOP,Assignment 2,lecturer1,2026-01-01,Assignment,
-ASS012,null,lecturer1,Cybersecurity,Introduction to OOP,Exam 1,lecturer1,2026-01-01,Exam,
-ASS013,null,lecturer1,Cybersecurity,Introduction to OOP,Assignment 1,lecturer1,2026-01-01,Assignment,
-ASS014,null,lecturer1,Cybersecurity,Introduction to OOP,Assignment 3,lecturer1,2026-01-01,Assignment,
-ASS015,null,lecturer1,Cybersecurity,Introduction to OOP,Assignment 4,lecturer1,2026-01-01,Assignment,
-ASS016,null,lecturer1,Cybersecurity,Introduction to OOP,Assignment 6,lecturer1,2026-01-01,Assignment,
-ASS017,U006,wengtimmm,CyberSecurity,Ethical Hacking,Hello,wengtimmm,2026-01-01,Assignment,
-ASS018,U006,wengtimmm,CyberSecurity,Ethical Hacking,test,wengtimmm,2026-01-01,Assignment,
-ASS019,U006,wengtimmm,CyberSecurity,Ethical Hacking,Test,wengtimmm,2026-01-01,Group Assignment,
-ASS020,U006,wengtimmm,CyberSecurity,Ethical Hacking,Test,wengtimmm,2026-01-01,Group Assignment,
-ASS021,U006,wengtimmm,CyberSecurity,Ethical Hacking,test,wengtimmm,2026-02-13,Group Assignment,
+ASS019,U006,wengtimmm,CyberSecurity,Ethical Hacking,Group Assignment 1,wengtimmm,2026-02-20,Group Assignment,
+ASS020,U006,wengtimmm,CyberSecurity,Ethical Hacking,Group Assignment 2,wengtimmm,2026-02-20,Group Assignment,
+ASS021,U006,wengtimmm,CyberSecurity,Ethical Hacking,Group Assignment 3,wengtimmm,2026-02-20,Group Assignment,
+ASS022,U006,wengtimmm,CyberSecurity,Ethical Hacking,Individual Assignment 1,wengtimmm,2026-02-20,Individual Assignment,
+ASS023,U006,wengtimmm,CyberSecurity,Ethical Hacking,Individual Assignment 2,wengtimmm,2026-02-20,Individual Assignment,
+ASS024,U006,wengtimmm,CyberSecurity,Ethical Hacking,Exam 1,wengtimmm,2026-02-20,Exam,
+ASS025,U006,wengtimmm,CyberSecurity,Ethical Hacking,Mock test 1,wengtimmm,2026-02-20,Mock Test,
+ASS026,U006,wengtim,CyberSecurity,Ethical Hacking,New Group Assignment,wengtim,2026-03-01,Group Assignment,this is newly created assignment. 
+please finish it
