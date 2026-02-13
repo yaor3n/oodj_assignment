@@ -335,7 +335,7 @@ public class lecturerAssessment extends JPanel {
     mainPanel.add(detailsPanel, BorderLayout.NORTH);
 
     if (!editable) {
-      String[] cols = { "Student ID", "Student Name", "Mark", "Grade" };
+      String[] cols = { "Student Name", "Module Name", "Mark", "Grade" };
       DefaultTableModel model = new DefaultTableModel(cols, 0);
       List<String[]> results = getExistingResults(a[5]);
       List<String[]> students = getEnrolledStudents(lecturerModule);
