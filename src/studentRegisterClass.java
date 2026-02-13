@@ -7,8 +7,8 @@ import java.io.File;
 public class studentRegisterClass extends JFrame implements ActionListener {
 
     private JComboBox<String> courseCombo;
-    private JTextPane detailsPane; // Changed from JTextArea for HTML support
-    private JLabel imageLabel;     // New label for course image
+    private JTextPane detailsPane;
+    private JLabel imageLabel;
     private JButton registerBtn, backBtn;
 
     private List<Course> courses;
@@ -25,11 +25,10 @@ public class studentRegisterClass extends JFrame implements ActionListener {
         // Title
         JLabel title = new JLabel("Class Registration");
         title.setFont(new Font("Arial", Font.BOLD, 28));
-        title.setForeground(new Color(43, 80, 110)); // Dark Blue color
+        title.setForeground(new Color(43, 80, 110)); 
         title.setBounds(300, 20, 300, 40);
         add(title);
 
-        // ===== Course Selection =====
         JLabel selectLbl = new JLabel("Select Course:");
         selectLbl.setFont(new Font("Arial", Font.PLAIN, 14));
         selectLbl.setBounds(100, 85, 120, 30);
@@ -43,7 +42,7 @@ public class studentRegisterClass extends JFrame implements ActionListener {
         courseCombo.addActionListener(this);
         add(courseCombo);
 
-        //  container for course info
+        // container for course info
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(null);
         infoPanel.setBounds(100, 140, 700, 300);
@@ -59,20 +58,19 @@ public class studentRegisterClass extends JFrame implements ActionListener {
         imageLabel.setBackground(new Color(245, 245, 245));
         infoPanel.add(imageLabel);
 
-        // Right Side: Details (Scrollable
         detailsPane = new JTextPane();
         detailsPane.setEditable(false);
-        detailsPane.setContentType("text/html"); // Allows HTML styling
+        detailsPane.setContentType("text/html"); 
 
         JScrollPane scrollPane = new JScrollPane(detailsPane);
         scrollPane.setBounds(300, 15, 385, 270);
-        scrollPane.setBorder(null); // Cleaner look
+        scrollPane.setBorder(null); 
         infoPanel.add(scrollPane);
 
         // buttons
         registerBtn = new JButton("Register Course");
         registerBtn.setBounds(300, 470, 140, 45);
-        registerBtn.setBackground(new Color(76, 175, 80)); // Green
+        registerBtn.setBackground(new Color(76, 175, 80)); 
         registerBtn.setForeground(Color.WHITE);
         registerBtn.setFocusPainted(false);
         registerBtn.addActionListener(this);
@@ -83,7 +81,6 @@ public class studentRegisterClass extends JFrame implements ActionListener {
         backBtn.addActionListener(this);
         add(backBtn);
 
-        // initialize display
         if (courses != null && !courses.isEmpty()) {
             updateDescription(0);
         } else {
@@ -95,13 +92,9 @@ public class studentRegisterClass extends JFrame implements ActionListener {
 
     private void updateDescription(int index) {
         if (index < 0 || index >= courses.size()) return;
-
         Course c = courses.get(index);
-
-        // 1. Update Image Logic
         displayImage(c.getImageFilePath());
 
-        // 2. Update Details with HTML
         String html = "<html><body style='font-family: Arial; margin: 10px;'>" +
                 "<h2 style='color: #2b506e; margin-bottom: 0;'>" + c.getName() + "</h2>" +
                 "<p style='color: #555;'><b>Code:</b> " + c.getCode() + "</p>" +
@@ -114,7 +107,7 @@ public class studentRegisterClass extends JFrame implements ActionListener {
                 "</body></html>";
 
         detailsPane.setText(html);
-        detailsPane.setCaretPosition(0); // Scroll back to top
+        detailsPane.setCaretPosition(0); 
     }
 
     private void displayImage(String path) {
@@ -122,7 +115,6 @@ public class studentRegisterClass extends JFrame implements ActionListener {
             File imgFile = new File(path);
             if (imgFile.exists()) {
                 ImageIcon icon = new ImageIcon(path);
-                // Scale to fit label: 270x270
                 Image img = icon.getImage().getScaledInstance(270, 270, Image.SCALE_SMOOTH);
                 imageLabel.setIcon(new ImageIcon(img));
                 imageLabel.setText("");
@@ -147,9 +139,20 @@ public class studentRegisterClass extends JFrame implements ActionListener {
             if (index != -1) {
                 Course selected = courses.get(index);
 
-                String warningMsg = "<html>Are you sure you want to register for <b>" + selected.getName() + "</b>?<br>" + "Once you register, you cannot undo it.</html>";
 
-                int response =JOptionPane.showConfirmDialog(
+                boolean alreadyRegistered = ClassFileHandler.isAlreadyRegistered(Session.currentUsername, selected.getName());
+
+                if (alreadyRegistered) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Registration Failed: You have already registered for " + selected.getName() + ".", 
+                        "Duplicate Entry", 
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                String warningMsg = "<html>Are you sure you want to register for <b>" + selected.getName() + "</b>?<br>Once you register, you cannot undo it.</html>";
+
+                int response = JOptionPane.showConfirmDialog(
                         this,
                         warningMsg,
                         "Confirm Registration",
@@ -158,7 +161,8 @@ public class studentRegisterClass extends JFrame implements ActionListener {
                 );
 
                 if (response == JOptionPane.YES_OPTION) {
-                    CourseFileHandler.registerStudent(Session.currentUsername, selected);
+                    // Using "Student" as a placeholder for the name
+                    ClassFileHandler.registerStudentToModule(Session.currentUsername, "Student", selected.getName());
                     JOptionPane.showMessageDialog(this, "Successfully registered for: " + selected.getName());
                 }
             }
