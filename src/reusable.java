@@ -12,7 +12,5 @@ public class reusable {
         frame.setLayout(null);
         frame.setLocationRelativeTo(null);
 
-        //ImageIcon icon = new ImageIcon("resources/icon1.png");
-        //frame.setIconImage(icon.getImage());
     }
 }

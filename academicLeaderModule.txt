@@ -4,3 +4,4 @@ M003-PSY-101,Human Behaviourial studies,Bachelor's Degree,U012,Mr. Johnny Thing,
 M004-ETHCK,Ethical Hacking,Master's Degree,U006,Siew Weng Tim,May,2026,Fundemental skills of ethical hacking,images/ModuleDefaultPic.png,CyberSecurity
 M005-DPR,Data Processing with R,PhD,U015,Dr. Kumar,March,2027,using R to process and extract data from datasets,images/ModuleDefaultPic3.png,Data Science
 M006-CO,Code Optimization,Bachelor's Degree,U006,Siew Weng Tim,March,2027,code optimization techniques,images/ModuleDefaultPic.png,Software Engineering
+M007,Discrete Math,Diploma,U013,Ms. Nurul,March,2026,Math for computing,images/ModuleDefaultPic.png,Software Engineering

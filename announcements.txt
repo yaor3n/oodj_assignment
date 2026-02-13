@@ -3,3 +3,4 @@ A1770755008673,2026-02-11 04:23,All,ALL,if u can see this  then all filter is wo
 A1770759417784,2026-02-11 05:36,All,All can see this,hihihhi
 A1770759452969,2026-02-11 05:37,Lecturer,Testing for Lecturer filter,if u can see this you are a lecturer
 A1770759474750,2026-02-11 05:37,Student,Testing for student filter,if u can see this you are a student
+A1770990545370,2026-02-13 21:49,All,SYSTEM MAINTENANCE,AFS system will be down from 11pm to 4am  new updates are on their way :D

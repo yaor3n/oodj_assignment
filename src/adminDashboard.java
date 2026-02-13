@@ -26,7 +26,6 @@ public class adminDashboard extends JFrame {
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
         add(welcomeLabel);
 
-        // ===== SIDEBAR TOGGLE =====
         JButton toggleSidebarBtn = new JButton("\u2630"); // Unicode hamburger
         toggleSidebarBtn.setBounds(20, 20, 50, 40);
         toggleSidebarBtn.setBackground(new Color(241, 245, 249));
@@ -34,13 +33,11 @@ public class adminDashboard extends JFrame {
         toggleSidebarBtn.addActionListener(e -> toggleSidebar());
         add(toggleSidebarBtn);
 
-        // ===== SIDEBAR =====
         sidebar = new JPanel(null);
         sidebar.setBackground(new Color(241, 245, 249));
         sidebar.setBounds(-SIDEBAR_WIDTH, 0, SIDEBAR_WIDTH, 650);
         add(sidebar);
 
-        // ===== APU LOGO =====
         ImageIcon logoIcon = loadIcon("images/APUlogo.png", 120, 110);
         JLabel logoLabel = new JLabel(logoIcon);
         logoLabel.setBounds(50, 20, 120, 110);
@@ -96,7 +93,6 @@ public class adminDashboard extends JFrame {
         titleLabel.setBounds(0, 20, getWidth(), 40);
         heroBar.add(titleLabel);
 
-        // ===== MAIN BUTTONS (ICON + TEXT) =====
         mainButtons = new JButton[]{
                 mainButton(
                         "CRUD Users",
@@ -128,7 +124,6 @@ public class adminDashboard extends JFrame {
         setVisible(true);
     }
 
-    // ===== BUTTON AND ICON  =====
     private JButton mainButton(String text, String iconPath, java.awt.event.ActionListener a) {
         JButton btn = new JButton(text);
 
@@ -148,7 +143,6 @@ public class adminDashboard extends JFrame {
         return btn;
     }
 
-    // ===== SIDEBAR BUTTON =====
     private JButton sidebarButton(String text, int y) {
         JButton btn = new JButton(text);
         btn.setBounds(20, y, 180, 35);
@@ -156,14 +150,12 @@ public class adminDashboard extends JFrame {
         return btn;
     }
 
-    // ===== ICON LOADER =====
     private ImageIcon loadIcon(String path, int w, int h) {
         ImageIcon raw = new ImageIcon(path);
         Image scaled = raw.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
         return new ImageIcon(scaled);
     }
 
-    // ===== BUTTON POSITIONING =====
     private void positionMainButtons(boolean sidebarOpen) {
         int frameCenterX = getWidth() / 2;
         int offsetX = sidebarOpen ? SIDEBAR_WIDTH / 2 : 0;
@@ -185,15 +177,10 @@ public class adminDashboard extends JFrame {
         }
     }
 
-    // ===== TOGGLE SIDEBAR =====
     private void toggleSidebar() {
         sidebar.setBounds(sidebarVisible ? -SIDEBAR_WIDTH : 0, 0, SIDEBAR_WIDTH, 650);
         sidebarVisible = !sidebarVisible;
         positionMainButtons(sidebarVisible);
         repaint();
-    }
-
-    public static void main(String[] args) {
-        new adminDashboard();
     }
 }

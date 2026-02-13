@@ -14,3 +14,4 @@ U013,Ms. Nurul,nurul@gmail.com,Female,9 September 1987,019-1235346,41,nurr,123,L
 U014,Dr. Issac Wong,issac@gmail.com,Male,3 March 1987,016-789012,41,isack is great,123,AcademicLeader,Digital Marketing
 U015,Dr. Kumar,kumar@gmail.com,Male,9 September 1980,014-67898765,46,Kumar,123,Lecturer,Computer Engineering
 U016,Dr. Duck,duck@gmail.com,Male,1980,012-505345,46,Duckling,123,Admin,Data Science
+U017,ADMIN USER,admin@gmail.com,Male,13 Feb 2005,012-312345,21,admin,123,Admin,-

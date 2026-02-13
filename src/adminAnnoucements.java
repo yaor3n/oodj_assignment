@@ -25,7 +25,6 @@ public class adminAnnoucements extends JFrame {
         header.setBounds(30, 20, 500, 30);
         add(header);
 
-        // ===== CREATE SECTION (TOP) =====
         JLabel roleLbl = new JLabel("Target Role:");
         roleLbl.setBounds(30, 80, 120, 25);
         add(roleLbl);
@@ -237,9 +236,5 @@ public class adminAnnoucements extends JFrame {
         }
 
         loadAnnouncements();
-    }
-
-    public static void main(String[] args) {
-        new adminAnnoucements();
     }
 }

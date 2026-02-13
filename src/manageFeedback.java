@@ -17,13 +17,11 @@ public class manageFeedback extends JFrame {
         reusable.windowSetup(this);
         setLayout(null);
 
-        // ===== TITLE =====
         JLabel title = new JLabel("Manage Feedback");
         title.setFont(new Font("Arial", Font.BOLD, 26));
         title.setBounds(380, 20, 300, 40);
         add(title);
 
-        // ===== TABLE =====
         model = new DefaultTableModel(
                 new String[]{
                         "Student Username",
@@ -48,7 +46,6 @@ public class manageFeedback extends JFrame {
         scrollPane.setBounds(40, 90, 1000, 350);
         add(scrollPane);
 
-        // ===== DELETE BUTTON =====
         JButton deleteBtn = new JButton("Delete Selected Feedback");
         deleteBtn.setBackground(new Color(220,53,69));
         deleteBtn.setForeground(new Color(0xFFFFFF));
@@ -57,7 +54,6 @@ public class manageFeedback extends JFrame {
         deleteBtn.addActionListener(e -> deleteFeedback());
         add(deleteBtn);
 
-        // ===== BACK BUTTON =====
         JButton backBtn = new JButton("Back");
         backBtn.setBackground(new Color(30,41,59));
         backBtn.setForeground(new Color(0xFFFFFF));
@@ -72,7 +68,6 @@ public class manageFeedback extends JFrame {
         setVisible(true);
     }
 
-    // load 
     private void loadFeedback() {
         feedbackList.clear();
         model.setRowCount(0);
@@ -101,7 +96,6 @@ public class manageFeedback extends JFrame {
     }
 
 
-    // ================= DELETE =================
     private void deleteFeedback() {
         int row = table.getSelectedRow();
         if (row == -1) {
@@ -125,7 +119,6 @@ public class manageFeedback extends JFrame {
         JOptionPane.showMessageDialog(this, "Feedback deleted successfully");
     }
 
-    // ================= SAVE ================= 
     private void saveAll() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_NAME))) {
             for (String[] f : feedbackList) {
@@ -134,9 +127,5 @@ public class manageFeedback extends JFrame {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Failed to save feedback");
         }
-    }
-
-    public static void main(String[] args) {
-        new manageFeedback();
     }
 }

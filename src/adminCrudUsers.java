@@ -18,7 +18,6 @@ public class adminCrudUsers extends JFrame {
         reusable.windowSetup(this);
         setLayout(new BorderLayout());
 
-        // ================= HERO BAR =================
         JPanel heroBar = new JPanel(new BorderLayout());
         heroBar.setBackground(new Color(30, 41, 59));
         heroBar.setPreferredSize(new Dimension(0, 80));
@@ -30,11 +29,9 @@ public class adminCrudUsers extends JFrame {
 
         add(heroBar, BorderLayout.NORTH);
 
-        // ================= MAIN PANEL =================
         JPanel mainPanel = new JPanel(null);
         mainPanel.setPreferredSize(new Dimension(1100, 1100));
 
-        // ================= SEARCH =================
         JLabel searchLabel = new JLabel("Search:");
         searchLabel.setBounds(100, 80, 80, 25);
         mainPanel.add(searchLabel);
@@ -60,7 +57,6 @@ public class adminCrudUsers extends JFrame {
         });
         mainPanel.add(resetBtn);
 
-        // ================= TABLE =================
         model = new DefaultTableModel(new String[]{
                 "ID", "Full Name", "Email", "Gender", "DOB",
                 "Phone", "Age", "Username", "Password", "Role", "Course"
@@ -77,7 +73,6 @@ public class adminCrudUsers extends JFrame {
         tableScroll.setBounds(50, 130, 1000, 280);
         mainPanel.add(tableScroll);
 
-        // ================= ACTION BUTTONS =================
         JButton updateBtn = new JButton("Update Selected");
         updateBtn.setBackground(new Color(40, 167, 69));
         updateBtn.setForeground(new Color(0xFFFFFF));
@@ -102,7 +97,6 @@ public class adminCrudUsers extends JFrame {
         });
         mainPanel.add(backBtn);
 
-        // ================= CREATE USER =================
         JLabel createTitle = new JLabel("Create New User");
         createTitle.setFont(new Font("Arial", Font.BOLD, 18));
         createTitle.setBounds(420, 490, 250, 30);
@@ -203,7 +197,6 @@ public class adminCrudUsers extends JFrame {
         setVisible(true);
     }
 
-    // ================= HELPERS =================
     private JTextField addField(JPanel p, String label, int lx, int fx, int y) {
         JLabel l = new JLabel(label);
         l.setBounds(lx, y, 150, 25);
@@ -239,13 +232,12 @@ public class adminCrudUsers extends JFrame {
         }
     }
 
-    // ================= FILE =================
     private void loadUsers() {
         allUsers.clear();
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] p = line.split(",", -1); //This tells Java to Keep empty fields, even at the end
+                String[] p = line.split(",", -1); 
                 if (p.length == 11)
                     allUsers.add(new User(
                             p[0], p[1], p[2], p[3], p[4],
@@ -266,7 +258,6 @@ public class adminCrudUsers extends JFrame {
         }
     }
 
-    // ================= LOGIC =================
     private void refreshTable(String key) {
         model.setRowCount(0);
         for (User u : allUsers) {

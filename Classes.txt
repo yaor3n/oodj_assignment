@@ -7,3 +7,4 @@ M002,OOP Concepts,Diploma,U002,John Lee,February,2026,Object Oriented Programmin
 M005,Human Behaviourial Research,PhD,U011,Dr. Usman,April,2026,Research on Human Behaviour,ModuleDefaultPic.png,Psychology,C005,Workshop,S-08-01,5 April 2026,12:00,14:00
 M006,Introduction to Circuits,Foundation,U015,Dr. Kumar,April,2028,Basic knowledge of circuits,ModuleDefaultPic.png,Computer Engineering,C006,Tutorial,E-08-11,6 March 2026,16:00,18:00
 M004-ETHCK,Ethical Hacking,Master's Degree,U006,Siew Weng Tim,May,2026,Fundemental skills of ethical hacking,images/ModuleDefaultPic.png,CyberSecurity,C007,Tutorial,Tech Lab-06-12,7 March 2026,11:00,13:00
+M007,Discrete Math,Diploma,U013,Ms. Nurul,March,2026,Math for computing,images/ModuleDefaultPic.png,Software Engineering,C008,Tutorial: Week1 algebra,B-05-10,4 April 2026,08:00,10:00

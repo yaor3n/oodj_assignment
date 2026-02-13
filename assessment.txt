@@ -7,3 +7,4 @@ ASS024,U006,wengtimmm,CyberSecurity,Ethical Hacking,Exam 1,wengtimmm,2026-02-20,
 ASS025,U006,wengtimmm,CyberSecurity,Ethical Hacking,Mock test 1,wengtimmm,2026-02-20,Mock Test,
 ASS026,U006,wengtim,CyberSecurity,Ethical Hacking,New Group Assignment,wengtim,2026-03-01,Group Assignment,this is newly created assignment. 
 please finish it
+ASS027,U013,nurr,Software Engineering,Discrete Math,Math Homework,nurr,2026-02-13,Individual Assignment,do it by this week
