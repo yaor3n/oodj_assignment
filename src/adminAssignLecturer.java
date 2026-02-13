@@ -70,10 +70,18 @@ public class adminAssignLecturer extends JFrame {
         assignBtn.addActionListener(e -> adminAssignLecturer());
         mainPanel.add(assignBtn);
 
+        JButton unassignBtn = new JButton("Unassign");
+        unassignBtn.setBackground(new Color(220, 53, 69));
+        unassignBtn.setForeground(Color.WHITE);
+        unassignBtn.setBounds(600, 180, 140, 35);
+        unassignBtn.addActionListener(e -> unassignLecturer());
+        mainPanel.add(unassignBtn);
+
+
         JButton backBtn = new JButton("Back");
         backBtn.setBackground(new Color(30, 41, 59));
         backBtn.setForeground(Color.WHITE);
-        backBtn.setBounds(600, 180, 140, 35);
+        backBtn.setBounds(750, 180, 140, 35);
         backBtn.addActionListener(e -> {
             new adminDashboard();
             dispose();
@@ -198,5 +206,70 @@ public class adminAssignLecturer extends JFrame {
         JOptionPane.showMessageDialog(this, "Lecturer assigned successfully");
         loadAssignments();
     }
+
+    private void unassignLecturer() {
+
+        int selectedRow = table.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a lecturer from the table");
+            return;
+        }
+
+        String lecturerId = tableModel.getValueAt(selectedRow, 0).toString();
+        String lecturerName = tableModel.getValueAt(selectedRow, 1).toString();
+        String assignedLeader = tableModel.getValueAt(selectedRow, 2).toString();
+
+        if (assignedLeader.equals("None")) {
+            JOptionPane.showMessageDialog(this, "This lecturer is not assigned.");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to unassign\n" +
+                lecturerName + " from " + assignedLeader + "?",
+                "Confirm Unassign",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        ArrayList<String> updatedLines = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ASSIGNED_FILE))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+
+                String[] p = line.split(",");
+
+                if (!p[0].equals(lecturerId)) {
+                    updatedLines.add(line);
+                }
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Failed to read file");
+            return;
+        }
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(ASSIGNED_FILE))) {
+
+            for (String l : updatedLines) {
+                pw.println(l);
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Failed to update file");
+            return;
+        }
+
+        JOptionPane.showMessageDialog(this, "Lecturer unassigned successfully.");
+        loadAssignments();
+    }
+
 
 }
