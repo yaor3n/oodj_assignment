@@ -109,7 +109,7 @@ public class studentDashboard extends JFrame implements ActionListener {
         viewCommentBtn = new JButton("View Feedback");
         notificationBtn = new JButton("Notifications");
 
-        // Added notificationBtn to the array so it gets styled and added to sidebar
+        // style and add buttons to sidebar
         JButton[] navButtons = {registerClassBtn, viewResultsBtn, commentLecturerBtn, viewCommentBtn, notificationBtn};
         for (JButton btn : navButtons) {
             styleSidebarButton(btn, navPanel);
@@ -202,38 +202,38 @@ public class studentDashboard extends JFrame implements ActionListener {
 
     private JScrollPane getStudentClasses() {
         DefaultListModel<String> listModel = new DefaultListModel<>();
-        HashSet<String> uniqueModules = new HashSet<>();
-        String username = Session.currentUsername;
 
-        try (BufferedReader br = new BufferedReader(new FileReader("student_courses.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 3) {
-                    String userInFile = parts[0].trim();
-                    String courseName = parts[1].trim();
-                    String moduleName = parts[2].trim();
+        // fetch registered classes from handler
+        java.util.List<Course> registeredList = CourseFileHandler.getRegisteredCoursesForStudent(Session.currentUsername);
 
-                    if (userInFile.equalsIgnoreCase(username)) {
-                        if (uniqueModules.add(courseName)) {
-                            listModel.addElement("  • " + courseName + " - " + moduleName);
-                        }
-                    }
-                }
+        if (registeredList.isEmpty()) {
+            listModel.addElement("  No classes registered.");
+        } else {
+            for (Course c : registeredList) {
+                listModel.addElement("  • " + c.getCode() + " - " + c.getName());
             }
-        } catch (IOException e) {
-            listModel.addElement("  • Error loading classes.");
         }
-
-        if (listModel.isEmpty()) listModel.addElement("  No classes registered.");
 
         JList<String> list = new JList<>(listModel);
         list.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        list.setFixedCellHeight(40);
+        list.setFixedCellHeight(50);
         list.setBackground(Color.WHITE);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // wrap list in scroll pane
         JScrollPane scroll = new JScrollPane(list);
+
+        // set scroll policies
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // styling
         scroll.setBorder(null);
         scroll.getViewport().setBackground(Color.WHITE);
+
+        // size to trigger scroll
+        scroll.setPreferredSize(new Dimension(400, 250));
+
         return scroll;
     }
 
