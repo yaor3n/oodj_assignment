@@ -108,10 +108,10 @@ public class adminEditProfile extends JFrame implements ActionListener {
     }
 
     private void setEditMode(boolean editing) {
-        JTextField[] fields = {nameField, emailField, genderField, dobField};
+        JTextField[] fields = {idField, nameField, emailField, genderField, dobField, usernameField, roleField};
         for (JTextField f : fields) {
-            f.setEditable(editing);
-            f.setBackground(editing ? Color.WHITE : new Color(245, 245, 245));
+            f.setEditable(false);
+            f.setBackground(new Color(245, 245, 245));
         }
         passwordField.setEditable(editing);
         passwordField.getParent().setBackground(editing ? Color.WHITE : new Color(245, 245, 245));
