@@ -120,11 +120,14 @@ public class studentEditProfile extends JFrame implements ActionListener {
     }
 
     private void setEditMode(boolean editing) {
+        // keep all data fields locked
         JTextField[] fields = {nameField, emailField, dobField, genderField, usernameField, courseField};
         for (JTextField f : fields) {
-            f.setEditable(editing);
-            f.setBackground(editing ? Color.WHITE : new Color(245, 245, 245));
+            f.setEditable(false);
+            f.setBackground(new Color(245, 245, 245));
         }
+
+        // only allow password to be editable
         passwordField.setEditable(editing);
         passwordField.getParent().setBackground(editing ? Color.WHITE : new Color(245, 245, 245));
 
